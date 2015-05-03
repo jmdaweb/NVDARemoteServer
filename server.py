@@ -1,3 +1,4 @@
+import sys
 import os
 import select
 import socket
@@ -16,7 +17,10 @@ class Server(object):
 		self.client_sockets = []
 		self.running = False
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
+		if hasattr(sys, 'frozen'):
+			certfile=os.path.join(sys.prefix, 'server.pem')
+		else:
+			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile)
 		self.server_socket.bind((bind_host, self.port))
 		self.server_socket.listen(5)
