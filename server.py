@@ -6,6 +6,7 @@ import ssl
 import json
 import time
 import random
+import platform
 
 class Server(object):
 	PING_TIME = 300
@@ -135,5 +136,14 @@ class Client(object):
 			if (c.password==self.password)&(c!=self):
 				c.send(**obj)
 
-servidor=Server(6837)
-servidor.run()
+if platform.system()=="Linux":
+	import daemon
+	class serverDaemon(daemon.Daemon):
+		def run(self):
+			srv=Server(6837)
+			srv.run()
+	dm=serverDaemon()
+	dm.start()
+else:
+	srv=Server(6837)
+	srv.run()

@@ -1,3 +1,3 @@
 #!/bin/bash
-cp ../server.py ../server.pem src/usr/share/NVDARemoteServer
+cp ../server.py ../server.pem ../daemon.py src/usr/share/NVDARemoteServer
 makepkg
