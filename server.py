@@ -142,7 +142,7 @@ if platform.system()=="Linux":
 		def run(self):
 			srv=Server(6837)
 			srv.run()
-	dm=serverDaemon()
+	dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 	dm.start()
 else:
 	srv=Server(6837)
