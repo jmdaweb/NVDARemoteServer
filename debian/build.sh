@@ -1,6 +1,8 @@
 #!/bin/bash
 #please, run this script as root
 #This script builds a debian package, but lintian still reports some errors and warnings. Despite of that, it can be installed.
+#make directories
+mkdir -p package/usr/share/NVDARemoteServer
 #copy files
 cp ../server.py ../server.pem ../daemon.py package/usr/share/NVDARemoteServer
 #change permissions
