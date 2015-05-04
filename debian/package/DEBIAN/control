@@ -1,0 +1,10 @@
+Package: nvda-remote-server
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: all
+Depends: python
+Maintainer: Jose Manuel Delicado <jmdaweb@hotmail.com>
+Description: NVDARemote Relay server
+ This server allows NVDARemote users to redirect their traffic.
+  Don't forget to open the tcp port 6837 on your firewall
