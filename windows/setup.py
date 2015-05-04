@@ -20,7 +20,7 @@ if __name__ == '__main__':
   author_email = "jm.delicado@technow.es",
   version = "1.0",
   url = "https://www.technow.es",
-data_files = get_data()+[("", ["server.pem"])],
+data_files = get_data()+[("", ["../server.pem"])],
 options = {
    'py2exe': {   
     'optimize':2,
@@ -30,7 +30,7 @@ options = {
   },
   console = [
    {
-    'script': 'server.py',
+    'script': '../server.py',
     'dest_base': 'NVDARemoteServer',
 }
   ],
