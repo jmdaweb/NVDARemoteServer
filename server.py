@@ -150,7 +150,7 @@ if __name__ == "__main__":
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:
-				dm.start()
+				dm.run()
 			elif 'stop' == sys.argv[1]:
 				dm.stop()
 			elif "restart" == sys.argv[1]:
