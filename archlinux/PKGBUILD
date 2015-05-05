@@ -36,5 +36,5 @@ echo checking...
 }
 
 package() {
-	cp -r usr "$pkgdir/"
+	cp -r usr -t "$pkgdir/"
 }
