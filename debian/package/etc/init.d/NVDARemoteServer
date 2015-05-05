@@ -3,5 +3,5 @@ if test $# -lt 1
 then
 echo Usage: $0 start | stop | restart
 else
-python2 /usr/share/NVDARemoteServer/server.py $1
+/usr/bin/NVDARemoteServer $1
 fi
