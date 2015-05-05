@@ -23,6 +23,8 @@ class Server(object):
 		else:
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile)
+		# This reuses the port and avoid "Address already in use" errors.
+		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, self.port))
 		self.server_socket.listen(5)
 
@@ -139,11 +141,28 @@ class Client(object):
 if platform.system()=="Linux":
 	import daemon
 	class serverDaemon(daemon.Daemon):
+
 		def run(self):
 			srv=Server(6837)
 			srv.run()
-	dm=serverDaemon('/var/run/NVDARemoteServer.pid')
-	dm.start()
+
+if __name__ == "__main__":
+		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
+		if len(sys.argv) == 2:
+			if 'start' == sys.argv[1]:
+				dm.start()
+			elif 'stop' == sys.argv[1]:
+				dm.stop()
+			elif "restart" == sys.argv[1]:
+				dm.restart()
+			else:
+				print "Unknown command"
+				sys.exit(2)
+			sys.exit(0)
+		else:
+			print "usage: %s start|stop|restart" % sys.argv[0]
+			sys.exit(2)
+
 else:
 	srv=Server(6837)
 	srv.run()
