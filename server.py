@@ -148,7 +148,6 @@ if platform.system()=="Linux":
 
 if __name__ == "__main__":
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
-		print len(sys.argv), sys.argv
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:
 				dm.start()
