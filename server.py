@@ -29,6 +29,14 @@ class Server(object):
 		self.server_socket.listen(5)
 
 	def run(self):
+		if platform.system()=='Linux':
+			try:
+				import signal
+				signal.signal(signal.SIGINT, self.sighandler)
+				signal.signal(signal.SIGTERM, self.sighandler)
+				signal.signal(signal.SIGSTOP, self.sighandler)
+			except:
+				pass
 		self.running = True
 		self.last_ping_time = time.time()
 		while self.running:
@@ -71,6 +79,9 @@ class Server(object):
 	def close(self):
 		self.running = False
 		self.server_socket.close()
+
+	def sighandler(self, signum, frame):
+		self.close()
 
 class Client(object):
 	id = 0
@@ -147,6 +158,7 @@ if platform.system()=="Linux":
 			srv.run()
 
 if __name__ == "__main__":
+	if platform.system()=='Linux':
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:
@@ -162,7 +174,6 @@ if __name__ == "__main__":
 		else:
 			print "usage: %s start|stop|restart" % sys.argv[0]
 			sys.exit(2)
-
-else:
-	srv=Server(6837)
-	srv.run()
+	else:
+		srv=Server(6837)
+		srv.run()
