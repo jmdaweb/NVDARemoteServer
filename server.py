@@ -149,16 +149,15 @@ class Client(object):
 			if (c.password==self.password)&(c!=self):
 				c.send(**obj)
 
-if platform.system()=="Linux":
+if (platform.system()=="Linux")|(platform.system()=="Darwin"):
 	import daemon
 	class serverDaemon(daemon.Daemon):
-
 		def run(self):
 			srv=Server(6837)
 			srv.run()
 
 if __name__ == "__main__":
-	if platform.system()=='Linux':
+	if (platform.system()=='Linux')|(platform.system()=='Darwin'):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:
