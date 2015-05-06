@@ -1,0 +1,13 @@
+[Unit]
+Description=NVDARemote relay server
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/NVDARemoteServer.pid
+ExecStart=/usr/bin/NVDARemoteServer start
+ExecStop=/usr/bin/NVDARemoteServer stop
+ExecReload=/usr/bin/NVDARemoteServer restart
+
+[Install]
+WantedBy=multi-user.target
