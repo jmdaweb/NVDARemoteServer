@@ -20,11 +20,12 @@ install -m 0755 server.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.py
 install -m 0755 server.pem $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.pem
 install -m 0755 daemon.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/daemon.py
 install -m 0755 NVDARemoteServer $RPM_BUILD_ROOT/usr/bin/NVDARemoteServer
+install -m 0755 NVDARemoteServerd $RPM_BUILD_ROOT/etc/init.d/NVDARemoteServerd
 %clean
 rm -rf $RPM_BUILD_ROOT
 %post
-ln -s /usr/bin/NVDARemoteServer /etc/init.d/NVDARemoteServer
 %files
+/etc/init.d/NVDARemoteServerd
 /usr/bin/NVDARemoteServer
 %dir /usr/share/NVDARemoteServer
 /usr/share/NVDARemoteServer/server.py

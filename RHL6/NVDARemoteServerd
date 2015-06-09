@@ -1,0 +1,45 @@
+### BEGIN INIT INFO
+# Provides:          NVDARemoteServer
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      
+# Short-Description: Start/stop NVDARemote server
+# Description:       Setup variables BIN and USER
+#                    before running this script
+### END INIT INFO
+
+# Location of NVDARemote server binary
+BIN=/usr/bin/NVDARemoteServer
+# The NVDARemote server should be launched by this user account
+USER=root
+
+#. /lib/lsb/init-functions
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+    start)
+	su $USER -c "$BIN start"
+	;;
+    stop)
+	$BIN stop
+	;;
+    restart)
+	$0 stop || exit 1
+	$0 start || exit 1
+	;;
+status)
+	if test -e /var/run/NVDARemoteServer.pid
+	then
+		echo NVDARemoteServer is running
+	else
+		echo NVDARemoteServer is stopped
+	fi
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+	;;
+esac
+
+exit 0
