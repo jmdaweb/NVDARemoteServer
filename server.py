@@ -146,7 +146,11 @@ class Client(object):
 	def send(self, type, **kwargs):
 		msg = dict(type=type, **kwargs)
 		msgstr = json.dumps(msg)+"\n"
-		self.socket.sendall(msgstr)
+		try:
+			self.socket.sendall(msgstr)
+		except:
+			self.close()
+			return
 
 	def send_to_others(self, **obj):
 		for c in self.server.clients.itervalues():
