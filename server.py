@@ -95,7 +95,11 @@ class Client(object):
 		Client.id += 1
 
 	def handle_data(self):
-		data = self.buffer + self.socket.recv(8192)
+		try:
+			data = self.buffer + self.socket.recv(8192)
+		except:
+			self.close()
+			return
 		if data == '': #Disconnect
 			self.close()
 			return
