@@ -1,0 +1,8 @@
+#!/bin/bash
+# Post installation script.
+ # This script run after installing the package 
+
+update-rc.d -n NVDARemoteServer defaults
+service NVDARemoteServer start
+
+
