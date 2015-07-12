@@ -1,3 +1,4 @@
+#!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          NVDARemoteServer
 # Required-Start:    $local_fs $remote_fs
