@@ -9,9 +9,13 @@ cp ../server.py ../server.pem ../daemon.py package/usr/share/NVDARemoteServer
 chown -R root package
 chgrp -R root package
 chmod -R 755 package
+chmod 644 package/DEBIAN/control
+chmod 644 package/DEBIAN/conffiles
 chmod -x package/usr/share/NVDARemoteServer/server.py
 chmod -x package/usr/share/NVDARemoteServer/server.pem
 chmod -x package/usr/share/NVDARemoteServer/daemon.py
+chmod -x package/usr/share/doc/nvda-remote-server/copyright
+chmod -x package/usr/share/man/man1/NVDARemoteServer.1.gz
 #build the package
 dpkg-deb --build package
 mv package.deb nvda-remote-server.deb

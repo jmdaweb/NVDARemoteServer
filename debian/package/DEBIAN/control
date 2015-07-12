@@ -4,7 +4,7 @@ Section: base
 Priority: optional
 Architecture: all
 Depends: python
-Maintainer: Jose Manuel Delicado <jmdaweb@hotmail.com>
+Maintainer: Technow <info@technow.es>
 Description: NVDARemote Relay server
  This server allows NVDARemote users to redirect their traffic.
   Don't forget to open the tcp port 6837 on your firewall

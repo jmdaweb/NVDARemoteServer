@@ -1,0 +1,14 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: NVDA Remote Server 1.0
+Upstream-Contact: Technow <info@technow.es>
+Source: http://www.technow.es/
+
+Copyright: 2015 Technow. All rights reserved.
+License:
+ This is a release of NVDA Remote Server, a relay server for NVDA Remote.
+ For the avoidance of doubt, this particular copy of the software
+ is released under the version 2 of the GNU General Public License.
+  .
+The full text of the GNU General Public License version 2 can
+ be found in the file
+ `/usr/share/doc/nvda-remote-server/COPYING.gz'.
