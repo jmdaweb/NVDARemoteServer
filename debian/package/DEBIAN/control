@@ -1,6 +1,6 @@
 Package: nvda-remote-server
 Version: 1.0-1
-Section: base
+Section: net
 Priority: optional
 Architecture: all
 Depends: python
