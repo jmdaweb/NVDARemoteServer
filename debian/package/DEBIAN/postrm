@@ -1,0 +1,8 @@
+#!/bin/bash
+# Post removal script.
+ # This script runs after removing the package 
+
+set -e
+update-rc.d -n NVDARemoteServer remove
+set +e
+exit 0
