@@ -4,5 +4,4 @@
 
 update-rc.d -n NVDARemoteServer defaults
 service NVDARemoteServer start
-
-
+exit 0
