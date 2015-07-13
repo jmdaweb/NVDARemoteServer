@@ -1,22 +1,20 @@
 #!/bin/bash
 #please, run this script as root
-#This script builds a debian package, but lintian still reports some errors and warnings. Despite of that, it can be installed.
 #make directories
-mkdir -p package/usr/share/NVDARemoteServer
+mkdir -p nvda-remote-server_1.0/usr/share/NVDARemoteServer
 #copy files
-cp ../server.py ../server.pem ../daemon.py package/usr/share/NVDARemoteServer
+cp ../server.py ../server.pem ../daemon.py nvda-remote-server_1.0/usr/share/NVDARemoteServer
 #change permissions
-chown -R root package
-chgrp -R root package
-chmod -R 755 package
-chmod 644 package/DEBIAN/control
-chmod 644 package/DEBIAN/conffiles
-chmod -x package/usr/share/NVDARemoteServer/server.py
-chmod -x package/usr/share/NVDARemoteServer/server.pem
-chmod -x package/usr/share/NVDARemoteServer/daemon.py
-chmod -x package/usr/share/doc/nvda-remote-server/copyright
-chmod -x package/usr/share/man/man1/NVDARemoteServer.1.gz
-chmod -x package/usr/share/lintian/overrides/nvda-remote-server
+chown -R root nvda-remote-server_1.0
+chgrp -R root nvda-remote-server_1.0
+chmod -R 755 nvda-remote-server_1.0
+chmod 644 nvda-remote-server_1.0/DEBIAN/control
+chmod 644 nvda-remote-server_1.0/DEBIAN/conffiles
+chmod -x nvda-remote-server_1.0/usr/share/NVDARemoteServer/server.py
+chmod -x nvda-remote-server_1.0/usr/share/NVDARemoteServer/server.pem
+chmod -x nvda-remote-server_1.0/usr/share/NVDARemoteServer/daemon.py
+chmod -x nvda-remote-server_1.0/usr/share/doc/nvda-remote-server/copyright
+chmod -x nvda-remote-server_1.0/usr/share/man/man1/NVDARemoteServer.1.gz
+chmod -x nvda-remote-server_1.0/usr/share/doc/nvda-remote-server/changelog.Debian.gz
 #build the package
-dpkg-deb --build package
-mv package.deb nvda-remote-server.deb
+dpkg-deb --build nvda-remote-server_1.0

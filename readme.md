@@ -17,9 +17,9 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
 
-3. Run the script: ./build.sh
+3. Run the script: sudo ./build.sh
 
-4. Install the package: dpkg -i NVDARemoteServer.deb
+4. Install the package: sudo dpkg -i NVDARemoteServer.deb
 
 ###Building for Centos
 
@@ -66,4 +66,8 @@ To see the server status, run:
 NVDARemoteServer status
 On Centos 6, Centos 7 and Arch, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. Remember to run these commands with sudo if you are an unprivileged user.
 The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in debugging mode. To stop, simply close the console window or kill the process.
-If you want to install the server as a system service, run service_manager.cmd as administrator.
+If you want to install the server as a system service, run service_manager.cmd as administrator and choose the right options on the displayed menu.
+
+##known problems
+
+On Debian based distributions, if you uninstall the package with apt-get remove or dpkg --remove, it will break and you won't be able to install it again. To uninstall the package and avoid this problem, please run: sudo dpkg --purge nvda-remote-server
