@@ -1,6 +1,6 @@
 #!/bin/bash
 # Pre removal script.
- # This script run before removing the package 
+ # This script runs before removing the package 
 
 set -e
 service NVDARemoteServer stop

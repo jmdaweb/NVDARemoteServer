@@ -16,6 +16,7 @@ chmod -x package/usr/share/NVDARemoteServer/server.pem
 chmod -x package/usr/share/NVDARemoteServer/daemon.py
 chmod -x package/usr/share/doc/nvda-remote-server/copyright
 chmod -x package/usr/share/man/man1/NVDARemoteServer.1.gz
+chmod -x package/usr/share/lintian/overrides/nvda-remote-server
 #build the package
 dpkg-deb --build package
 mv package.deb nvda-remote-server.deb

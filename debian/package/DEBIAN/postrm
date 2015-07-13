@@ -3,6 +3,14 @@
  # This script runs after removing the package 
 
 set -e
+if test -e /etc/init.d/NVDARemoteServer
+then
+rm -f /etc/init.d/NVDARemoteServer
+fi
+if test -e /usr/share/NVDARemoteServer
+then
+rm -rf /usr/share/NVDARemoteServer
+fi
 update-rc.d -n NVDARemoteServer remove
 set +e
 exit 0
