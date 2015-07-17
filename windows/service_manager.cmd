@@ -8,32 +8,60 @@ echo 1) install service
 echo 2) uninstall service
 echo 3) start service
 echo 4) stop service
-echo 5) exit
+echo 5) Enable interactive mode
+echo 6) set automatic startup
+echo 7) set manual startup
+echo 8) disable service
+echo 9) exit
 set /p choice=select an option: 
 if %choice%==1 goto install
 if %choice%==2 goto remove
 if %choice%==3 goto start
 if %choice%==4 goto stop
-if %choice%==5 goto quit
+if %choice%==5 goto interactive
+if %choice%==6 goto auto
+if %choice%==7 goto manual
+if %choice%==8 goto disable
+if %choice%==9 goto quit
 goto menu
 :install
 echo installing...
-"%~dp0NVDARemoteService.exe" -install
+"%~dp0NVDARemoteService.exe" install
 pause
 goto menu
 :remove
 echo uninstalling...
-"%~dp0NVDARemoteService.exe" -remove
+"%~dp0NVDARemoteService.exe" remove
 pause
 goto menu
 :start
 echo starting...
-net start NVDARemoteService
+"%~dp0NVDARemoteService.exe" start
 pause
 goto menu
 :stop
 echo stopping...
-net stop NVDARemoteService
+"%~dp0NVDARemoteService.exe" stop
+pause
+goto menu
+:interactive
+echo Enabling interactive mode...
+"%~dp0NVDARemoteService.exe" --interactive update
+pause
+goto menu
+:auto
+echo configuring service to run at system startup...
+"%~dp0NVDARemoteService.exe" --startup auto update
+pause
+goto menu
+:manual
+echo configuring service to run manually...
+"%~dp0NVDARemoteService.exe" --startup manual update
+pause
+goto menu
+:disable
+echo disabling service...
+"%~dp0NVDARemoteService.exe" --startup disabled update
 pause
 goto menu
 :quit

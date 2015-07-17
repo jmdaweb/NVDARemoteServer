@@ -37,6 +37,7 @@ options = {
   service = [
    {
     'modules': ['service'],
+    'cmdline_style':'pywin32',
     'dest_base': 'NVDARemoteService',
 }
   ],
