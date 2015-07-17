@@ -58,6 +58,8 @@ You need Python 2.7.x for x64 installed and the py2exe package. The steps are th
 ##Running
 
 Before you start, check that the tcp port 6837 is allowed through your firewall.
+If you want to start the server in debugging mode (useful to see activity and errors) run:
+NVDARemoteServer debug
 On Unix platforms, including Mac Os x, there is a script located in /usr/bin called NVDARemoteServer. You can run this script without parameters to get a short help message. To start the server, run:
 NVDARemoteServer start
 To stop it, run:
@@ -70,4 +72,4 @@ If you want to install the server as a system service, run service_manager.cmd a
 
 ##known problems
 
-On Debian based distributions, if you uninstall the package with apt-get remove or dpkg --remove, it will break and you won't be able to install it again. To uninstall the package and avoid this problem, please run: sudo dpkg --purge nvda-remote-server
+There aren't known problems at this time.

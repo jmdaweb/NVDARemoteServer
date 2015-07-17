@@ -7,6 +7,10 @@ import json
 import time
 import random
 import platform
+debug=False
+def printDebugMessage(msg):
+	if debug:
+		print msg
 
 class Server(object):
 	PING_TIME = 300
@@ -17,16 +21,21 @@ class Server(object):
 		self.clients = {}
 		self.client_sockets = []
 		self.running = False
+		printDebugMessage("Initialized instance variables")
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		printDebugMessage("Socket created.")
 		if hasattr(sys, 'frozen'):
 			certfile=os.path.join(sys.prefix, 'server.pem')
 		else:
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile)
+		printDebugMessage("Enabled ssl in socket.")
 		# This reuses the port and avoid "Address already in use" errors.
+		printDebugMessage("Setting socket options...")
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, self.port))
 		self.server_socket.listen(5)
+		printDebugMessage("Socket has started listening on port "+str(self.port))
 
 	def run(self):
 		if platform.system()=='Linux':
@@ -34,14 +43,19 @@ class Server(object):
 				import signal
 				signal.signal(signal.SIGINT, self.sighandler)
 				signal.signal(signal.SIGTERM, self.sighandler)
-				signal.signal(signal.SIGSTOP, self.sighandler)
+				printDebugMessage("Signal handlers configured.")
 			except:
-				pass
+				printDebugMessage("Error setting handler for signals")
 		self.running = True
 		self.last_ping_time = time.time()
+		printDebugMessage("NVDA Remote Server is ready.")
 		while self.running:
-			r, w, e = select.select(self.client_sockets+[self.server_socket], [], self.client_sockets, 60)
+			try:
+				r, w, e = select.select(self.client_sockets+[self.server_socket], [], self.client_sockets, 60)
+			except select.error:
+				pass
 			if not self.running:
+				printDebugMessage("Shuting down server...")
 				break
 			for sock in r:
 				if sock is self.server_socket:
@@ -53,15 +67,20 @@ class Server(object):
 					if client.password!="":
 						client.send(type='ping')
 				self.last_ping_time = time.time()
+		self.close()
 
 	def accept_new_connection(self):
 		try:
 			client_sock, addr = self.server_socket.accept()
+			printDebugMessage("New incoming connection")
 		except ssl.SSLError:
+			printDebugMessage("ssl error, connection ignored.")
 			return
+		printDebugMessage("Setting socket options...")
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 		client = Client(server=self, socket=client_sock)
 		self.add_client(client)
+		printDebugMessage("Added a new client.")
 
 	def add_client(self, client):
 		self.clients[client.socket] = client
@@ -72,16 +91,21 @@ class Server(object):
 		self.client_sockets.remove(client.socket)
 
 	def client_disconnected(self, client):
+		printDebugMessage("Client "+str(client.id)+" has disconnected.")
 		self.remove_client(client)
+		printDebugMessage("Client "+str(client.id)+" removed.")
 		if client.password!="":
+			printDebugMessage("Sending notification to other clients about client "+str(client.id))
 			client.send_to_others(type='client_left', user_id=client.id)
 
 	def close(self):
 		self.running = False
+		printDebugMessage("Closing server socket...")
 		self.server_socket.close()
 
 	def sighandler(self, signum, frame):
-		self.close()
+		printDebugMessage("Received system signal. Waiting for server stop.")
+		self.running=False
 
 class Client(object):
 	id = 0
@@ -98,6 +122,7 @@ class Client(object):
 		try:
 			data = self.buffer + self.socket.recv(8192)
 		except:
+			printDebugMessage("Socket error in client "+str(self.id)+" while receiving data")
 			self.close()
 			return
 		if data == '': #Disconnect
@@ -132,12 +157,14 @@ class Client(object):
 		clients = [c.id for c in self.server.clients.values() if c is not self]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
+		printDebugMessage("Client "+str(self.id)+" joined channel "+str(self.password))
 
 	def do_generate_key(self, obj):
 		res = str(random.randrange(1, 9))
 		for n in xrange(6):
 			res += str(random.randrange(0, 9))
 		self.send(type='generate_key', key=res)
+		printDebugMessage("Client "+str(self.id)+" generated a key")
 
 	def close(self):
 		self.socket.close()
@@ -150,7 +177,7 @@ class Client(object):
 			self.socket.sendall(msgstr)
 		except:
 			self.close()
-			return
+			printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
 
 	def send_to_others(self, **obj):
 		for c in self.server.clients.itervalues():
@@ -165,7 +192,12 @@ if (platform.system()=="Linux")|(platform.system()=="Darwin"):
 			srv.run()
 
 if __name__ == "__main__":
-	if (platform.system()=='Linux')|(platform.system()=='Darwin'):
+	#If debug is enabled, all platform checks are skipped
+	if 'debug' in sys.argv:
+		debug=True
+		srv=Server(6837)
+		srv.run()
+	elif (platform.system()=='Linux')|(platform.system()=='Darwin'):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:
