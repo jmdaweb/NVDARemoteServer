@@ -47,13 +47,13 @@ You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the i
 
 ###Building for Windows
 
-You only need Python 2.7.x and the py2exe package. Open a command prompt and navigate to the root folder of this repository, then run:
+You only need Python 2.7.x and the pywin32 and py2exe packages. Open a command prompt and navigate to the root folder of this repository, then run:
 python setup_windows.py py2exe
 The binaries will be placed in the dist folder.
 
 ###Building for Windows x64
 
-You need Python 2.7.x for x64 installed and the py2exe package. The steps are the same for Windows x86 and x64.
+You need Python 2.7.x for x64 installed and the pywin32 and py2exe packages. The steps are the same for Windows x86 and x64.
 
 ##Running
 
@@ -67,7 +67,7 @@ NVDARemoteServer stop
 To see the server status, run:
 NVDARemoteServer status
 On Centos 6, Centos 7 and Arch, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. Remember to run these commands with sudo if you are an unprivileged user.
-The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in debugging mode. To stop, simply close the console window or kill the process.
+The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in console mode. To stop, simply close the console window or kill the process.
 If you want to install the server as a system service, run service_manager.cmd as administrator and choose the right options on the displayed menu.
 
 ##known problems
