@@ -43,7 +43,7 @@ class Server(object):
 				import signal
 				signal.signal(signal.SIGINT, self.sighandler)
 				signal.signal(signal.SIGTERM, self.sighandler)
-				printDebugMessage("Signal handlers configured.")
+				printDebugMessage("Configuring signal handlers")
 			except:
 				printDebugMessage("Error setting handler for signals")
 		self.running = True
@@ -57,12 +57,16 @@ class Server(object):
 			if not self.running:
 				printDebugMessage("Shuting down server...")
 				break
+			for sock in e:
+				printDebugMessage("The client "+str(self.clients[sock].id)+" has connection problems. Disconnecting...")
+				self.clients[sock].close()
 			for sock in r:
 				if sock is self.server_socket:
 					self.accept_new_connection()
 					continue
 				self.clients[sock].handle_data()
 			if time.time() - self.last_ping_time >= self.PING_TIME:
+				printDebugMessage("Sending ping to all connected clients...")
 				for client in self.clients.itervalues():
 					if client.password!="":
 						client.send(type='ping')
@@ -126,6 +130,7 @@ class Client(object):
 			self.close()
 			return
 		if data == '': #Disconnect
+			printDebugMessage("Received empty buffer from client "+str(self.id)+", disconnecting")
 			self.close()
 			return
 		if '\n' not in data:
@@ -154,7 +159,7 @@ class Client(object):
 
 	def do_join(self, obj):
 		self.password = obj.get('channel', None)
-		clients = [c.id for c in self.server.clients.values() if c is not self]
+		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
 		printDebugMessage("Client "+str(self.id)+" joined channel "+str(self.password))
