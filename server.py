@@ -104,6 +104,9 @@ class Server(object):
 
 	def close(self):
 		self.running = False
+		printDebugMessage("Disconnecting clients...")
+		for c in self.clients.values():
+			c.close()
 		printDebugMessage("Closing server socket...")
 		self.server_socket.close()
 
@@ -219,5 +222,5 @@ if __name__ == "__main__":
 			print "usage: %s start|stop|restart" % sys.argv[0]
 			sys.exit(2)
 	else:
-		srv=Server(6837)
+		srv=Server(6838)
 		srv.run()
