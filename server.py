@@ -222,5 +222,5 @@ if __name__ == "__main__":
 			print "usage: %s start|stop|restart" % sys.argv[0]
 			sys.exit(2)
 	else:
-		srv=Server(6838)
+		srv=Server(6837)
 		srv.run()
