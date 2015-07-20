@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys, os, time, atexit
 from signal import SIGTERM 
 

@@ -21,7 +21,7 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 
 4. Install the package: sudo dpkg -i NVDARemoteServer.deb
 
-###Building for Centos
+###Building for Centos and RHL based distributions
 
 You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the instructions included in that folders. Finally, install the package using rpm: rpm -U NVDARemoteServer.rpm
 
@@ -64,9 +64,11 @@ On Unix platforms, including Mac Os x, there is a script located in /usr/bin cal
 NVDARemoteServer start
 To stop it, run:
 NVDARemoteServer stop
-To see the server status, run:
-NVDARemoteServer status
-On Centos 6, Centos 7 and Arch, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. Remember to run these commands with sudo if you are an unprivileged user.
+On Centos 6, Centos 7, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. Remember to run these commands with sudo if you are an unprivileged user. You can run service NVDARemoteServer status to see if the service is running.
+If you want to configure the service to run at system startup, do the following:
+For Debian 7 and earlier, Ubuntu 14.10 and older versions, and similar distributions, run: update-rc.d NVDARemoteServer enable
+For Debian 8 and later, Ubuntu 15.04 and later, Arch and RHL7 based distributions (Centos 7, for example): systemctl enable NVDARemoteServer
+For RHL6 based distributions (Centos 6, for example): chkconfig NVDARemoteServerd on
 The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in console mode. To stop, simply close the console window or kill the process.
 If you want to install the server as a system service, run service_manager.cmd as administrator and choose the right options on the displayed menu.
 

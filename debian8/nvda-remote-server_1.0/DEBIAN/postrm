@@ -1,0 +1,12 @@
+#!/bin/bash
+# Post removal script.
+ # This script runs after removing the package 
+
+set -e
+if test -e /usr/share/NVDARemoteServer
+then
+rm -rf /usr/share/NVDARemoteServer
+fi
+systemctl daemon-reload
+set +e
+exit 0

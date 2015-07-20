@@ -1,0 +1,9 @@
+#!/bin/bash
+# Post installation script.
+ # This script runs after installing the package 
+
+set -e
+systemctl daemon-reload
+service NVDARemoteServer start
+set +e
+exit 0
