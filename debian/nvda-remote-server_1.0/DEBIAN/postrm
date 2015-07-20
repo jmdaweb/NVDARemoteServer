@@ -7,6 +7,6 @@ if test -e /usr/share/NVDARemoteServer
 then
 rm -rf /usr/share/NVDARemoteServer
 fi
-update-rc.d -n NVDARemoteServer remove
+update-rc.d NVDARemoteServer remove
 set +e
 exit 0
