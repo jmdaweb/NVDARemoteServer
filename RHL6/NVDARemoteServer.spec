@@ -3,9 +3,10 @@ Version: 1
 Release: 0
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
-License: GPL
+License: GPLv2
+URL: http://remote.technow.es
 Requires: python
-Group: Rahul
+Group: System Environment/Daemons
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-buildroot
 %description
