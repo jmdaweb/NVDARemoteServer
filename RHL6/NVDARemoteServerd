@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Comments to support chkconfig on RedHat Linux
+# chkconfig: 2345 64 36
+# description: a relay server for NVDA Remote
+
 ### BEGIN INIT INFO
 # Provides:          NVDARemoteServer
 # Required-Start:    $local_fs $remote_fs
@@ -6,8 +11,7 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      
 # Short-Description: Start/stop NVDARemote server
-# Description:       Setup variables BIN and USER
-#                    before running this script
+# Description:       a relay server for NVDA Remote
 ### END INIT INFO
 
 # Location of NVDARemote server binary
@@ -15,19 +19,42 @@ BIN=/usr/bin/NVDARemoteServer
 # The NVDARemote server should be launched by this user account
 USER=root
 
-#. /lib/lsb/init-functions
+if test -e /lib/lsb/init-functions
+then
+	. /lib/lsb/init-functions
+fi
+
+# Lock directory for RedHat / SuSE.
+lockdir='/var/lock/subsys'
+lock_file_path="$lockdir/NVDARemoteServer"
 
 # Carry out specific functions when asked to by the system
 case "$1" in
     start)
 	su $USER -c "$BIN start"
+	if test -w "$lockdir"
+	then
+		touch "$lock_file_path"
+	fi
+	exit 0
 	;;
     stop)
 	$BIN stop
+	if test -f "$lock_file_path"
+	then
+		rm -f "$lock_file_path"
+	fi
+	exit 0
 	;;
     restart)
 	$0 stop || exit 1
 	$0 start || exit 1
+	;;
+reload)
+	$0 restart || exit 1
+	;;
+force-reload)
+	$0 reload || exit 1
 	;;
 status)
 	if test -e /var/run/NVDARemoteServer.pid

@@ -24,15 +24,19 @@ install -m 0644 server.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.py
 install -m 0644 server.pem $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.pem
 install -m 0644 daemon.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/daemon.py
 install -m 0755 NVDARemoteServer $RPM_BUILD_ROOT/usr/bin/NVDARemoteServer
-install -m 0755 NVDARemoteServerd $RPM_BUILD_ROOT/etc/init.d/NVDARemoteServer
+install -m 0755 NVDARemoteServerd $RPM_BUILD_ROOT/etc/init.d/nvdaremoteserver
 gzip -9 NVDARemoteServer.1
 install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
 %clean
 rm -rf $RPM_BUILD_ROOT
 %post
+chkconfig --add nvdaremoteserver
 NVDARemoteServer start
+%preun
+NVDARemoteServer stop
+chkconfig --del nvdaremoteserver
 %files
-/etc/init.d/NVDARemoteServer
+/etc/init.d/nvdaremoteserver
 /usr/bin/NVDARemoteServer
 %dir /usr/share/NVDARemoteServer
 /usr/share/NVDARemoteServer/server.py
