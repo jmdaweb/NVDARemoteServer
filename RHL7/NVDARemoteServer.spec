@@ -1,6 +1,6 @@
 Name: NVDARemoteServer
-Version: 1
-Release: 0
+Version: 1.0
+Release: 1.el7
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
 License: GPLv2
@@ -15,17 +15,22 @@ This remote server allows NVDARemote users to redirect their traffic.
 %setup -q
 %build
 %install
+chmod -x LICENSE
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/NVDARemoteServer
 install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/systemd/system
 install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
+install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man1
 install -m 0644 server.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.py
 install -m 0644 server.pem $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.pem
 install -m 0644 daemon.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/daemon.py
 install -m 0755 NVDARemoteServer $RPM_BUILD_ROOT/usr/bin/NVDARemoteServer
 install -m 0644 NVDARemoteServer.service $RPM_BUILD_ROOT/usr/lib/systemd/system/NVDARemoteServer.service
+gzip -9 NVDARemoteServer.1
+install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
 %clean
 rm -rf $RPM_BUILD_ROOT
 %post
+NVDARemoteServer start
 %files
 /usr/bin/NVDARemoteServer
 %dir /usr/share/NVDARemoteServer
@@ -37,3 +42,8 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/NVDARemoteServer/daemon.pyc
 /usr/share/NVDARemoteServer/daemon.pyo
 /usr/lib/systemd/system/NVDARemoteServer.service
+/usr/share/man/man1/NVDARemoteServer.1.gz
+%doc LICENSE
+%changelog
+* Tue Jul 21 2015 Technow <info@technow.es> - 1.0-1
+ - First release

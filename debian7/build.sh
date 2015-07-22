@@ -2,8 +2,12 @@
 #please, run this script as root
 #make directories
 mkdir -p nvda-remote-server_1.0/usr/share/NVDARemoteServer
+mkdir -p nvda-remote-server_1.0/usr/share/man/man1
 #copy files
 cp ../server.py ../server.pem ../daemon.py nvda-remote-server_1.0/usr/share/NVDARemoteServer
+cp ../manual/NVDARemoteServer.1 nvda-remote-server_1.0/usr/share/man/man1
+#compress manual
+gzip -9 nvda-remote-server_1.0/usr/share/man/man1/NVDARemoteServer.1
 #change permissions
 chown -R root nvda-remote-server_1.0
 chgrp -R root nvda-remote-server_1.0
