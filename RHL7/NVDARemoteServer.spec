@@ -30,7 +30,12 @@ install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARem
 %clean
 rm -rf $RPM_BUILD_ROOT
 %post
+systemctl daemon-reload
 NVDARemoteServer start
+%postun
+systemctl daemon-reload
+%preun
+NVDARemoteServer stop
 %files
 /usr/bin/NVDARemoteServer
 %dir /usr/share/NVDARemoteServer
