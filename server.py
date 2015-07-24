@@ -38,14 +38,14 @@ class Server(object):
 		printDebugMessage("Socket has started listening on port "+str(self.port))
 
 	def run(self):
-		if platform.system()=='Linux':
-			try:
-				import signal
+		try:
+			import signal
+			printDebugMessage("Configuring signal handlers")
+			if platform.system()=='Linux':
 				signal.signal(signal.SIGINT, self.sighandler)
 				signal.signal(signal.SIGTERM, self.sighandler)
-				printDebugMessage("Configuring signal handlers")
-			except:
-				printDebugMessage("Error setting handler for signals")
+		except:
+			printDebugMessage("Error setting handler for signals")
 		self.running = True
 		self.last_ping_time = time.time()
 		printDebugMessage("NVDA Remote Server is ready.")

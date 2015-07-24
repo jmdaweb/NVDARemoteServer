@@ -15,12 +15,12 @@ def get_data():
 
 if __name__ == '__main__':
  setup(
-  name = "NVDARemote relay server",
-  author = "Jose Manuel Delicado",
-  author_email = "jm.delicado@technow.es",
+  name = "NVDARemote server",
+  author = "Technow",
+  author_email = "info@technow.es",
   version = "1.0",
-  url = "https://www.technow.es",
-  data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd"])],
+  url = "http://remote.technow.es",
+  data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd"])],
 options = {
    'py2exe': {   
     'optimize':2,

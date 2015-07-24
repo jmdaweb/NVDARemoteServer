@@ -1,7 +1,17 @@
 #!/bin/bash
 if test $# -lt 1
 then
-echo Usage: $0 start | stop | restart
+echo Usage: $0 start | stop | restart | status | debug | enable | disable
 else
-python /usr/share/NVDARemoteServer/server.py $1
+case "$1" in
+start | stop | restart | status)
+	service NVDARemoteServer $1
+	;;
+enable | disable)
+	update-rc.d NVDARemoteServer $1
+	;;
+*)
+	python /usr/share/NVDARemoteServer/server.py $1
+	;;
+esac
 fi

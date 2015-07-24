@@ -15,7 +15,7 @@
 ### END INIT INFO
 
 # Location of NVDARemote server binary
-BIN=/usr/bin/NVDARemoteServer
+BIN="/usr/bin/python /usr/share/NVDARemoteServer/server.py"
 # The NVDARemote server should be launched by this user account
 USER=root
 
