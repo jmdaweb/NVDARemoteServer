@@ -188,9 +188,13 @@ class Client(object):
 			printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
 
 	def send_to_others(self, **obj):
-		for c in self.server.clients.itervalues():
-			if (c.password==self.password)&(c!=self):
-				c.send(**obj)
+		try:
+			for c in self.server.clients.itervalues():
+				if (c.password==self.password)&(c!=self):
+					c.send(**obj)
+		except:
+			printDebugMessage("Error sending to others.")
+			return
 
 if (platform.system()=="Linux")|(platform.system()=="Darwin"):
 	import daemon
