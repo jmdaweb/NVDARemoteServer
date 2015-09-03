@@ -77,8 +77,8 @@ class Server(object):
 		try:
 			client_sock, addr = self.server_socket.accept()
 			printDebugMessage("New incoming connection")
-		except ssl.SSLError:
-			printDebugMessage("ssl error, connection ignored.")
+		except:
+			printDebugMessage("Error while accepting a new connection.")
 			return
 		printDebugMessage("Setting socket options...")
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
