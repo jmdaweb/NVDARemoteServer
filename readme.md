@@ -72,6 +72,12 @@ For Debian 8 and later, Ubuntu 15.04 and later, Arch and RHL7 based distribution
 For RHL6 based distributions (Centos 6, for example): chkconfig nvdaremoteserver on
 The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in console mode. To stop, simply close the console window or kill the process.
 If you want to install the server as a system service, run service_manager.cmd as administrator and choose the right options on the displayed menu.
+Run debug.cmd to start the server in debugging mode.
+
+##Log files
+Do you run the server in production mode and it suddenly is stopped? Now you can look at the following files:
+On Linux and Mac Os x: go to /var/log/NVDARemoteServer.log
+On Windows: NVDARemoteServer.log is located inside the program folder.
 
 ##known problems
 
