@@ -8,9 +8,9 @@ import time
 import random
 import platform
 debug=False
+logfile=""
 def printDebugMessage(msg):
-	if debug:
-		print msg
+	print msg
 
 class Server(object):
 	PING_TIME = 300
@@ -38,6 +38,16 @@ class Server(object):
 		printDebugMessage("Socket has started listening on port "+str(self.port))
 
 	def run(self):
+		printDebugMessage("Initializing loggin system")
+		global logfile
+		try:
+			log=open(logfile, "w")
+			if debug==False:
+				sys.stdout=log
+				sys.stderr=log
+				printDebugMessage("Loggin system initialized.")
+		except:
+			printDebugMessage("Error opening NVDARemoteServer.log. Incorrect permissions or read only environment.")
 		try:
 			import signal
 			printDebugMessage("Configuring signal handlers")
@@ -49,29 +59,39 @@ class Server(object):
 		self.running = True
 		self.last_ping_time = time.time()
 		printDebugMessage("NVDA Remote Server is ready.")
-		while self.running:
+		try:
+			while self.running:
+				try:
+					r, w, e = select.select(self.client_sockets+[self.server_socket], [], self.client_sockets, 60)
+				except select.error:
+					pass
+				if not self.running:
+					printDebugMessage("Shuting down server...")
+					break
+				for sock in e:
+					printDebugMessage("The client "+str(self.clients[sock].id)+" has connection problems. Disconnecting...")
+					self.clients[sock].close()
+				for sock in r:
+					if sock is self.server_socket:
+						self.accept_new_connection()
+						continue
+					self.clients[sock].handle_data()
+				if time.time() - self.last_ping_time >= self.PING_TIME:
+					printDebugMessage("Sending ping to all connected clients...")
+					for client in self.clients.itervalues():
+						if client.password!="":
+							client.send(type='ping')
+					self.last_ping_time = time.time()
+			self.close()
+		except:
+			import traceback
+			exc, type, trace=sys.exc_info()
+			traceback.print_exception(exc, type, trace)
+		finally:
 			try:
-				r, w, e = select.select(self.client_sockets+[self.server_socket], [], self.client_sockets, 60)
-			except select.error:
+				log.close()
+			except:
 				pass
-			if not self.running:
-				printDebugMessage("Shuting down server...")
-				break
-			for sock in e:
-				printDebugMessage("The client "+str(self.clients[sock].id)+" has connection problems. Disconnecting...")
-				self.clients[sock].close()
-			for sock in r:
-				if sock is self.server_socket:
-					self.accept_new_connection()
-					continue
-				self.clients[sock].handle_data()
-			if time.time() - self.last_ping_time >= self.PING_TIME:
-				printDebugMessage("Sending ping to all connected clients...")
-				for client in self.clients.itervalues():
-					if client.password!="":
-						client.send(type='ping')
-				self.last_ping_time = time.time()
-		self.close()
 
 	def accept_new_connection(self):
 		try:
@@ -197,6 +217,7 @@ class Client(object):
 			return
 
 if (platform.system()=="Linux")|(platform.system()=="Darwin"):
+	logfile="/var/log/NVDARemoteServer.log"
 	import daemon
 	class serverDaemon(daemon.Daemon):
 		def run(self):
@@ -207,6 +228,7 @@ if __name__ == "__main__":
 	#If debug is enabled, all platform checks are skipped
 	if 'debug' in sys.argv:
 		debug=True
+		logfile="NVDARemoteServer.log"
 		srv=Server(6837)
 		srv.run()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin'):
@@ -226,5 +248,6 @@ if __name__ == "__main__":
 			print "usage: %s start|stop|restart" % sys.argv[0]
 			sys.exit(2)
 	else:
+		logfile="NVDARemoteServer.log"
 		srv=Server(6837)
 		srv.run()
