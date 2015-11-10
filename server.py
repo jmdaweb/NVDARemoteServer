@@ -10,7 +10,7 @@ import platform
 debug=False
 logfile=""
 def printDebugMessage(msg):
-	print msg
+	print unicode(msg)
 
 class Server(object):
 	PING_TIME = 300
@@ -77,7 +77,6 @@ class Server(object):
 						continue
 					self.clients[sock].handle_data()
 				if time.time() - self.last_ping_time >= self.PING_TIME:
-					printDebugMessage("Sending ping to all connected clients...")
 					for client in self.clients.itervalues():
 						if client.password!="":
 							client.send(type='ping')
@@ -185,7 +184,7 @@ class Client(object):
 		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
-		printDebugMessage("Client "+str(self.id)+" joined channel "+unicode(self.password))
+		printDebugMessage("Client "+str(self.id)+" joined channel "+str(self.password))
 
 	def do_generate_key(self, obj):
 		res = str(random.randrange(1, 9))
