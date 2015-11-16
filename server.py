@@ -184,7 +184,9 @@ class Client(object):
 		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
-		printDebugMessage("Client "+str(self.id)+" joined channel "+str(self.password))
+		id=unicode(self.id)
+		password=unicode(self.password)
+		printDebugMessage("Client "+id+" joined channel "+password)
 
 	def do_generate_key(self, obj):
 		res = str(random.randrange(1, 9))
