@@ -7,10 +7,13 @@ import json
 import time
 import random
 import platform
+import codecs
 debug=False
 logfile=""
 def printDebugMessage(msg):
 	print unicode(msg)
+	if debug==False:
+		sys.stdout.flush()
 
 class Server(object):
 	PING_TIME = 300
@@ -41,7 +44,7 @@ class Server(object):
 		printDebugMessage("Initializing loggin system")
 		global logfile
 		try:
-			log=open(logfile, "w")
+			log=codecs.open(logfile, "w", "utf-8")
 			if debug==False:
 				sys.stdout=log
 				sys.stderr=log
