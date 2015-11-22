@@ -4,7 +4,7 @@
 .SH NAME
 NVDARemoteServer \- Manage quickly the NVDA Remote Server
 .SH SYNOPSIS
-NVDARemoteServer [start|stop|restart|status|enable|disable]
+NVDARemoteServer [start|stop|restart|status|enable|disable|debug|kill]
 .SH DESCRIPTION
 NVDARemoteServer is a script to control the NVDA Remote Server in an easy way. You can start, stop, restart, manage and view the status of the service.
 .SH OPTIONS
@@ -14,6 +14,8 @@ Restart: restarts the service.
 Status: gives information about the service.
 Enable: configures the service to run at system startup.
 Disable: configures the service to be started manually.
+Debug: starts the server in debug mode. You can see the server activity in the console. To stop the server, press ctrl+c
+Kill: sometimes the server gets completely frozen in some systems. Use this command to kill the process.
 .SH BUGS
 Report bugs to info@technow.es
 .SH AUTHOR

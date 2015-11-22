@@ -244,6 +244,8 @@ if __name__ == "__main__":
 				dm.stop()
 			elif "restart" == sys.argv[1]:
 				dm.restart()
+			elif "kill" == sys.argv[1]:
+				dm.kill()
 			else:
 				print "Unknown command"
 				sys.exit(2)
