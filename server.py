@@ -11,7 +11,7 @@ import codecs
 debug=False
 logfile=""
 def printDebugMessage(msg):
-	print unicode(msg)
+	print msg
 	if debug==False:
 		sys.stdout.flush()
 
@@ -187,9 +187,7 @@ class Client(object):
 		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
-		id=unicode(self.id)
-		password=unicode(self.password)
-		printDebugMessage("Client "+id+" joined channel "+password)
+		printDebugMessage("Client "+str(self.id)+" joined channel "+self.password)
 
 	def do_generate_key(self, obj):
 		res = str(random.randrange(1, 9))
@@ -232,6 +230,7 @@ if __name__ == "__main__":
 	#If debug is enabled, all platform checks are skipped
 	if 'debug' in sys.argv:
 		debug=True
+		sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
 		logfile="NVDARemoteServer.log"
 		srv=Server(6837)
 		srv.run()
