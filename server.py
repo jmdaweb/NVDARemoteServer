@@ -130,6 +130,7 @@ class Server(object):
 		for c in self.clients.values():
 			c.close()
 		printDebugMessage("Closing server socket...")
+		self.server_socket.shutdown(socket.SHUT_RDWR)
 		self.server_socket.close()
 
 	def sighandler(self, signum, frame):
@@ -197,6 +198,7 @@ class Client(object):
 		printDebugMessage("Client "+str(self.id)+" generated a key")
 
 	def close(self):
+		self.socket.shutdown(socket.SHUT_RDWR)
 		self.socket.close()
 		self.server.client_disconnected(self)
 
