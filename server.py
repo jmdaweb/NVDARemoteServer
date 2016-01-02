@@ -194,11 +194,23 @@ class Client(object):
 		printDebugMessage("Client "+str(self.id)+" joined channel "+self.password)
 
 	def do_generate_key(self, obj):
+		res=self.generate_key()
+		while self.check_key(res):
+			res=self.generate_key()
+		self.send(type='generate_key', key=res)
+		printDebugMessage("Client "+str(self.id)+" generated a key")
+
+	def generate_key(self):
 		res = str(random.randrange(1, 9))
 		for n in xrange(6):
 			res += str(random.randrange(0, 9))
-		self.send(type='generate_key', key=res)
-		printDebugMessage("Client "+str(self.id)+" generated a key")
+		return res
+
+	def check_key(self, key):
+		for v in self.server.clients.itervalues():
+			if v.password==key:
+				return True
+		return False
 
 	def close(self):
 		try:
