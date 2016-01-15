@@ -58,9 +58,11 @@ You need Python 2.7.x for x64 installed and the pywin32 and py2exe packages. The
 ##Running
 
 Before you start, check that the tcp port 6837 is allowed through your firewall.
+On Unix platforms, including Mac Os x, there is a script located in /usr/bin called NVDARemoteServer. You can run this script without parameters to get a short help message.
 If you want to start the server in debugging mode (useful to see activity and errors) run:
 NVDARemoteServer debug
-On Unix platforms, including Mac Os x, there is a script located in /usr/bin called NVDARemoteServer. You can run this script without parameters to get a short help message. To start the server, run:
+On most platforms, you can stop the server by pressing ctrl+c if it is running in this mode.
+To start the server, run:
 NVDARemoteServer start
 To stop it, run:
 NVDARemoteServer stop
