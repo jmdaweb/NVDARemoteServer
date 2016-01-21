@@ -10,6 +10,11 @@ import platform
 import codecs
 debug=False
 logfile=""
+import traceback
+def printError():
+	exc, type, trace=sys.exc_info()
+	traceback.print_exception(exc, type, trace)
+
 def printDebugMessage(msg):
 	print msg
 	if debug==False:
@@ -51,6 +56,7 @@ class Server(object):
 				printDebugMessage("Loggin system initialized.")
 		except:
 			printDebugMessage("Error opening NVDARemoteServer.log. Incorrect permissions or read only environment.")
+			printError()
 		try:
 			import signal
 			printDebugMessage("Configuring signal handlers")
@@ -59,6 +65,7 @@ class Server(object):
 				signal.signal(signal.SIGTERM, self.sighandler)
 		except:
 			printDebugMessage("Error setting handler for signals")
+			printError()
 		self.running = True
 		self.last_ping_time = time.time()
 		printDebugMessage("NVDA Remote Server is ready.")
@@ -67,7 +74,7 @@ class Server(object):
 				try:
 					r, w, e = select.select(self.client_sockets+[self.server_socket], [], self.client_sockets, 60)
 				except select.error:
-					pass
+					printError()
 				if not self.running:
 					printDebugMessage("Shuting down server...")
 					break
@@ -86,14 +93,12 @@ class Server(object):
 					self.last_ping_time = time.time()
 			self.close()
 		except:
-			import traceback
-			exc, type, trace=sys.exc_info()
-			traceback.print_exception(exc, type, trace)
+			printError()
 		finally:
 			try:
 				log.close()
 			except:
-				pass
+				printError()
 
 	def accept_new_connection(self):
 		try:
@@ -101,6 +106,7 @@ class Server(object):
 			printDebugMessage("New incoming connection")
 		except:
 			printDebugMessage("Error while accepting a new connection.")
+			printError()
 			return
 		printDebugMessage("Setting socket options...")
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
@@ -133,7 +139,7 @@ class Server(object):
 		try:
 			self.server_socket.shutdown(socket.SHUT_RDWR)
 		except:
-			pass
+			printError()
 		self.server_socket.close()
 
 	def sighandler(self, signum, frame):
@@ -156,6 +162,7 @@ class Client(object):
 			data = self.buffer + self.socket.recv(8192)
 		except:
 			printDebugMessage("Socket error in client "+str(self.id)+" while receiving data")
+			printError()
 			self.close()
 			return
 		if data == '': #Disconnect
@@ -175,6 +182,7 @@ class Client(object):
 		try:
 			parsed = json.loads(line)
 		except ValueError:
+			printError()
 			self.close()
 			return
 		if 'type' not in parsed:
@@ -216,7 +224,7 @@ class Client(object):
 		try:
 			self.socket.shutdown(socket.SHUT_RDWR)
 		except:
-			pass
+			printError()
 		self.socket.close()
 		self.server.client_disconnected(self)
 
@@ -228,6 +236,7 @@ class Client(object):
 		except:
 			self.close()
 			printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
+			printError()
 
 	def send_to_others(self, **obj):
 		try:
@@ -236,6 +245,7 @@ class Client(object):
 					c.send(**obj)
 		except:
 			printDebugMessage("Error sending to others.")
+			printError()
 			return
 
 if (platform.system()=="Linux")|(platform.system()=="Darwin"):
