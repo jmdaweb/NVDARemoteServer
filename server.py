@@ -79,13 +79,14 @@ class Server(object):
 					printDebugMessage("Shuting down server...")
 					break
 				for sock in e:
-					printDebugMessage("The client "+str(self.clients[sock].id)+" has connection problems. Disconnecting...")
-					self.clients[sock].close()
+					id=self.searchId(sock)
+					printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...")
+					self.clients[id].close()
 				for sock in r:
 					if sock is self.server_socket:
 						self.accept_new_connection()
 						continue
-					self.clients[sock].handle_data()
+					self.clients[self.searchId(sock)].handle_data()
 				if time.time() - self.last_ping_time >= self.PING_TIME:
 					for client in self.clients.itervalues():
 						if client.password!="":
@@ -115,11 +116,11 @@ class Server(object):
 		printDebugMessage("Added a new client.")
 
 	def add_client(self, client):
-		self.clients[client.socket] = client
+		self.clients[client.id] = client
 		self.client_sockets.append(client.socket)
 
 	def remove_client(self, client):
-		del self.clients[client.socket]
+		del self.clients[client.id]
 		self.client_sockets.remove(client.socket)
 
 	def client_disconnected(self, client):
@@ -129,6 +130,11 @@ class Server(object):
 		if client.password!="":
 			printDebugMessage("Sending notification to other clients about client "+str(client.id))
 			client.send_to_others(type='client_left', user_id=client.id)
+
+	def searchId(self, socket):
+		for c in self.clients.itervalues():
+			if socket==c.socket:
+				return c.id
 
 	def close(self):
 		self.running = False
@@ -234,9 +240,9 @@ class Client(object):
 		try:
 			self.socket.sendall(msgstr)
 		except:
-			self.close()
 			printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
 			printError()
+			self.close()
 
 	def send_to_others(self, **obj):
 		try:
