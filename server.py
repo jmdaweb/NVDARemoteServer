@@ -165,7 +165,7 @@ class Client(object):
 
 	def handle_data(self):
 		try:
-			data = self.buffer + self.socket.recv(8192)
+			data = self.buffer + self.socket.recv(16384)
 		except:
 			printDebugMessage("Socket error in client "+str(self.id)+" while receiving data")
 			printError()
