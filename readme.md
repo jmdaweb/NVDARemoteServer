@@ -81,4 +81,15 @@ On Windows: NVDARemoteServer.log is located inside the program folder.
 
 ##known problems
 
-There aren't known problems at this time.
+###Installing on Mac os x El Capitan and later
+
+Mac os x El Capitan adds a new feature called system integrity protection to prevent malware from modifying system files. If this feature is enabled, you won't be able to install NVDA Remote Server on your Mac.
+If you want to disable it, follow these steps:
+
+* Reboot your system. While rebooting, hold the command+r key to enter in recovery mode.
+* Go to the utilities menu, and choose terminal.
+* Type the following command: csrutil disable
+* Reboot your system and go back to the main operating system.
+* Install NVDA Remote Server.
+
+Caution! Disabling system integrity protection is a security risk. To enable it back, run csrutil enable in recovery mode.
