@@ -1,6 +1,6 @@
 # Maintainer: Technow <info@technow.es>
 pkgname=NVDARemoteServer
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 epoch=
 pkgdesc=""

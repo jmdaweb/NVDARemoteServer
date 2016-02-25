@@ -18,7 +18,7 @@ if __name__ == '__main__':
   name = "NVDARemote server",
   author = "Technow",
   author_email = "info@technow.es",
-  version = "1.0",
+  version = "1.1",
   url = "http://remote.technow.es",
   data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd"])],
 options = {
