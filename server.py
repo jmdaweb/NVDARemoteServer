@@ -60,7 +60,7 @@ class Server(object):
 		try:
 			import signal
 			printDebugMessage("Configuring signal handlers")
-			if platform.system()=='Linux':
+			if (platform.system()=='Linux')|(platform.system()=='Darwin'):
 				signal.signal(signal.SIGINT, self.sighandler)
 				signal.signal(signal.SIGTERM, self.sighandler)
 		except:
