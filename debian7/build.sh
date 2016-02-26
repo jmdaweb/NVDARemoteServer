@@ -21,4 +21,4 @@ chmod -x nvda-remote-server_1.1/usr/share/doc/nvda-remote-server/copyright
 chmod -x nvda-remote-server_1.1/usr/share/man/man1/NVDARemoteServer.1.gz
 chmod -x nvda-remote-server_1.1/usr/share/doc/nvda-remote-server/changelog.Debian.gz
 #build the package
-dpkg-deb --build nvda-remote-server_1.0
+dpkg-deb --build nvda-remote-server_1.1
