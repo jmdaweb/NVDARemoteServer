@@ -11,7 +11,7 @@ class NVDARemoteService(win32serviceutil.ServiceFramework):
 	def __init__(self, args):
 		win32serviceutil.ServiceFramework.__init__(self, args)
 		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
-		self.srv=server.Server(6837)
+		self.srv=server.Server(6837, service=True)
 		server.logfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.log")
 
 	def SvcStop(self):

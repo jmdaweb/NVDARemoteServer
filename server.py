@@ -23,30 +23,35 @@ def printDebugMessage(msg):
 class Server(object):
 	PING_TIME = 300
 
-	def __init__(self, port, bind_host=''):
+	def __init__(self, port, bind_host='', service=False):
 		self.port = port
 		#Maps client sockets to clients
 		self.clients = {}
 		self.client_sockets = []
 		self.running = False
-		printDebugMessage("Initialized instance variables")
+		self.service=service
+		if service==False:
+			printDebugMessage("Initialized instance variables")
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		printDebugMessage("Socket created.")
+		if service==False:
+			printDebugMessage("Socket created.")
 		if hasattr(sys, 'frozen'):
 			certfile=os.path.join(sys.prefix, 'server.pem')
 		else:
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile)
-		printDebugMessage("Enabled ssl in socket.")
-		# This reuses the port and avoid "Address already in use" errors.
-		printDebugMessage("Setting socket options...")
+		if service==False:
+			printDebugMessage("Enabled ssl in socket.")
+			printDebugMessage("Setting socket options...")
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, self.port))
 		self.server_socket.listen(5)
-		printDebugMessage("Socket has started listening on port "+str(self.port))
+		if service==False:
+			printDebugMessage("Socket has started listening on port "+str(self.port))
 
 	def run(self):
-		printDebugMessage("Initializing loggin system")
+		if self.service==False:
+			printDebugMessage("Initializing loggin system")
 		global logfile
 		try:
 			log=codecs.open(logfile, "w", "utf-8")
