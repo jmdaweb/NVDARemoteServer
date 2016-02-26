@@ -36,7 +36,7 @@ You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the i
 
 3. Run the script: ./build.sh
 
-4. Install the generated package using Finder or the terminal.
+4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: sudo installer -pkg NVDARemoteServer.pkg -target /
 
 ###Building for Arch based distributions
 
@@ -107,6 +107,7 @@ On Windows: NVDARemoteServer.log is located inside the program folder.
 ###Installing on Mac os x El Capitan and later
 
 Mac os x El Capitan adds a new feature called system integrity protection to prevent malware from modifying system files. If this feature is enabled, you won't be able to install NVDA Remote Server on your Mac.
+
 If you want to disable it, follow these steps:
 
 * Reboot your system. While rebooting, hold the command+r key to enter in recovery mode.
