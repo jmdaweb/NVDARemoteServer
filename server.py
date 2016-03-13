@@ -181,7 +181,7 @@ class Client(object):
 			self.close()
 			return
 		if '\n' not in data:
-			self.buffer += data
+			self.buffer = data
 			return
 		self.buffer = ""
 		while '\n' in data:
