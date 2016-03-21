@@ -8,6 +8,30 @@ import time
 import random
 import platform
 import codecs
+from functools import wraps
+protocol="SSL v 23"
+
+#use the higuest available ssl protocol version
+def sslwrap(func):
+	@wraps(func)
+	def bar(*args, **kw):
+		global protocol
+		if hasattr(ssl, 'PROTOCOL_TLSv1_2'):
+			kw['ssl_version'] = ssl.PROTOCOL_TLSv1_2
+			protocol="TLS v 1.2"
+		elif hasattr(ssl, 'PROTOCOL_TLSv1_1'):
+			kw['ssl_version'] = ssl.PROTOCOL_TLSv1_1
+			protocol="TLS v 1.1"
+		elif hasattr(ssl, 'PROTOCOL_TLSv1'):
+			kw['ssl_version'] = ssl.PROTOCOL_TLSv1
+			protocol="TLS v 1"
+		elif hasattr(ssl, 'PROTOCOL_SSLv3'):
+			kw['ssl_version'] = ssl.PROTOCOL_SSLv3
+			protocol="SSL v 3"
+		return func(*args, **kw)
+	return bar
+
+ssl.wrap_socket = sslwrap(ssl.wrap_socket)
 debug=False
 logfile=""
 import traceback
@@ -32,21 +56,24 @@ class Server(object):
 		self.service=service
 		if service==False:
 			printDebugMessage("Initialized instance variables")
+		self.createServerSocket(port, bind_host)
+
+	def createServerSocket(self, port, bind_host):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		if service==False:
+		if self.service==False:
 			printDebugMessage("Socket created.")
 		if hasattr(sys, 'frozen'):
 			certfile=os.path.join(sys.prefix, 'server.pem')
 		else:
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile)
-		if service==False:
+		if self.service==False:
 			printDebugMessage("Enabled ssl in socket.")
 			printDebugMessage("Setting socket options...")
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, self.port))
 		self.server_socket.listen(5)
-		if service==False:
+		if self.service==False:
 			printDebugMessage("Socket has started listening on port "+str(self.port))
 
 	def run(self):
@@ -74,26 +101,30 @@ class Server(object):
 		self.running = True
 		self.last_ping_time = time.time()
 		printDebugMessage("NVDA Remote Server is ready.")
+		printDebugMessage("The server is using "+protocol)
 		try:
 			while self.running:
 				try:
 					r, w, e = select.select(self.client_sockets+[self.server_socket], [], self.client_sockets, 60)
-				except select.error:
+				except:
 					printError()
 				if not self.running:
 					printDebugMessage("Shuting down server...")
 					break
 				for sock in e:
 					id=self.searchId(sock)
-					printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...")
-					self.clients[id].close()
+					if id!=0:
+						printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...")
+						self.clients[id].close()
 				for sock in r:
 					if sock is self.server_socket:
 						self.accept_new_connection()
 						continue
-					self.clients[self.searchId(sock)].handle_data()
+					id=self.searchId(sock)
+					if id!=0:
+						self.clients[id].handle_data()
 				if time.time() - self.last_ping_time >= self.PING_TIME:
-					for client in self.clients.itervalues():
+					for client in self.clients.values():
 						if client.password!="":
 							client.send(type='ping')
 					self.last_ping_time = time.time()
@@ -125,8 +156,8 @@ class Server(object):
 		self.client_sockets.append(client.socket)
 
 	def remove_client(self, client):
-		del self.clients[client.id]
 		self.client_sockets.remove(client.socket)
+		del self.clients[client.id]
 
 	def client_disconnected(self, client):
 		printDebugMessage("Client "+str(client.id)+" has disconnected.")
@@ -137,9 +168,10 @@ class Server(object):
 		printDebugMessage("Client "+str(client.id)+" removed.")
 
 	def searchId(self, socket):
-		for c in self.clients.itervalues():
+		for c in self.clients.values():
 			if socket==c.socket:
 				return c.id
+		return 0
 
 	def close(self):
 		self.running = False
@@ -226,7 +258,7 @@ class Client(object):
 		return res
 
 	def check_key(self, key):
-		for v in self.server.clients.itervalues():
+		for v in self.server.clients.values():
 			if v.password==key:
 				return True
 		return False
@@ -251,7 +283,7 @@ class Client(object):
 
 	def send_to_others(self, **obj):
 		try:
-			for c in self.server.clients.itervalues():
+			for c in self.server.clients.values():
 				if (c.password==self.password)&(c!=self):
 					c.send(**obj)
 		except:
