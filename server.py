@@ -86,6 +86,7 @@ class Server(object):
 				sys.stdout=log
 				sys.stderr=log
 				printDebugMessage("Loggin system initialized.")
+				printDebugMessage("The server is running with pid "+str(os.getpid()))
 		except:
 			printDebugMessage("Error opening NVDARemoteServer.log. Incorrect permissions or read only environment.")
 			printError()

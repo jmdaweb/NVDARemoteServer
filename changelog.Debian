@@ -1,0 +1,15 @@
+nvda-remote-server (1.1-1) stable; urgency=low
+
+  * Fixed lots of bugs
+    Closes: #2234567
+
+ -- Technow <info@technow.es>  Thu, 25 Feb 2016 18:50:00 +0530
+
+
+nvda-remote-server (1.0-1) stable; urgency=low
+
+  * First release
+    Closes: #1234567
+
+ -- Technow <info@technow.es>  Mon, 13 Jul 2015 18:50:00 +0530
+

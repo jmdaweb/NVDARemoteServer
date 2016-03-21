@@ -16,12 +16,9 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 
 ###Building for debian based distributions
 
-1. Navigate to the debian directory inside this repo.
-
+1. Navigate to the debian directory inside this repo (choose between Debian 7 or Debian 8).
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
-
 3. Run the script: sudo ./build.sh
-
 4. Install the package: sudo dpkg -i NVDARemoteServer.deb
 
 ###Building for Centos and RHL based distributions
@@ -31,21 +28,15 @@ You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the i
 ###Building for Mac Os x
 
 1. Navigate to the Mac Os x directory inside this repo.
-
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
-
 3. Run the script: ./build.sh
-
 4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: sudo installer -pkg NVDARemoteServer.pkg -target /
 
 ###Building for Arch based distributions
 
 1. Navigate to the Arch directory inside this repo.
-
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
-
 3. Run the script: ./build.sh
-
 4. Install the package with pacman: pacman -U NVDARemoteServer.pkg.tar.xz
 
 ###Building for Windows
