@@ -8,10 +8,10 @@ mkdir -p nvda-remote-server_1.1/usr/share/man/man1
 cp ../server.py ../server.pem ../daemon.py nvda-remote-server_1.1/usr/share/NVDARemoteServer
 cp ../manual/NVDARemoteServer.1 nvda-remote-server_1.1/usr/share/man/man1
 cp ../copyright nvda-remote-server_1.1/usr/share/doc/nvda-remote-server
-cp ../changelog.debian nvda-remote-server_1.1/usr/share/doc/nvda-remote-server
+cp ../changelog.Debian nvda-remote-server_1.1/usr/share/doc/nvda-remote-server
 #compress manual and changelog
 gzip -9 nvda-remote-server_1.1/usr/share/man/man1/NVDARemoteServer.1
-gzip -9 nvda-remote-server_1.1/usr/share/doc/nvda-remote-server/changelog.debian
+gzip -9 nvda-remote-server_1.1/usr/share/doc/nvda-remote-server/changelog.Debian
 #change permissions
 chown -R root.root nvda-remote-server_1.1
 chmod -R 755 nvda-remote-server_1.1
