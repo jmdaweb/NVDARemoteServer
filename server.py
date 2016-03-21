@@ -85,17 +85,18 @@ class Server(object):
 			if debug==False:
 				sys.stdout=log
 				sys.stderr=log
-				printDebugMessage("Loggin system initialized.")
-				printDebugMessage("The server is running with pid "+str(os.getpid()))
+			printDebugMessage("Loggin system initialized.")
 		except:
 			printDebugMessage("Error opening NVDARemoteServer.log. Incorrect permissions or read only environment.")
 			printError()
 		try:
 			import signal
-			printDebugMessage("Configuring signal handlers")
-			if (platform.system()=='Linux')|(platform.system()=='Darwin'):
+			if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN')):
+				printDebugMessage("Configuring signal handlers")
 				signal.signal(signal.SIGINT, self.sighandler)
 				signal.signal(signal.SIGTERM, self.sighandler)
+			else:
+				printDebugMessage("Warning: this server has not been tested on your platform. We don't have added signals handlers here to avoid errors. Probably you will have to kill the process manually to stop the server.")
 		except:
 			printDebugMessage("Error setting handler for signals")
 			printError()
@@ -103,6 +104,7 @@ class Server(object):
 		self.last_ping_time = time.time()
 		printDebugMessage("NVDA Remote Server is ready.")
 		printDebugMessage("The server is using "+protocol)
+		printDebugMessage("The server is running with pid "+str(os.getpid()))
 		try:
 			while self.running:
 				try:

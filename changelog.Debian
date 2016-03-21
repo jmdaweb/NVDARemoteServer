@@ -1,3 +1,11 @@
+nvda-remote-server (1.2-1) stable; urgency=low
+
+  * Security and stability improvements
+    Closes: #3234567
+
+ -- Technow <info@technow.es>  Mon, 21 Mar 2016 15:42:00 +0530
+
+
 nvda-remote-server (1.1-1) stable; urgency=low
 
   * Fixed lots of bugs

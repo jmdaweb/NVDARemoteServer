@@ -1,5 +1,5 @@
 Name: NVDARemoteServer
-Version: 1.1
+Version: 1.2
 Release: 1.el7
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
@@ -50,6 +50,8 @@ NVDARemoteServer stop
 /usr/share/man/man1/NVDARemoteServer.1.gz
 %doc LICENSE
 %changelog
+* Mon Mar 21 2016 Technow <info@technow.es> - 1.2-1
+- Security and stability improvements
 * Thu Feb 25 2016 Technow <info@technow.es> - 1.1-1
 - Fixed lots of bugs
 * Tue Jul 21 2015 Technow <info@technow.es> - 1.0-1

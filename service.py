@@ -16,7 +16,7 @@ class NVDARemoteService(win32serviceutil.ServiceFramework):
 
 	def SvcStop(self):
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-		self.srv.close()
+		self.srv.running=False
 		win32event.SetEvent(self.hWaitStop)
 
 	def SvcDoRun(self):
