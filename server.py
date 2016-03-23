@@ -41,8 +41,7 @@ def printError():
 
 def printDebugMessage(msg):
 	print msg
-	if debug==False:
-		sys.stdout.flush()
+	sys.stdout.flush()
 
 class Server(object):
 	PING_TIME = 300
@@ -228,8 +227,10 @@ class Client(object):
 		try:
 			parsed = json.loads(line)
 		except ValueError:
+			#we don't understand the parsed data, but we can send it to all clients in this channel
 			printError()
-			self.close()
+			printDebugMessage("parse error, sending raw message")
+			self.send_data_to_others(line+"\n")
 			return
 		if 'type' not in parsed:
 			return
@@ -277,12 +278,25 @@ class Client(object):
 	def send(self, type, **kwargs):
 		msg = dict(type=type, **kwargs)
 		msgstr = json.dumps(msg)+"\n"
+		self.socket_send(msgstr)
+
+	def socket_send(self, msgstr):
 		try:
 			self.socket.sendall(msgstr)
 		except:
 			printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
 			printError()
 			self.close()
+
+	def send_data_to_others(self, data):
+		try:
+			for c in self.server.clients.values():
+				if (c.password==self.password)&(c!=self):
+					c.socket_send(data)
+		except:
+			printDebugMessage("Error sending to others.")
+			printError()
+			return
 
 	def send_to_others(self, **obj):
 		try:
