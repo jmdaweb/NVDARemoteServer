@@ -49,6 +49,7 @@ class Server(object):
 
 	def __init__(self, port, bind_host='', service=False):
 		self.port = port
+		self.bind_host=bind_host
 		#Maps client sockets to clients
 		self.clients = {}
 		self.client_sockets = []
@@ -152,6 +153,14 @@ class Server(object):
 		except:
 			printDebugMessage("Error while accepting a new connection.")
 			printError()
+			try:
+				self.server_socket.shutdown(socket.SHUT_RDWR)
+			except:
+				printError()
+			self.server_socket.close()
+			del self.server_socket
+			printDebugMessage("The server socket has been closed and deleted. The server will create it again.")
+			self.createServerSocket(self.port, self.bind_host)
 			return
 		printDebugMessage("Setting socket options...")
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
