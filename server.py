@@ -8,6 +8,7 @@ import time
 import random
 import platform
 import codecs
+import struct
 from functools import wraps
 protocol="SSL v 23"
 
@@ -69,6 +70,7 @@ class Server(object):
 		if self.service==False:
 			printDebugMessage("Enabled ssl in socket.")
 			printDebugMessage("Setting socket options...")
+		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, self.port))
 		self.server_socket.listen(5)
@@ -107,7 +109,7 @@ class Server(object):
 		try:
 			while self.running:
 				try:
-					r, w, e = select.select(self.client_sockets+[self.server_socket], [], self.client_sockets, 60)
+					r, w, e = select.select(self.client_sockets+[self.server_socket], self.client_sockets, self.client_sockets, 60)
 				except:
 					printError()
 				if not self.running:
@@ -118,6 +120,10 @@ class Server(object):
 					if id!=0:
 						printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...")
 						self.clients[id].close()
+				for sock in w:
+					id=self.searchId(sock)
+					if id!=0:
+						self.clients[id].confirmSend()
 				for sock in r:
 					if sock is self.server_socket:
 						self.accept_new_connection()
@@ -149,6 +155,8 @@ class Server(object):
 			return
 		printDebugMessage("Setting socket options...")
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, struct.pack('LL', 60, 0))
 		client = Client(server=self, socket=client_sock)
 		self.add_client(client)
 		printDebugMessage("Added a new client.")
@@ -170,10 +178,12 @@ class Server(object):
 		printDebugMessage("Client "+str(client.id)+" removed.")
 
 	def searchId(self, socket):
+		id=0
 		for c in self.clients.values():
 			if socket==c.socket:
-				return c.id
-		return 0
+				id=c.id
+				break
+		return id
 
 	def close(self):
 		self.running = False
@@ -198,6 +208,7 @@ class Client(object):
 		self.server = server
 		self.socket = socket
 		self.buffer = ""
+		self.buffer2=""
 		self.password=""
 		self.id = Client.id + 1
 		Client.id += 1
@@ -262,10 +273,12 @@ class Client(object):
 		return res
 
 	def check_key(self, key):
+		check=False
 		for v in self.server.clients.values():
 			if v.password==key:
-				return True
-		return False
+				check=True
+				break
+		return check
 
 	def close(self):
 		try:
@@ -281,12 +294,17 @@ class Client(object):
 		self.socket_send(msgstr)
 
 	def socket_send(self, msgstr):
-		try:
-			self.socket.sendall(msgstr)
-		except:
-			printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
-			printError()
-			self.close()
+		self.buffer2=self.buffer2+msgstr
+
+	def confirmSend(self):
+		if self.buffer2!="":
+			try:
+				self.socket.sendall(self.buffer2)
+				self.buffer2=""
+			except:
+				printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
+				printError()
+				self.close()
 
 	def send_data_to_others(self, data):
 		try:
