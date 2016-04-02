@@ -1,0 +1,12 @@
+#!/bin/bash
+cd /usr/share/NVDARemoteServer
+openssl genrsa -out key.key 4096
+openssl req -new -key key.key -out cert.csr
+openssl x509 -req -days 3650 -in cert.csr -signkey key.key -out cert.crt
+rm -f server.pem
+mv key.key server.pem
+cat cert.crt >> server.pem
+rm -f cert.csr cert.crt
+echo Certificate successfully created.
+echo You must restart the server for the changes to take effect.
+exit

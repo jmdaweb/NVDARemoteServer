@@ -7,20 +7,22 @@ def get_data():
  if platform.architecture()[0][:2] == "32":
   return [
   ("Microsoft.VC90.CRT", glob("windows/msvc32/Microsoft.VC90.CRT/*")),
-  ("Microsoft.VC90.MFC", glob("windows/msvc32/Microsoft.VC90.MFC/*")),]
+  ("Microsoft.VC90.MFC", glob("windows/msvc32/Microsoft.VC90.MFC/*")),
+  ("", ["msvc32/openssl.exe"])]
  elif platform.architecture()[0][:2] == "64":
   return [
   ("Microsoft.VC90.CRT", glob("windows/msvc64/Microsoft.VC90.CRT/*")),
-  ("Microsoft.VC90.MFC", glob("windows/msvc64/Microsoft.VC90.MFC/*")),]
+  ("Microsoft.VC90.MFC", glob("windows/msvc64/Microsoft.VC90.MFC/*")),
+  ("", ["msvc64/openssl.exe"])]
 
 if __name__ == '__main__':
  setup(
   name = "NVDARemote server",
   author = "Technow",
   author_email = "info@technow.es",
-  version = "1.2",
+  version = "1.3",
   url = "http://remote.technow.es",
-  data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd"])],
+  data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd", "windows/NVDARemoteCertificate.cmd"])],
 options = {
    'py2exe': {   
     'optimize':2,
