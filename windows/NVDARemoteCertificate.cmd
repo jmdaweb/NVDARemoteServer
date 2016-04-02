@@ -1,6 +1,7 @@
 @echo off
 title NVDA Remote Server self-signed certificate generator
 cd %~dp0
+set OPENSSL_CONF=%~dp0openssl.cnf
 openssl genrsa -out key.key 4096
 openssl req -new -key key.key -out cert.csr
 openssl x509 -req -days 3650 -in cert.csr -signkey key.key -out cert.crt
