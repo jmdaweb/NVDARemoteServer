@@ -77,7 +77,7 @@ If the server freezes, run NVDARemoteServer kill to kill the process.
 
 On Centos 6, Centos 7, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. Remember to run these commands with sudo if you are an unprivileged user. You can run NVDARemoteServer status to see if the service is running.
 
-If you want to configure the service to run at system startup, run NVDARemoteServer enable
+If you want to configure the service to run at system startup, run NVDARemoteServer enable. Run NVDARemoteServer disable to configure the service to start manually.
 
 The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in console mode. To stop, simply close the console window or kill the process.
 
@@ -92,6 +92,16 @@ Do you run the server in production mode and it suddenly is stopped? Now you can
 On Linux and Mac Os x: go to /var/log/NVDARemoteServer.log
 
 On Windows: NVDARemoteServer.log is located inside the program folder.
+
+##Creating your own self-signed certificate
+
+The server includes a default self-signed certificate to encrypt connections. This certificate is also included in the official NVDA Remote add-on, so this is a big security risk.
+
+It is strongly recommended that you create your own certificate before starting the server for the first time. You can do it by running the NVDARemoteCertificate script on almost all platforms. The script takes no arguments. Follow the on-screen instructions to complete the process.
+
+The server will create a 4096 RSA private key and a certificate, and combine them in a single server.pem file. Once finished, if the server is running, restart it.
+
+On Windows, a pre-built OpenSSL version is included in the server directory. You can run NVDARemoteCertificate.cmd to create a certificate.
 
 ##known problems
 
