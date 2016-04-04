@@ -99,7 +99,7 @@ The server includes a default self-signed certificate to encrypt connections. Th
 
 It is strongly recommended that you create your own certificate before starting the server for the first time. You can do it by running the NVDARemoteCertificate script on almost all platforms. The script takes no arguments. Follow the on-screen instructions to complete the process.
 
-The server will create a 4096 RSA private key and a certificate, and combine them in a single server.pem file. Once finished, if the server is running, restart it.
+The script will create a 4096 bit RSA private key and a certificate, and combine them in a single server.pem file. Once finished, if the server is running, restart it.
 
 On Windows, a pre-built OpenSSL version is included in the server directory. You can run NVDARemoteCertificate.cmd to create a certificate.
 
