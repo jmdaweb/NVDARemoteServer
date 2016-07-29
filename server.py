@@ -34,7 +34,7 @@ def sslwrap(func):
 
 ssl.wrap_socket = sslwrap(ssl.wrap_socket)
 debug=False
-logfile=""
+logfile="NVDARemoteServer.log"
 import traceback
 def printError():
 	exc, type, trace=sys.exc_info()
@@ -348,10 +348,9 @@ if __name__ == "__main__":
 	if 'debug' in sys.argv:
 		debug=True
 		sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
-		logfile="NVDARemoteServer.log"
 		srv=Server(6837)
 		srv.run()
-	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
+	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:
@@ -370,6 +369,5 @@ if __name__ == "__main__":
 			print "usage: %s start|stop|restart" % sys.argv[0]
 			sys.exit(2)
 	else:
-		logfile="NVDARemoteServer.log"
 		srv=Server(6837)
 		srv.run()
