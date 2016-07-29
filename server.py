@@ -93,7 +93,7 @@ class Server(object):
 			printError()
 		try:
 			import signal
-			if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN')):
+			if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
 				printDebugMessage("Configuring signal handlers")
 				signal.signal(signal.SIGINT, self.sighandler)
 				signal.signal(signal.SIGTERM, self.sighandler)
@@ -335,7 +335,7 @@ class Client(object):
 			printError()
 			return
 
-if (platform.system()=="Linux")|(platform.system()=="Darwin"):
+if (platform.system()=="Linux")|(platform.system()=="Darwin")|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
 	logfile="/var/log/NVDARemoteServer.log"
 	import daemon
 	class serverDaemon(daemon.Daemon):
@@ -351,7 +351,7 @@ if __name__ == "__main__":
 		logfile="NVDARemoteServer.log"
 		srv=Server(6837)
 		srv.run()
-	elif (platform.system()=='Linux')|(platform.system()=='Darwin'):
+	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('CYGWIN'))|platform.system().startswith('MSYS')):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:

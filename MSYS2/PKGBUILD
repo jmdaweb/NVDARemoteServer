@@ -1,0 +1,40 @@
+# Maintainer: Technow <info@technow.es>
+pkgname=NVDARemoteServer
+pkgver=1.3
+pkgrel=1
+epoch=
+pkgdesc=""
+arch=('any')
+url="http://remote.technow.es"
+license=('GPL')
+groups=()
+depends=('python2')
+makedepends=()
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+noextract=()
+md5sums=()
+validpgpkeys=()
+
+prepare() {
+echo preparing...
+}
+
+build() {
+echo building...
+}
+
+check() {
+echo checking...
+}
+
+package() {
+	cp -r usr -t "$pkgdir/"
+}
