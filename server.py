@@ -351,7 +351,7 @@ if __name__ == "__main__":
 		logfile="NVDARemoteServer.log"
 		srv=Server(6837)
 		srv.run()
-	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('CYGWIN'))|platform.system().startswith('MSYS')):
+	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
 			if 'start' == sys.argv[1]:
