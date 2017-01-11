@@ -265,6 +265,11 @@ class Channel(Thread):
 		for client in self.clients.values():
 			client.send(type='ping')
 
+	def client_disconnected(self, client):
+		printDebugMessage("Client "+str(client.id)+" has disconnected.")
+		self.remove_client(client)
+		printDebugMessage("Client "+str(client.id)+" removed.")
+
 class Client(object):
 	id = 0
 
@@ -357,6 +362,7 @@ class Client(object):
 		except:
 			printError()
 		self.socket.close()
+		self.server.client_disconnected(self)
 
 	def send(self, type, **kwargs):
 		msg = dict(type=type, **kwargs)
