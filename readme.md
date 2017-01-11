@@ -21,6 +21,8 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 3. Run the script: sudo ./build.sh
 4. Install the package: sudo dpkg -i NVDARemoteServer.deb
 
+To uninstall it, run dpkg --purge nvda-remote-server
+
 ###Building for Centos and RHL based distributions
 
 You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the instructions included in that folders. Finally, install the package using rpm: rpm -U NVDARemoteServer.rpm
@@ -50,6 +52,14 @@ The binaries will be placed in the dist folder.
 ###Building for Windows x64
 
 You need Python 2.7.x for x64 installed and the pywin32 and py2exe packages. The steps are the same for Windows x86 and x64.
+
+###Building the Docker image
+
+You need Docker installed on a Linux system. Navigate to the docker directory and run:
+
+docker build -t nvda-remote-server .
+
+Change or add more tags if you plan to push the image to a Docker registry.
 
 ##Running
 
@@ -85,6 +95,12 @@ If you want to install the server as a system service, run service_manager.cmd a
 
 Run debug.cmd to start the server in debugging mode.
 
+If you want to run the server inside a Docker container, use a command similar to the following:
+
+docker run -d -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest
+
+You can change jmdaweb/nvda-remote-server:latest to your custom image name if you have built it. The --name argument specifies the container name. If you want to use a diferent port, change the first part after -p. The second must be always 6837.
+
 ##Log files
 
 Do you run the server in production mode and it suddenly is stopped? Now you can look at the following files:
@@ -92,6 +108,10 @@ Do you run the server in production mode and it suddenly is stopped? Now you can
 On Linux and Mac Os x: go to /var/log/NVDARemoteServer.log
 
 On Windows: NVDARemoteServer.log is located inside the program folder.
+
+On a Docker container: run docker logs containername. For example: docker logs my_nvda_remote
+
+Read the Docker documentation to see all available commands.
 
 ##Creating your own self-signed certificate
 
