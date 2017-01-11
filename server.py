@@ -45,15 +45,41 @@ def printDebugMessage(msg):
 	print msg
 	sys.stdout.flush()
 
-class Server(object):
+class baseServer(Thread):
+	def __init__(self):
+		super(baseServer, self).__init__()
+		self.clients={}
+		self.client_sockets=[]
+		self.running=False
+
+	def add_client(self, client):
+		self.clients[client.id] = client
+		self.client_sockets.append(client.socket)
+
+	def remove_client(self, client):
+		self.client_sockets.remove(client.socket)
+		del self.clients[client.id]
+
+	def client_disconnected(self, client):
+		printDebugMessage("Client "+str(client.id)+" has disconnected.")
+		self.remove_client(client)
+		printDebugMessage("Client "+str(client.id)+" removed.")
+
+	def searchId(self, socket):
+		id=0
+		for c in self.clients.values():
+			if socket==c.socket:
+				id=c.id
+				break
+		return id
+
+class Server(baseServer):
 	PING_TIME = 300
 
 	def __init__(self, port, bind_host='', service=False):
+		super(Server, self).__init__()
 		self.port = port
 		self.bind_host=bind_host
-		#Maps client sockets to clients
-		self.clients = {}
-		self.client_sockets = []
 		self.channels={}
 		self.running = False
 		self.service=service
@@ -171,27 +197,6 @@ class Server(object):
 		self.add_client(client)
 		printDebugMessage("Added a new client.")
 
-	def add_client(self, client):
-		self.clients[client.id] = client
-		self.client_sockets.append(client.socket)
-
-	def remove_client(self, client):
-		self.client_sockets.remove(client.socket)
-		del self.clients[client.id]
-
-	def client_disconnected(self, client):
-		printDebugMessage("Client "+str(client.id)+" has disconnected.")
-		self.remove_client(client)
-		printDebugMessage("Client "+str(client.id)+" removed.")
-
-	def searchId(self, socket):
-		id=0
-		for c in self.clients.values():
-			if socket==c.socket:
-				id=c.id
-				break
-		return id
-
 	def close(self):
 		self.running = False
 		printDebugMessage("Closing channels...")
@@ -211,19 +216,17 @@ class Server(object):
 		printDebugMessage("Received system signal. Waiting for server stop.")
 		self.running=False
 
-class Channel(Thread):
+class Channel(baseServer):
 	def __init__(self, firstclient, server, password):
 		super(Channel, self).__init__()
-		self.clients={}
 		self.clients[firstclient.id]=firstclient
-		self.client_sockets=[firstclient.socket]
-		self.active=False
+		self.client_sockets.append(firstclient.socket)
 		self.server=server
 		self.password=password
 
 	def run(self):
-		self.active=True
-		while self.active and len(self.clients.values())>0:
+		self.running=True
+		while self.running and len(self.clients.values())>0:
 			try:
 				r, w, e = select.select(self.client_sockets, self.client_sockets, self.client_sockets, 60)
 			except:
@@ -245,30 +248,9 @@ class Channel(Thread):
 			c.close()
 		del self.server.channels[self.password]
 
-	def add_client(self, client):
-		self.clients[client.id] = client
-		self.client_sockets.append(client.socket)
-
-	def remove_client(self, client):
-		self.client_sockets.remove(client.socket)
-		del self.clients[client.id]
-
-	def searchId(self, socket):
-		id=0
-		for c in self.clients.values():
-			if socket==c.socket:
-				id=c.id
-				break
-		return id
-
 	def ping(self):
 		for client in self.clients.values():
 			client.send(type='ping')
-
-	def client_disconnected(self, client):
-		printDebugMessage("Client "+str(client.id)+" has disconnected.")
-		self.remove_client(client)
-		printDebugMessage("Client "+str(client.id)+" removed.")
 
 class Client(object):
 	id = 0
@@ -404,21 +386,23 @@ class Client(object):
 			printError()
 			return
 
+def startAndWait():
+	srv=Server(6837)
+	srv.run()
+
 if (platform.system()=="Linux")|(platform.system()=="Darwin")|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
 	logfile="/var/log/NVDARemoteServer.log"
 	import daemon
 	class serverDaemon(daemon.Daemon):
 		def run(self):
-			srv=Server(6837)
-			srv.run()
+			startAndWait()
 
 if __name__ == "__main__":
 	#If debug is enabled, all platform checks are skipped
 	if 'debug' in sys.argv:
 		debug=True
 		sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
-		srv=Server(6837)
-		srv.run()
+		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
 		if len(sys.argv) == 2:
@@ -438,5 +422,4 @@ if __name__ == "__main__":
 			print "usage: %s start|stop|restart" % sys.argv[0]
 			sys.exit(2)
 	else:
-		srv=Server(6837)
-		srv.run()
+		startAndWait()
