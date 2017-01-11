@@ -9,6 +9,7 @@ import random
 import platform
 import codecs
 import struct
+from threading import Thread, Lock
 from functools import wraps
 protocol="SSL v 23"
 
@@ -53,6 +54,7 @@ class Server(object):
 		#Maps client sockets to clients
 		self.clients = {}
 		self.client_sockets = []
+		self.channels={}
 		self.running = False
 		self.service=service
 		if service==False:
@@ -133,9 +135,8 @@ class Server(object):
 					if id!=0:
 						self.clients[id].handle_data()
 				if time.time() - self.last_ping_time >= self.PING_TIME:
-					for client in self.clients.values():
-						if client.password!="":
-							client.send(type='ping')
+					for channel in self.channels.values():
+						channel.ping()
 					self.last_ping_time = time.time()
 			self.close()
 		except:
@@ -180,9 +181,6 @@ class Server(object):
 
 	def client_disconnected(self, client):
 		printDebugMessage("Client "+str(client.id)+" has disconnected.")
-		if client.password!="":
-			printDebugMessage("Sending notification to other clients about client "+str(client.id))
-			client.send_to_others(type='client_left', user_id=client.id)
 		self.remove_client(client)
 		printDebugMessage("Client "+str(client.id)+" removed.")
 
@@ -196,6 +194,9 @@ class Server(object):
 
 	def close(self):
 		self.running = False
+		printDebugMessage("Closing channels...")
+		for c in self.channels.values():
+			c.active=False
 		printDebugMessage("Disconnecting clients...")
 		for c in self.clients.values():
 			c.close()
@@ -210,6 +211,60 @@ class Server(object):
 		printDebugMessage("Received system signal. Waiting for server stop.")
 		self.running=False
 
+class Channel(Thread):
+	def __init__(self, firstclient, server, password):
+		super(Channel, self).__init__()
+		self.clients={}
+		self.clients[firstclient.id]=firstclient
+		self.client_sockets=[firstclient.socket]
+		self.active=False
+		self.server=server
+		self.password=password
+
+	def run(self):
+		self.active=True
+		while self.active and len(self.clients.values())>0:
+			try:
+				r, w, e = select.select(self.client_sockets, self.client_sockets, self.client_sockets, 60)
+			except:
+				printError()
+			for sock in e:
+				id=self.searchId(sock)
+				if id!=0:
+					printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...")
+					self.clients[id].close()
+			for sock in w:
+				id=self.searchId(sock)
+				if id!=0:
+					self.clients[id].confirmSend()
+			for sock in r:
+				id=self.searchId(sock)
+				if id!=0:
+					self.clients[id].handle_data()
+		for c in self.clients.values():
+			c.close()
+		del self.server.channels[self.password]
+
+	def add_client(self, client):
+		self.clients[client.id] = client
+		self.client_sockets.append(client.socket)
+
+	def remove_client(self, client):
+		self.client_sockets.remove(client.socket)
+		del self.clients[client.id]
+
+	def searchId(self, socket):
+		id=0
+		for c in self.clients.values():
+			if socket==c.socket:
+				id=c.id
+				break
+		return id
+
+	def ping(self):
+		for client in self.clients.values():
+			client.send(type='ping')
+
 class Client(object):
 	id = 0
 
@@ -221,6 +276,7 @@ class Client(object):
 		self.password=""
 		self.id = Client.id + 1
 		Client.id += 1
+		self.sendLock=Lock()
 
 	def handle_data(self):
 		try:
@@ -263,6 +319,12 @@ class Client(object):
 
 	def do_join(self, obj):
 		self.password = obj.get('channel', None)
+		if not self.password in self.server.channels.keys():
+			self.server.channels[self.password]=Channel(self, self.server, self.password)
+			self.server.channels[self.password].start()
+		self.server.remove_client(self)
+		self.server=self.server.channels[self.password]
+		self.server.add_client(self)
 		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
@@ -283,7 +345,7 @@ class Client(object):
 
 	def check_key(self, key):
 		check=False
-		for v in self.server.clients.values():
+		for v in self.server.channels.values():
 			if v.password==key:
 				check=True
 				break
@@ -295,7 +357,6 @@ class Client(object):
 		except:
 			printError()
 		self.socket.close()
-		self.server.client_disconnected(self)
 
 	def send(self, type, **kwargs):
 		msg = dict(type=type, **kwargs)
@@ -303,7 +364,9 @@ class Client(object):
 		self.socket_send(msgstr)
 
 	def socket_send(self, msgstr):
+		self.sendLock.acquire()
 		self.buffer2=self.buffer2+msgstr
+		self.sendLock.release()
 
 	def confirmSend(self):
 		if self.buffer2!="":
