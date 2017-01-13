@@ -138,3 +138,9 @@ If you want to disable it, follow these steps:
 * Install NVDA Remote Server.
 
 Caution! Disabling system integrity protection is a security risk. To enable it back, run csrutil enable in recovery mode.
+
+###Problems with the server in OpenVZ or Docker containers
+
+If you run a Debian 8 based OpenVZ or Docker container, don't install the Debian 8 package. It will fail and leave the installation in a bad state. In these containers, Systemd produces errors because it can't connect directly to the kernel.
+Solution: install Debian 7 package instead.
+
