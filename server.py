@@ -266,7 +266,7 @@ class Channel(baseServer):
 
 class CheckThread(Thread):
 	def __init__(self, channel):
-		super(self, CheckThread).__init__()
+		super(CheckThread, self).__init__()
 		self.daemon=True
 		self.channel=channel
 		self.server=channel.server
@@ -275,7 +275,7 @@ class CheckThread(Thread):
 
 	def run(self):
 		self.running=True
-		while running:
+		while self.running:
 			try:
 				self.channel.queue.get(True, self.timeout)
 				time.sleep(self.timeout)
