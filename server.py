@@ -10,6 +10,7 @@ import platform
 import codecs
 import struct
 from threading import Thread, Lock
+from Queue import Queue
 from functools import wraps
 protocol="SSL v 23"
 
@@ -48,6 +49,7 @@ def printDebugMessage(msg):
 class baseServer(Thread):
 	def __init__(self):
 		super(baseServer, self).__init__()
+		self.daemon=True
 		self.clients={}
 		self.client_sockets=[]
 		self.running=False
@@ -201,7 +203,7 @@ class Server(baseServer):
 		self.running = False
 		printDebugMessage("Closing channels...")
 		for c in self.channels.values():
-			c.active=False
+			c.running=False
 		printDebugMessage("Disconnecting clients...")
 		for c in self.clients.values():
 			c.close()
@@ -223,9 +225,13 @@ class Channel(baseServer):
 		self.client_sockets.append(firstclient.socket)
 		self.server=server
 		self.password=password
+		self.queue=Queue(0)
+		self.queue.put(None)
+		self.checkThread=CheckThread(self)
 
 	def run(self):
 		self.running=True
+		self.checkThread.start()
 		while self.running and len(self.clients.values())>0:
 			try:
 				r, w, e = select.select(self.client_sockets, self.client_sockets, self.client_sockets, 60)
@@ -244,13 +250,40 @@ class Channel(baseServer):
 				id=self.searchId(sock)
 				if id!=0:
 					self.clients[id].handle_data()
-		for c in self.clients.values():
-			c.close()
+			self.queue.put(None)
+		self.terminate()
+		self.checkThread.running=False
 		del self.server.channels[self.password]
 
 	def ping(self):
 		for client in self.clients.values():
 			client.send(type='ping')
+
+	def terminate(self):
+		for client in self.clients.values():
+			client.close()
+			self.client_disconnected(client)
+
+class CheckThread(Thread):
+	def __init__(self, channel):
+		super(self, CheckThread).__init__()
+		self.daemon=True
+		self.channel=channel
+		self.server=channel.server
+		self.timeout=10
+		self.running=False
+
+	def run(self):
+		self.running=True
+		while running:
+			try:
+				self.channel.queue.get(True, self.timeout)
+				time.sleep(self.timeout)
+			except:
+				self.channel.terminate()
+				del self.server.channels[self.channel.password]
+				self.channel._Thread__stop()
+				break
 
 class Client(object):
 	id = 0
