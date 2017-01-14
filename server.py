@@ -279,6 +279,7 @@ class CheckThread(Thread):
 				self.channel.queue.get(True, self.timeout)
 				time.sleep(self.timeout)
 			except:
+				printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...")
 				self.channel.terminate()
 				del self.server.channels[self.channel.password]
 				self.channel._Thread__stop()
