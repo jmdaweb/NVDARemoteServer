@@ -341,13 +341,15 @@ class Client(object):
 		self.password = obj.get('channel', None)
 		if not self.password in self.server.channels.keys():
 			self.server.channels[self.password]=Channel(self, self.server, self.password)
-			self.server.channels[self.password].start()
 		self.server.remove_client(self)
 		self.server=self.server.channels[self.password]
-		self.server.add_client(self)
+		if not self.id in self.server.clients.keys():
+			self.server.add_client(self)
 		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
+		if not self.server.isAlive():
+			self.server.start()
 		printDebugMessage("Client "+str(self.id)+" joined channel "+self.password)
 
 	def do_generate_key(self, obj):
