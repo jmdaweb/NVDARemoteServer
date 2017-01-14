@@ -1,3 +1,11 @@
+nvda-remote-server (1.4-1) stable; urgency=low
+
+  * The server is now threaded. Added support for more platforms and protocol v2.
+    Closes: #5234567
+
+ -- Jose Manuel Delicado <jmdaweb@hotmail.com>  Sat, 14 Jan 2017 18:40:00 +0530
+
+
 nvda-remote-server (1.3-1) stable; urgency=low
 
   * Bug fixes. New utility to generate certificates.

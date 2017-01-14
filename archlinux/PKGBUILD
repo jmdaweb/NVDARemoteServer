@@ -1,11 +1,11 @@
-# Maintainer: Technow <info@technow.es>
+# Maintainer: Jose Manuel Delicado <jmdaweb@hotmail.com>
 pkgname=NVDARemoteServer
-pkgver=1.3
+pkgver=1.4
 pkgrel=1
 epoch=
 pkgdesc=""
 arch=('any')
-url="http://remote.technow.es"
+url="https://github.com/jmdaweb/NVDARemoteServer"
 license=('GPL')
 groups=()
 depends=('python2')
