@@ -64,6 +64,9 @@ class baseServer(Thread):
 
 	def client_disconnected(self, client):
 		printDebugMessage("Client "+str(client.id)+" has disconnected.")
+		if client.password!="":
+			printDebugMessage("Sending notification to other clients about client "+str(client.id))
+			client.send_to_others(type='client_left', user_id=client.id)
 		self.remove_client(client)
 		printDebugMessage("Client "+str(client.id)+" removed.")
 
