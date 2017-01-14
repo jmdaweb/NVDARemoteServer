@@ -222,6 +222,7 @@ class Channel(baseServer):
 		super(Channel, self).__init__()
 		self.server=server
 		self.password=password
+		printDebugMessage("Created new channel with password"+password)
 		self.queue=Queue(0)
 		self.queue.put(None)
 		self.checkThread=CheckThread(self)
@@ -248,6 +249,7 @@ class Channel(baseServer):
 				if id!=0:
 					self.clients[id].handle_data()
 			self.queue.put(None)
+		printDebugMessage("Terminating channel with password "+self.password)
 		self.terminate()
 		self.checkThread.running=False
 		del self.server.channels[self.password]
