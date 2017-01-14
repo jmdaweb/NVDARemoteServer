@@ -83,7 +83,6 @@ class Server(baseServer):
 		self.port = port
 		self.bind_host=bind_host
 		self.channels={}
-		self.running = False
 		self.service=service
 		if service==False:
 			printDebugMessage("Initialized instance variables")
@@ -219,10 +218,8 @@ class Server(baseServer):
 		self.running=False
 
 class Channel(baseServer):
-	def __init__(self, firstclient, server, password):
+	def __init__(self, server, password):
 		super(Channel, self).__init__()
-		self.clients[firstclient.id]=firstclient
-		self.client_sockets.append(firstclient.socket)
 		self.server=server
 		self.password=password
 		self.queue=Queue(0)
@@ -340,11 +337,10 @@ class Client(object):
 	def do_join(self, obj):
 		self.password = obj.get('channel', None)
 		if not self.password in self.server.channels.keys():
-			self.server.channels[self.password]=Channel(self, self.server, self.password)
+			self.server.channels[self.password]=Channel(self.server, self.password)
 		self.server.remove_client(self)
 		self.server=self.server.channels[self.password]
-		if not self.id in self.server.clients.keys():
-			self.server.add_client(self)
+		self.server.add_client(self)
 		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=clients)
 		self.send_to_others(type='client_joined', user_id=self.id)
