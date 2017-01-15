@@ -66,7 +66,7 @@ class baseServer(Thread):
 		printDebugMessage("Client "+str(client.id)+" has disconnected.")
 		if client.password!="":
 			printDebugMessage("Sending notification to other clients about client "+str(client.id))
-			client.send_to_others(type='client_left', user_id=client.id)
+			client.send_to_others(type='client_left', user_id=client.id, client=client.as_dict())
 		self.remove_client(client)
 		printDebugMessage("Client "+str(client.id)+" removed.")
 
@@ -298,6 +298,8 @@ class Client(object):
 		self.buffer2=""
 		self.password=""
 		self.id = Client.id + 1
+		self.connection_type = None
+		self.protocol_version = 1
 		Client.id += 1
 		self.sendLock=Lock()
 
@@ -340,6 +342,9 @@ class Client(object):
 		if hasattr(self, fn):
 			getattr(self, fn)(parsed)
 
+	def as_dict(self):
+		return dict(id=self.id, connection_type=self.connection_type)
+
 	def do_join(self, obj):
 		self.password = obj.get('channel', None)
 		if not self.password in self.server.channels.keys():
@@ -347,12 +352,25 @@ class Client(object):
 		self.server.remove_client(self)
 		self.server=self.server.channels[self.password]
 		self.server.add_client(self)
+		self.connection_type = obj.get('connection_type')
+		clients = []
+		client_ids = []
+		for c in self.server.clients.values():
+			if c is not self and self.password==c.password:
+				clients.append(c.as_dict())
+				client_ids.append(c.id)
 		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
-		self.send(type='channel_joined', channel=self.password, user_ids=clients)
-		self.send_to_others(type='client_joined', user_id=self.id)
+		self.send(type='channel_joined', channel=self.password, user_ids=client_ids, clients=clients)
+		self.send_to_others(type='client_joined', user_id=self.id, client=self.as_dict())
 		if not self.server.isAlive():
 			self.server.start()
 		printDebugMessage("Client "+str(self.id)+" joined channel "+self.password)
+
+	def do_protocol_version(self, obj):
+		version = obj.get('version')
+		if not version:
+			return
+		self.protocol_version = version
 
 	def do_generate_key(self, obj):
 		res=self.generate_key()
@@ -383,8 +401,15 @@ class Client(object):
 		self.socket.close()
 		self.server.client_disconnected(self)
 
-	def send(self, type, **kwargs):
+	def send(self, type, origin=None, clients=None, client=None, **kwargs):
 		msg = dict(type=type, **kwargs)
+		if self.protocol_version > 1:
+			if origin:
+				msg['origin'] = origin
+			if clients:
+				msg['clients'] = clients
+			if client:
+				msg['client'] = client
 		msgstr = json.dumps(msg)+"\n"
 		self.socket_send(msgstr)
 
@@ -413,11 +438,13 @@ class Client(object):
 			printError()
 			return
 
-	def send_to_others(self, **obj):
+	def send_to_others(self, origin=None, **obj):
+		if origin is None:
+			origin = self.id
 		try:
 			for c in self.server.clients.values():
 				if (c.password==self.password)&(c!=self):
-					c.send(**obj)
+					c.send(origin=origin, **obj)
 		except:
 			printDebugMessage("Error sending to others.")
 			printError()
