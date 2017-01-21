@@ -18,10 +18,10 @@ def get_data():
 if __name__ == '__main__':
  setup(
   name = "NVDARemote server",
-  author = "Technow",
-  author_email = "info@technow.es",
+  author = "Jose Manuel Delicado",
+  author_email = "jmdaweb@hotmail.com",
   version = "1.4",
-  url = "http://remote.technow.es",
+  url = "https://github.com/jmdaweb/NVDARemoteServer",
   data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd", "windows/NVDARemoteCertificate.cmd"])],
 options = {
    'py2exe': {   
