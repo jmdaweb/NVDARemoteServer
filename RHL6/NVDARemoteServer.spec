@@ -1,10 +1,10 @@
 Name: NVDARemoteServer
-Version: 1.3
+Version: 1.4
 Release: 1.el6
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
 License: GPLv2
-URL: http://remote.technow.es
+URL: https://github.com/jmdaweb/NVDARemoteServer
 Requires: python
 Group: System Environment/Daemons
 BuildArch: noarch
@@ -54,6 +54,8 @@ chkconfig --del nvdaremoteserver
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %doc LICENSE
 %changelog
+* Sat Jan 14 2017 Jose Manuel Delicado <jmdaweb@hotmail.com> - 1.4-1
+- The server is now threaded. Support for more platforms and protocol v2.
 * Mon Apr 4 2016 Technow <info@technow.es> - 1.3-1
 - Bugs fixed. New utility to generate server certificates.
 * Mon Mar 21 2016 Technow <info@technow.es> - 1.2-1
