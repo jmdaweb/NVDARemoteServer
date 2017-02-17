@@ -272,20 +272,24 @@ class CheckThread(Thread):
 		self.daemon=True
 		self.channel=channel
 		self.server=channel.server
-		self.timeout=10
+		self.timeout=30
 		self.running=False
 
 	def run(self):
 		self.running=True
-		while self.running:
+		while True:
 			try:
+				#we have to consume all items in the queue, even if our channel has been closed
 				self.channel.queue.get(True, self.timeout)
-				time.sleep(self.timeout)
+				self.channel.queue.task_done()
 			except:
-				printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...")
-				self.channel.terminate()
-				del self.server.channels[self.channel.password]
-				self.channel._Thread__stop()
+				if self.running:
+					#the channel is blocked, we need to close it
+					printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...")
+					self.channel.terminate()
+					del self.server.channels[self.channel.password]
+					self.channel._Thread__stop()
+				printDebugMessage("Checker thread for channel "+self.channel.password+" has finished")
 				break
 
 class Client(object):
@@ -359,7 +363,6 @@ class Client(object):
 			if c is not self and self.password==c.password:
 				clients.append(c.as_dict())
 				client_ids.append(c.id)
-		clients = [c.id for c in self.server.clients.values() if c is not self and self.password==c.password]
 		self.send(type='channel_joined', channel=self.password, user_ids=client_ids, clients=clients)
 		self.send_to_others(type='client_joined', user_id=self.id, client=self.as_dict())
 		if not self.server.isAlive():
