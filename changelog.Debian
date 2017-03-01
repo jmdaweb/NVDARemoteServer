@@ -1,3 +1,11 @@
+nvda-remote-server (1.4.1-1) stable; urgency=low
+
+  * Fixed massive memory allocation problem.
+    Closes: #6234567
+
+ -- Jose Manuel Delicado <jmdaweb@hotmail.com>  Wed, 01 Mar 2017 22:36:00 +0530
+
+
 nvda-remote-server (1.4-1) stable; urgency=low
 
   * The server is now threaded. Support for more platforms and protocol v2.

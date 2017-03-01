@@ -1,5 +1,5 @@
 Name: NVDARemoteServer
-Version: 1.4
+Version: 1.4.1
 Release: 1.el7
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
@@ -55,6 +55,8 @@ NVDARemoteServer stop
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %doc LICENSE
 %changelog
+* Wed Mar 01 2017 Jose Manuel Delicado <jmdaweb@hotmail.com> - 1.4.1-1
+- Fixed massive memory allocation problem.
 * Sat Jan 14 2017 Jose Manuel Delicado <jmdaweb@hotmail.com> - 1.4-1
 - The server is now threaded. Support for more platforms and protocol v2.
 * Mon Apr 4 2016 Technow <info@technow.es> - 1.3-1
