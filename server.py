@@ -12,6 +12,7 @@ import struct
 from threading import Thread, Lock
 from Queue import Queue
 from functools import wraps
+from time import sleep
 protocol="SSL v 23"
 
 #use the higuest available ssl protocol version
@@ -235,6 +236,7 @@ class Channel(baseServer):
 		self.checkThread.start()
 		while self.running and len(self.clients.values())>0:
 			try:
+				sleep(0.01) # Prevent 100% cpu usage when there's at least one writeable socket
 				r, w, e = select.select(self.client_sockets, self.client_sockets, self.client_sockets, 60)
 			except:
 				printError()
