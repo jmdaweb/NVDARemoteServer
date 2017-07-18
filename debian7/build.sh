@@ -11,9 +11,9 @@ cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 nvda-remote-se
 cp ../copyright nvda-remote-server_1.4.1/usr/share/doc/nvda-remote-server
 cp ../changelog.Debian nvda-remote-server_1.4.1/usr/share/doc/nvda-remote-server
 #compress manual and changelog
-gzip -9 nvda-remote-server_1.4.1/usr/share/man/man1/NVDARemoteServer.1
-gzip -9 nvda-remote-server_1.4.1/usr/share/man/man1/NVDARemoteCertificate.1
-gzip -9 nvda-remote-server_1.4.1/usr/share/doc/nvda-remote-server/changelog.Debian
+gzip -n -9 nvda-remote-server_1.4.1/usr/share/man/man1/NVDARemoteServer.1
+gzip -n -9 nvda-remote-server_1.4.1/usr/share/man/man1/NVDARemoteCertificate.1
+gzip -n -9 nvda-remote-server_1.4.1/usr/share/doc/nvda-remote-server/changelog.Debian
 #change permissions
 chown -R root.root nvda-remote-server_1.4.1
 chmod -R 755 nvda-remote-server_1.4.1
