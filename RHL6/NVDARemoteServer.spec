@@ -26,9 +26,9 @@ install -m 0644 daemon.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/daemon.py
 install -m 0755 NVDARemoteServer $RPM_BUILD_ROOT/usr/bin/NVDARemoteServer
 install -m 0755 NVDARemoteCertificate $RPM_BUILD_ROOT/usr/bin/NVDARemoteCertificate
 install -m 0755 NVDARemoteServerd $RPM_BUILD_ROOT/etc/init.d/nvdaremoteserver
-gzip -9 NVDARemoteServer.1
+gzip -n -9 NVDARemoteServer.1
 install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
-gzip -9 NVDARemoteCertificate.1
+gzip -n -9 NVDARemoteCertificate.1
 install -m 0644 NVDARemoteCertificate.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteCertificate.1.gz
 %clean
 rm -rf $RPM_BUILD_ROOT
