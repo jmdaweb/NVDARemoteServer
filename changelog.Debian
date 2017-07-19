@@ -1,3 +1,11 @@
+nvda-remote-server (1.4.2-1) stable; urgency=low
+
+  * Fixed CPU usage eficiency problem.
+    Closes: #6234568
+
+ -- Jose Manuel Delicado <jmdaweb@hotmail.com>  Wed, 19 Jul 2017 18:23:00 +0530
+
+
 nvda-remote-server (1.4.1-1) stable; urgency=low
 
   * Fixed massive memory allocation problem.
