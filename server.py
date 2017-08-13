@@ -41,7 +41,10 @@ logfile="NVDARemoteServer.log"
 import traceback
 def printError():
 	exc, type, trace=sys.exc_info()
-	traceback.print_exception(exc, type, trace)
+	try:
+		traceback.print_exception(exc, type, trace)
+	except:
+		printDebugMessage("Can't print all stack trace, text encoding error")
 
 def printDebugMessage(msg):
 	print msg
@@ -226,7 +229,7 @@ class Channel(baseServer):
 		super(Channel, self).__init__()
 		self.server=server
 		self.password=password
-		printDebugMessage("Created new channel with password"+password)
+		printDebugMessage("Created new channel with password "+password)
 		self.queue=Queue(0)
 		self.queue.put(None)
 		self.checkThread=CheckThread(self)
