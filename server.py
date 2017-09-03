@@ -103,7 +103,7 @@ class Server(baseServer):
 			certfile=os.path.join(sys.prefix, 'server.pem')
 		else:
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
-		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile)
+		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile, server_side=True)
 		if self.service==False:
 			printDebugMessage("Enabled ssl in socket.")
 			printDebugMessage("Setting socket options...")
