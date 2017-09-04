@@ -15,6 +15,10 @@ from Queue import Queue
 from functools import wraps
 from time import sleep
 protocol="SSL v 23"
+import locale
+encoding=locale.getpreferredencoding()
+reload(sys)
+sys.setdefaultencoding(encoding)
 
 #use the higuest available ssl protocol version
 def sslwrap(func):
@@ -120,7 +124,7 @@ class Server(baseServer):
 			printDebugMessage("Initializing loggin system")
 		global logfile
 		try:
-			log=codecs.open(logfile, "w", "utf-8")
+			log=codecs.open(logfile, "w", encoding)
 			if debug==False:
 				sys.stdout=log
 				sys.stderr=log
@@ -474,7 +478,7 @@ if __name__ == "__main__":
 	#If debug is enabled, all platform checks are skipped
 	if 'debug' in sys.argv:
 		debug=True
-		sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
+		sys.stdout=codecs.getwriter(encoding)(sys.stdout)
 		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
