@@ -189,7 +189,7 @@ class Server(baseServer):
 	def accept_new_connection(self):
 		try:
 			client_sock, addr = self.server_socket.accept()
-			printDebugMessage("New incoming connection")
+			printDebugMessage("New incoming connection from address "+addr[0]+", port "+str(addr[1]))
 		except:
 			printDebugMessage("Error while accepting a new connection.")
 			printError()
