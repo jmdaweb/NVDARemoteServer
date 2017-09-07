@@ -43,6 +43,7 @@ def sslwrap(func):
 ssl.wrap_socket = sslwrap(ssl.wrap_socket)
 debug=False
 logfile="NVDARemoteServer.log"
+loggerThread=None
 import traceback
 def printError():
 	exc, type, trace=sys.exc_info()
@@ -52,8 +53,40 @@ def printError():
 		printDebugMessage("Can't print all stack trace, text encoding error")
 
 def printDebugMessage(msg):
-	print msg
-	sys.stdout.flush()
+	global loggerThread
+	if loggerThread is None:
+		loggerThread=LoggerThread()
+		loggerThread.start()
+	loggerThread.queue.put(msg)
+
+class LoggerThread(Thread):
+	def __init__(self):
+		super(LoggerThread, self).__init__()
+		self.daemon=True
+		try:
+			self.log=codecs.open(logfile, "w", encoding)
+			if debug==False:
+				sys.stdout=log
+				sys.stderr=log
+			print "Loggin system initialized."
+		except:
+			print "Error opening NVDARemoteServer.log. Incorrect permissions or read only environment."
+			printError()
+		self.running=True
+		self.queue=Queue(0)
+
+	def run(self):
+		while self.running or not self.queue.empty():
+			try:
+				print self.queue.get(True, None)
+				self.queue.task_done()
+				sys.stdout.flush()
+			except:
+				pass
+		try:
+			self.log.close()
+		except:
+			printError()
 
 class baseServer(Thread):
 	def __init__(self):
@@ -96,42 +129,26 @@ class Server(baseServer):
 		self.bind_host=bind_host
 		self.channels={}
 		self.service=service
-		if service==False:
-			printDebugMessage("Initialized instance variables")
+		printDebugMessage("Initialized instance variables")
 		self.createServerSocket(port, bind_host)
 
 	def createServerSocket(self, port, bind_host):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		if self.service==False:
-			printDebugMessage("Socket created.")
+		printDebugMessage("Socket created.")
 		if hasattr(sys, 'frozen'):
 			certfile=os.path.join(sys.prefix, 'server.pem')
 		else:
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile, server_side=True)
-		if self.service==False:
-			printDebugMessage("Enabled ssl in socket.")
-			printDebugMessage("Setting socket options...")
+		printDebugMessage("Enabled ssl in socket.")
+		printDebugMessage("Setting socket options...")
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, self.port))
 		self.server_socket.listen(5)
-		if self.service==False:
-			printDebugMessage("Socket has started listening on port "+str(self.port))
+		printDebugMessage("Socket has started listening on port "+str(self.port))
 
 	def run(self):
-		if self.service==False:
-			printDebugMessage("Initializing loggin system")
-		global logfile
-		try:
-			log=codecs.open(logfile, "w", encoding)
-			if debug==False:
-				sys.stdout=log
-				sys.stderr=log
-			printDebugMessage("Loggin system initialized.")
-		except:
-			printDebugMessage("Error opening NVDARemoteServer.log. Incorrect permissions or read only environment.")
-			printError()
 		try:
 			import signal
 			if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
@@ -180,11 +197,6 @@ class Server(baseServer):
 			self.close()
 		except:
 			printError()
-		finally:
-			try:
-				log.close()
-			except:
-				printError()
 
 	def accept_new_connection(self):
 		try:
@@ -224,6 +236,7 @@ class Server(baseServer):
 		except:
 			printError()
 		self.server_socket.close()
+		loggerThread.running=False
 
 	def sighandler(self, signum, frame):
 		printDebugMessage("Received system signal. Waiting for server stop.")
