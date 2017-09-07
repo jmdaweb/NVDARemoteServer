@@ -509,6 +509,7 @@ if __name__ == "__main__":
 	if 'debug' in sys.argv:
 		debug=True
 		sys.stdout=codecs.getwriter(encoding)(sys.stdout)
+		sys.stderr=codecs.getwriter(encoding)(sys.stderr)
 		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
