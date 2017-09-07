@@ -62,15 +62,16 @@ class LoggerThread(Thread):
 	def __init__(self):
 		super(LoggerThread, self).__init__()
 		self.daemon=True
+		self.log=None
 		try:
-			self.log=codecs.open(logfile, "w", encoding)
 			if debug==False:
+				self.log=codecs.open(logfile, "w", encoding)
 				sys.stdout=self.log
 				sys.stderr=self.log
 			print "Loggin system initialized."
 		except:
 			print "Error opening NVDARemoteServer.log. Incorrect permissions or read only environment."
-			printError()
+			self.printError(sys.exc_info())
 		self.running=True
 		self.queue=Queue(0)
 
@@ -89,9 +90,10 @@ class LoggerThread(Thread):
 				pass
 		print "Closing logger thread..."
 		try:
-			self.log.close()
+			if self.log is not None:
+				self.log.close()
 		except:
-			self.printError()
+			self.printError(sys.exc_info())
 
 	def printError(self, item):
 		try:
