@@ -123,12 +123,11 @@ class baseServer(Thread):
 class Server(baseServer):
 	PING_TIME = 300
 
-	def __init__(self, port, bind_host='', service=False):
+	def __init__(self, port, bind_host=''):
 		super(Server, self).__init__()
 		self.port = port
 		self.bind_host=bind_host
 		self.channels={}
-		self.service=service
 		printDebugMessage("Initialized instance variables")
 		self.createServerSocket(port, bind_host)
 
