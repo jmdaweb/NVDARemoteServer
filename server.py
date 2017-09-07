@@ -78,11 +78,12 @@ class LoggerThread(Thread):
 		while self.running or not self.queue.empty():
 			try:
 				item=self.queue.get(True, None)
+				self.queue.task_done()
+				print time.asctime()
 				if isinstance(item, str) or isinstance(item, unicode):
 					print item
 				elif isinstance(item, tuple):
 					self.printError(item)
-				self.queue.task_done()
 				sys.stdout.flush()
 			except:
 				pass
