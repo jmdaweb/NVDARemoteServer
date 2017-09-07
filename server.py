@@ -46,11 +46,10 @@ logfile="NVDARemoteServer.log"
 loggerThread=None
 import traceback
 def printError():
-	exc, type, trace=sys.exc_info()
-	try:
-		traceback.print_exception(exc, type, trace)
-	except:
-		printDebugMessage("Can't print all stack trace, text encoding error")
+	global loggerThread
+	if loggerThread is None:
+		return
+	loggerThread.queue.put(sys.exc_info())
 
 def printDebugMessage(msg):
 	global loggerThread
@@ -66,8 +65,8 @@ class LoggerThread(Thread):
 		try:
 			self.log=codecs.open(logfile, "w", encoding)
 			if debug==False:
-				sys.stdout=log
-				sys.stderr=log
+				sys.stdout=self.log
+				sys.stderr=self.log
 			print "Loggin system initialized."
 		except:
 			print "Error opening NVDARemoteServer.log. Incorrect permissions or read only environment."
@@ -78,15 +77,30 @@ class LoggerThread(Thread):
 	def run(self):
 		while self.running or not self.queue.empty():
 			try:
-				print self.queue.get(True, None)
+				item=self.queue.get(True, None)
+				if isinstance(item, str) or isinstance(item, unicode):
+					print item
+				elif isinstance(item, tuple):
+					self.printError(item)
 				self.queue.task_done()
 				sys.stdout.flush()
 			except:
 				pass
+		print "Closing logger thread..."
 		try:
 			self.log.close()
 		except:
-			printError()
+			self.printError()
+
+	def printError(self, item):
+		try:
+			exc, type, trace=item
+			traceback.print_exception(exc, type, trace)
+		except:
+			print "Can't print all stack trace, text encoding error"
+		finally:
+			sys.stdout.flush()
+			sys.stderr.flush()
 
 class baseServer(Thread):
 	def __init__(self):
@@ -236,6 +250,7 @@ class Server(baseServer):
 			printError()
 		self.server_socket.close()
 		loggerThread.running=False
+		loggerThread.join()
 
 	def sighandler(self, signum, frame):
 		printDebugMessage("Received system signal. Waiting for server stop.")
