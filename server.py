@@ -513,7 +513,7 @@ if __name__ == "__main__":
 		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
 		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
-		if len(sys.argv) == 2:
+		if len(sys.argv) >= 2:
 			if 'start' == sys.argv[1]:
 				dm.start()
 			elif 'stop' == sys.argv[1]:
