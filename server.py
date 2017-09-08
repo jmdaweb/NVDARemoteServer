@@ -19,6 +19,7 @@ import locale
 encoding=locale.getpreferredencoding()
 reload(sys)
 sys.setdefaultencoding(encoding)
+import options
 
 #use the higuest available ssl protocol version
 def sslwrap(func):
@@ -42,7 +43,7 @@ def sslwrap(func):
 
 ssl.wrap_socket = sslwrap(ssl.wrap_socket)
 debug=False
-logfile="NVDARemoteServer.log"
+logfile=None
 loggerThread=None
 import traceback
 def printError():
@@ -140,10 +141,10 @@ class baseServer(Thread):
 class Server(baseServer):
 	PING_TIME = 300
 
-	def __init__(self, port, bind_host=''):
+	def __init__(self):
 		super(Server, self).__init__()
-		self.port = port
-		self.bind_host=bind_host
+		self.port = options.port
+		self.bind_host=options.bind_host
 		self.channels={}
 		printDebugMessage("Initialized instance variables")
 		self.createServerSocket(port, bind_host)
@@ -494,17 +495,18 @@ class Client(object):
 			return
 
 def startAndWait():
-	srv=Server(6837)
+	srv=Server()
 	srv.run()
 
 if (platform.system()=="Linux")|(platform.system()=="Darwin")|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
-	logfile="/var/log/NVDARemoteServer.log"
 	import daemon
 	class serverDaemon(daemon.Daemon):
 		def run(self):
 			startAndWait()
 
 if __name__ == "__main__":
+	options.setup()
+	logfile=options.logfile
 	#If debug is enabled, all platform checks are skipped
 	if 'debug' in sys.argv:
 		debug=True
@@ -512,7 +514,7 @@ if __name__ == "__main__":
 		sys.stderr=codecs.getwriter(encoding)(sys.stderr)
 		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
-		dm=serverDaemon('/var/run/NVDARemoteServer.pid')
+		dm=serverDaemon(options.pidfile)
 		if len(sys.argv) >= 2:
 			if 'start' == sys.argv[1]:
 				dm.start()
