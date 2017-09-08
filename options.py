@@ -40,7 +40,10 @@ def parseArguments():
 	for arg in sys.argv:
 		if arg.startswith("--"):
 			option=arg.split("=")
-			options[option[0].replace("--", "")]=option[1]
+			try:
+				options[option[0].replace("--", "")]=option[1]
+			except:
+				pass
 	return options
 
 def readConfig():
@@ -54,5 +57,8 @@ def readConfig():
 		if line.startswith("#") or line=="":
 			continue
 		option=line.split("=")
-		options[option[0]]=option[1]
+		try:
+			options[option[0]]=option[1]
+		except:
+			pass
 	return options
