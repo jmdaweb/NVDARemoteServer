@@ -144,10 +144,10 @@ class Server(baseServer):
 	def __init__(self):
 		super(Server, self).__init__()
 		self.port = options.port
-		self.bind_host=options.bind_host
+		self.bind_host=options.interface
 		self.channels={}
 		printDebugMessage("Initialized instance variables")
-		self.createServerSocket(port, bind_host)
+		self.createServerSocket(self.port, self.bind_host)
 
 	def createServerSocket(self, port, bind_host):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -161,7 +161,7 @@ class Server(baseServer):
 		printDebugMessage("Setting socket options...")
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		self.server_socket.bind((bind_host, self.port))
+		self.server_socket.bind((bind_host, port))
 		self.server_socket.listen(5)
 		printDebugMessage("Socket has started listening on port "+str(self.port))
 

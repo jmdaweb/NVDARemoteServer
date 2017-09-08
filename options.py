@@ -42,7 +42,10 @@ def parseArguments():
 		if arg.startswith("--"):
 			option=arg.split("=")
 			try:
-				options[option[0].replace("--", "")]=option[1]
+				option[0]=option[0].replace("--", "")
+				if option[0]=="port":
+					option[1]=int(option[1])
+				options[option[0]]=option[1]
 			except:
 				pass
 	return options
@@ -59,6 +62,8 @@ def readConfig():
 			continue
 		option=line.split("=")
 		try:
+			if option[0]=="port":
+				option[1]=int(option[1])
 			options[option[0]]=option[1]
 		except:
 			pass
