@@ -2,6 +2,7 @@
 import platform
 import sys
 import codecs
+import os
 #global variables
 configfile=None
 interface=None
@@ -18,7 +19,7 @@ def setup():
 		logfile="/var/log/NVDARemoteServer.log"
 		configfile="/etc/NVDARemoteServer.conf"
 	else:
-		logfile="NVDARemoteServer.log"
+		logfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.log")
 		configfile="NVDARemoteServer.conf"
 		pidfile=""
 	arguments=parseArguments()
