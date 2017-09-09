@@ -1,6 +1,6 @@
 nvda-remote-server (1.5-1) stable; urgency=low
 
-  * Added options module and a separate thread for loggin.
+  * Added options module and a separate thread for writing the log file.
     Closes: #7234568
 
  -- Jose Manuel Delicado <jmdaweb@hotmail.com>  Sat, 09 Sep 2017 11:15:00 +0530

@@ -20,7 +20,9 @@ gzip -n -9 nvda-remote-server_1.5/usr/share/doc/nvda-remote-server/changelog.Deb
 chown -R root.root nvda-remote-server_1.5
 chmod -R 755 nvda-remote-server_1.5
 chmod 644 nvda-remote-server_1.5/DEBIAN/control
+chmod 644 nvda-remote-server_1.5/DEBIAN/conffiles
 chmod -x nvda-remote-server_1.5/usr/share/NVDARemoteServer/server.py
+chmod -x nvda-remote-server_1.5/usr/share/NVDARemoteServer/options.py
 chmod -x nvda-remote-server_1.5/usr/share/NVDARemoteServer/server.pem
 chmod -x nvda-remote-server_1.5/usr/share/NVDARemoteServer/daemon.py
 chmod -x nvda-remote-server_1.5/usr/share/doc/nvda-remote-server/copyright
