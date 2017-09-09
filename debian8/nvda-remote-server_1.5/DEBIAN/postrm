@@ -3,9 +3,12 @@
  # This script runs after removing the package 
 
 set -e
+if test $1 = remove
+then
 if test -e /usr/share/NVDARemoteServer
 then
 rm -rf /usr/share/NVDARemoteServer
+fi
 fi
 systemctl daemon-reload
 set +e
