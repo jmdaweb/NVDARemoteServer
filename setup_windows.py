@@ -23,7 +23,7 @@ if __name__ == '__main__':
   author_email = "jmdaweb@hotmail.com",
   version = "1.5",
   url = "https://github.com/jmdaweb/NVDARemoteServer",
-  data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd", "windows/NVDARemoteCertificate.cmd"])],
+  data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd", "windows/NVDARemoteCertificate.cmd", "NVDARemoteServer.conf"])],
 options = {
    'py2exe': {   
     'optimize':2,

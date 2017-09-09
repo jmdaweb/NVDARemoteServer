@@ -19,12 +19,15 @@ chmod -x LICENSE
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/NVDARemoteServer
 install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/systemd/system
 install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
+install -m 0755 -d $RPM_BUILD_ROOT/etc
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man1
 install -m 0644 server.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.py
+install -m 0644 options.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/options.py
 install -m 0644 server.pem $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.pem
 install -m 0644 daemon.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/daemon.py
 install -m 0755 NVDARemoteServer $RPM_BUILD_ROOT/usr/bin/NVDARemoteServer
 install -m 0755 NVDARemoteCertificate $RPM_BUILD_ROOT/usr/bin/NVDARemoteCertificate
+install -m 0644 NVDARemoteServer.conf $RPM_BUILD_ROOT/etc/NVDARemoteServer.conf
 install -m 0644 NVDARemoteServer.service $RPM_BUILD_ROOT/usr/lib/systemd/system/NVDARemoteServer.service
 gzip -n -9 NVDARemoteServer.1
 install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
@@ -42,10 +45,14 @@ NVDARemoteServer stop
 %files
 /usr/bin/NVDARemoteServer
 /usr/bin/NVDARemoteCertificate
+/etc/NVDARemoteServer.conf
 %dir /usr/share/NVDARemoteServer
 /usr/share/NVDARemoteServer/server.py
 /usr/share/NVDARemoteServer/server.pyc
 /usr/share/NVDARemoteServer/server.pyo
+/usr/share/NVDARemoteServer/options.py
+/usr/share/NVDARemoteServer/options.pyc
+/usr/share/NVDARemoteServer/options.pyo
 /usr/share/NVDARemoteServer/server.pem
 /usr/share/NVDARemoteServer/daemon.py
 /usr/share/NVDARemoteServer/daemon.pyc

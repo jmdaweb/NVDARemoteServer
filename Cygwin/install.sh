@@ -14,10 +14,11 @@ cp NVDARemoteServer /usr/bin
 cp uninstall.sh /usr/bin/NVDARemoteUninstall
 cp ../NVDARemoteCertificate /usr/bin
 mkdir /usr/share/NVDARemoteServer
-cp ../server.py ../daemon.py ../server.pem /usr/share/NVDARemoteServer
+cp ../server.py ../daemon.py ../options.py ../server.pem /usr/share/NVDARemoteServer
 cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 /usr/share/man/man1
 mkdir /usr/share/doc/NVDARemoteServer
 cp ../LICENSE /usr/share/doc/NVDARemoteServer
+cp ../NVDARemoteServer.conf /etc
 if test $? -eq 0
 then
 echo NVDA Remote Server has been installed succesfully.
