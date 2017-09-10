@@ -13,7 +13,7 @@ status)
 	fi
 	;;
 *)
-	python /usr/share/NVDARemoteServer/server.py $1
+	python /usr/share/NVDARemoteServer/server.py $*
 	;;
 esac
 fi
