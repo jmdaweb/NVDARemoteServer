@@ -20,7 +20,7 @@ def setup():
 		configfile="/etc/NVDARemoteServer.conf"
 	else:
 		logfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.log")
-		configfile="NVDARemoteServer.conf"
+		configfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.conf")
 		pidfile=""
 	arguments=parseArguments()
 	if "configfile" in arguments.keys():
