@@ -11,6 +11,8 @@ class NVDARemoteService(win32serviceutil.ServiceFramework):
 	_svc_display_name_ = "NVDARemote relay server"
 	_svc_deps_ = []
 	def __init__(self, args):
+		options.setup()
+		server.logfile=options.logfile
 		win32serviceutil.ServiceFramework.__init__(self, args)
 		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
 		self.srv=server.Server()
@@ -21,5 +23,4 @@ class NVDARemoteService(win32serviceutil.ServiceFramework):
 		win32event.SetEvent(self.hWaitStop)
 
 	def SvcDoRun(self):
-		options.setup()
 		self.srv.run()
