@@ -59,7 +59,7 @@ chkconfig --del nvdaremoteserver
 /usr/share/NVDARemoteServer/daemon.pyo
 /usr/share/man/man1/NVDARemoteServer.1.gz
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
-%license LICENSE
+%doc LICENSE
 %changelog
 * Sat Sep 09 2017 Jose Manuel Delicado <jmdaweb@hotmail.com> - 1.5-1
 - Added options module and a separate thread for loggin.
