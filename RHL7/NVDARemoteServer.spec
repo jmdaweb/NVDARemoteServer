@@ -21,6 +21,7 @@ install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/systemd/system
 install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
 install -m 0755 -d $RPM_BUILD_ROOT/etc
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man1
+install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man5
 install -m 0644 server.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.py
 install -m 0644 options.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/options.py
 install -m 0644 server.pem $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.pem
@@ -31,6 +32,8 @@ install -m 0644 NVDARemoteServer.conf $RPM_BUILD_ROOT/etc/NVDARemoteServer.conf
 install -m 0644 NVDARemoteServer.service $RPM_BUILD_ROOT/usr/lib/systemd/system/NVDARemoteServer.service
 gzip -n -9 NVDARemoteServer.1
 install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
+gzip -n -9 NVDARemoteServer.conf.5
+install -m 0644 NVDARemoteServer.conf.5.gz $RPM_BUILD_ROOT/usr/share/man/man5/NVDARemoteServer.conf.5.gz
 gzip -n -9 NVDARemoteCertificate.1
 install -m 0644 NVDARemoteCertificate.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteCertificate.1.gz
 %clean
@@ -59,6 +62,7 @@ NVDARemoteServer stop
 /usr/share/NVDARemoteServer/daemon.pyo
 /usr/lib/systemd/system/NVDARemoteServer.service
 /usr/share/man/man1/NVDARemoteServer.1.gz
+/usr/share/man/man5/NVDARemoteServer.conf.5.gz
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %license LICENSE
 %changelog

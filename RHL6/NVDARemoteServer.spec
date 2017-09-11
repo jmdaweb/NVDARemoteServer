@@ -18,6 +18,7 @@ This remote server allows NVDARemote users to redirect their traffic.
 chmod -x LICENSE
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/NVDARemoteServer
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man1
+install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man5
 install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
 install -m 0755 -d $RPM_BUILD_ROOT/etc
 install -m 0755 -d $RPM_BUILD_ROOT/etc/init.d
@@ -31,6 +32,8 @@ install -m 0755 NVDARemoteServerd $RPM_BUILD_ROOT/etc/init.d/nvdaremoteserver
 install -m 0644 NVDARemoteServer.conf $RPM_BUILD_ROOT/etc/NVDARemoteServer.conf
 gzip -n -9 NVDARemoteServer.1
 install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
+gzip -n -9 NVDARemoteServer.conf.5
+install -m 0644 NVDARemoteServer.conf.5.gz $RPM_BUILD_ROOT/usr/share/man/man5/NVDARemoteServer.conf.5.gz
 gzip -n -9 NVDARemoteCertificate.1
 install -m 0644 NVDARemoteCertificate.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteCertificate.1.gz
 %clean
@@ -58,6 +61,7 @@ chkconfig --del nvdaremoteserver
 /usr/share/NVDARemoteServer/daemon.pyc
 /usr/share/NVDARemoteServer/daemon.pyo
 /usr/share/man/man1/NVDARemoteServer.1.gz
+/usr/share/man/man5/NVDARemoteServer.conf.5.gz
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %doc LICENSE
 %changelog
