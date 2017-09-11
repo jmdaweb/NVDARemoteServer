@@ -23,23 +23,43 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 
 To uninstall it, run dpkg --purge nvda-remote-server
 
+To uninstall it keeping the configuration files, run dpkg --remove nvda-remote-server
+
 ###Building for Centos and RHL based distributions
 
 You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the instructions included in that folders. Finally, install the package using rpm: rpm -U NVDARemoteServer.rpm
+
+To uninstall it, run rpm -e NVDARemoteServer
 
 ###Building for Mac Os x
 
 1. Navigate to the Mac Os x directory inside this repo.
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script: ./build.sh
+3. Run the script: sudo ./build.sh
 4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: sudo installer -pkg NVDARemoteServer.pkg -target /
+
+There is no removal procedure at this time, it will be added soon.
 
 ###Building for Arch based distributions
 
 1. Navigate to the Arch directory inside this repo.
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
 3. Run the script: ./build.sh
-4. Install the package with pacman: pacman -U NVDARemoteServer.pkg.tar.xz
+4. Install the package with pacman: pacman -U NVDARemoteServer.pkg.tar.xz.
+
+To uninstall it, run: pacman --remove NVDARemoteServer
+
+###Building for MSYS2 platform on Windows
+
+1. Navigate to the MSYS directory inside this repo.
+2. Repeat steps 3 and 4 from arch section.
+
+###Installing on Cygwin
+
+1. Navigate to the Cygwin directory from Cygwin Bash shell.
+2. Run install.sh: ./install.sh
+
+To uninstall it, run NVDARemoteUninstall
 
 ###Building for Windows
 
@@ -48,6 +68,8 @@ You only need Python 2.7.x and the pywin32 and py2exe packages. Open a command p
 python setup_windows.py py2exe
 
 The binaries will be placed in the dist folder.
+
+The server is almost portable, there is no installation required. If you install the Windows service, remember uninstalling it before moving the server to another location or removing it.
 
 ###Building for Windows x64
 
@@ -123,7 +145,20 @@ The script will create a 4096 bit RSA private key and a certificate, and combine
 
 On Windows, a pre-built OpenSSL version is included in the server directory. You can run NVDARemoteCertificate.cmd to create a certificate.
 
-##known problems
+##Configuration file and extra commandline options
+
+Starting with version 1.5, NVDARemoteServer includes a configuration file that you can modify to change some server settings. You must restart the server after modifying this file. The comments in the file will guide you when changing settings.
+
+You can test your changes in debugging mode before modifying the configuration file. Although the changes in the configuration also are applied when you run the server in debug mode, you can pass some commandline parameters to perform tests. The following options are available:
+
+* --interface=ip: listen only on the specified ip address.
+* --port=port: listen only on the specified tcp port.
+* --logfile=path, --pidfile=path: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead.
+* --configfile=path: read config file from path. All the previous options can be edited in the configuration file.
+
+Note: the command line arguments take precedence over the supplied ones in the configuration file.
+
+##Known problems
 
 ###Installing on Mac os x El Capitan and later
 
@@ -142,5 +177,5 @@ Caution! Disabling system integrity protection is a security risk. To enable it 
 ###Problems with the server in OpenVZ or Docker containers
 
 If you run a Debian 8 or RHL 7 based OpenVZ or Docker container, don't install the Debian 8 or RHL 7 packages. They will fail and leave the installation in a bad state. In these containers, Systemd produces errors because it can't connect directly to the kernel.
-Solution: install Debian 7 or RHL 6 package instead.
+Solution: install Debian 7 or RHL 6 package instead, or run systemd in a privileged container.
 
