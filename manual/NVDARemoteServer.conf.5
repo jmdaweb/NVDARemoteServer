@@ -1,0 +1,51 @@
+.\" Manpage for NVDARemoteServer.
+.\" Contact jmdaweb@hotmail.com to correct errors or typos.
+.TH man 5 "09 Sep 2017" "1.5" "NVDARemoteServer.conf man page"
+.SH NAME
+NVDARemoteServer.conf \- Change NVDARemoteServer configuration
+.SH DESCRIPTION
+.P
+NVDARemoteServer.conf is the configuration file for NVDARemoteServer. On most Unix systems, it is located under /etc directory. This file has the following specifications:
+.P
+Blank lines are allowed. The server will ignore them.
+.P
+Lines starting with a # character are comments, and the server ignore them. At the moment, a comment in the same line as a setting is not allowed.
+.P
+Each setting goes in a line, and has the following format: option=value
+.P
+Spaces between option and value, before option and after value are not allowed. The server will fail and switch to default settings if it can't parse the configuration.
+.P
+The file has unix-style line breaks, and is encoded in UTF\-8.
+.SH OPTIONS
+.P
+The following options are available. You can uncomment them in the file or add new lines.
+.P
+interface
+.P
+Set the ip address of the interface where the server will listen for new incoming connections. By default it listens on all available interfaces (address 0.0.0.0).
+.P
+Example: interface=127.0.0.1
+.P
+port
+.P
+Set the server tcp port. By default it is 6837.
+.P
+Example: port=6838
+.P
+logfile
+.P
+Set the path of the server log file. On Unix systems, the default path is /var/log/NVDARemoteServer.log. On Windows, it's the same path as the server executable.
+.P
+Example: logfile=/home/john/logs/NVDARemoteServer.log
+.P
+pidfile
+.P
+When the server is running, the process id is stored in a file. Here you can set the path for that file. By default it's /var/run/NVDARemoteServer.pid
+.P
+Example: pidfile=/home/john/run/NVDARemoteServer.pid
+.SH SEE ALSO
+NVDARemoteServer (1), NVDARemoteCertificate (1)
+.SH BUGS
+Report bugs to jmdaweb@hotmail.com
+.SH AUTHOR
+Jose Manuel Delicado (jmdaweb@hotmail.com)
