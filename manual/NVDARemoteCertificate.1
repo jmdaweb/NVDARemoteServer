@@ -7,6 +7,9 @@ NVDARemoteCertificate \- Generate a certificate for NVDA Remote Server
 NVDARemoteCertificate
 .SH DESCRIPTION
 NVDARemoteCertificate is a script to generate a ssl certificate for your server. It is highly recommended that you run this script before starting the server for the first time. It will replace the default certificate and enhance security.
+.P
+Once started, you will be prompted to enter some information for your certificate (organization, name, e-mail, country code, ...).
+After that, a self-signed certificate will be generated and stored with a private key into the server.pem file. On Unix systems, you will find this file at /usr/share/NVDARemoteServer/server.pem. On Windows, this file is in the same location as the server executable.
 .SH OPTIONS
 No options are required.
 .SH BUGS

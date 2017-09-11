@@ -4,18 +4,48 @@
 .SH NAME
 NVDARemoteServer \- Manage quickly the NVDA Remote Server
 .SH SYNOPSIS
-NVDARemoteServer [start|stop|restart|status|enable|disable|debug|kill]
+NVDARemoteServer <command> [options]
 .SH DESCRIPTION
 NVDARemoteServer is a script to control the NVDA Remote Server in an easy way. You can start, stop, restart, manage and view the status of the service.
+.SH COMMANDS
+.P
+NVDARemoteServer requires one of these commands.
+.P
+start: starts the service, or throws an error if the service is already started.
+.P
+stop: stops the service.
+.P
+restart: restarts the service.
+.P
+status: gives information about the service.
+.P
+enable: configures the service to run at system startup. Only available on some Linux distributions.
+.P
+disable: configures the service to be started manually. Only available on some Linux distributions.
+.P
+debug: starts the server in debug mode. You can see the server activity in the console. To stop the server, press ctrl+c
+.P
+kill: sometimes the server gets completely frozen in some systems. Use this command to kill the process.
 .SH OPTIONS
-Start: starts the service, or throws an error if the service is already started.
-Stop: stops the service.
-Restart: restarts the service.
-Status: gives information about the service.
-Enable: configures the service to run at system startup.
-Disable: configures the service to be started manually.
-Debug: starts the server in debug mode. You can see the server activity in the console. To stop the server, press ctrl+c
-Kill: sometimes the server gets completely frozen in some systems. Use this command to kill the process.
+.P
+NVDARemoteServer accepts some extra arguments in debug mode. The bassic syntax for them is as follows:
+.P
+NVDARemoteServer debug \-\-option1=value1 \-\-option2=value2 \-\-option3=value3...
+.P
+Currently the following options are supported:
+.P
+\-\-interface=ip: ip address where the server should listen. By default, listen on all available interfaces.
+.P
+\-\-port=port: tcp port for the server. By default 6837.
+.P
+\-\-pidfile=/path/to/pidfile: path where the pidfile will be stored. In debug mode no pidfile is generated.
+.P
+\-\-logfile=/path/to/log: specify the path to the log file. In debug mode no logfile is written.
+.P
+\-\-configfile=/path/to/configfile: read options from the config file in the specified path. By default /etc/NVDARemoteServer.conf
+.SH NOTES
+.P
+You can change server settings by editing the configuration file. See NVDARemoteServer.conf (5) for more details. The options \-\-configfile, \-\-logfile and \-\-pidfile can affect the server in daemon mode too. Edit the service files to fit your needs.
 .SH BUGS
 Report bugs to jmdaweb@hotmail.com
 .SH AUTHOR
