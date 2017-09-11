@@ -38,7 +38,7 @@ To uninstall it, run rpm -e NVDARemoteServer
 3. Run the script: sudo ./build.sh
 4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: sudo installer -pkg NVDARemoteServer.pkg -target /
 
-There is no removal procedure at this time, it will be added soon.
+To uninstall it, run NVDARemoteUninstall
 
 ###Building for Arch based distributions
 
