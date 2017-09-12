@@ -181,5 +181,6 @@ Caution! Disabling system integrity protection is a security risk. To enable it 
 ### Problems with the server in OpenVZ or Docker containers
 
 If you run a Debian 8 or RHL 7 based OpenVZ or Docker container, don't install the Debian 8 or RHL 7 packages. They will fail and leave the installation in a bad state. In these containers, Systemd produces errors because it can't connect directly to the kernel.
+
 Solution: install Debian 7 or RHL 6 package instead, or run systemd in a privileged container.
 
