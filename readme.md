@@ -21,15 +21,15 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 3. Run the script: sudo ./build.sh
 4. Install the package: sudo dpkg -i NVDARemoteServer.deb
 
-To uninstall it, run dpkg --purge nvda-remote-server
+To uninstall it, run sudo dpkg --purge nvda-remote-server
 
-To uninstall it keeping the configuration files, run dpkg --remove nvda-remote-server
+To uninstall it keeping the configuration files, run sudo dpkg --remove nvda-remote-server
 
 ###Building for Centos and RHL based distributions
 
 You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the instructions included in that folders. Finally, install the package using rpm: rpm -U NVDARemoteServer.rpm
 
-To uninstall it, run rpm -e NVDARemoteServer
+To uninstall it, run sudo rpm -e NVDARemoteServer
 
 ###Building for Mac Os x
 
@@ -44,10 +44,10 @@ To uninstall it, run sudo NVDARemoteUninstall
 
 1. Navigate to the Arch directory inside this repo.
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script: ./build.sh
-4. Install the package with pacman: pacman -U NVDARemoteServer.pkg.tar.xz.
+3. Run the script without root privileges: ./build.sh
+4. Install the package with pacman: sudo pacman -U NVDARemoteServer.pkg.tar.xz.
 
-To uninstall it, run: pacman --remove NVDARemoteServer
+To uninstall it, run: sudo pacman --remove NVDARemoteServer
 
 ###Building for MSYS2 platform on Windows
 
@@ -91,25 +91,25 @@ On Unix platforms, including Mac Os x, there is a script located in /usr/bin cal
 
 If you want to start the server in debugging mode (useful to see activity and errors) run:
 
-NVDARemoteServer debug
+sudo NVDARemoteServer debug
 
 On most platforms, you can stop the server by pressing ctrl+c if it is running in this mode.
 
 To start the server, run:
 
-NVDARemoteServer start
+sudo NVDARemoteServer start
 
 To stop it, run:
 
-NVDARemoteServer stop
+sudo NVDARemoteServer stop
 
-Run NVDARemoteServer restart to restart the server.
+Run sudo NVDARemoteServer restart to restart the server.
 
-If the server freezes, run NVDARemoteServer kill to kill the process.
+If the server freezes, run sudo NVDARemoteServer kill to kill the process.
 
-On Centos 6, Centos 7, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. Remember to run these commands with sudo if you are an unprivileged user. You can run NVDARemoteServer status to see if the service is running.
+On Centos 6, Centos 7, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. You can run NVDARemoteServer status to see if the service is running.
 
-If you want to configure the service to run at system startup, run NVDARemoteServer enable. Run NVDARemoteServer disable to configure the service to start manually.
+If you want to configure the service to run at system startup, run sudo NVDARemoteServer enable. Run sudo NVDARemoteServer disable to configure the service to start manually.
 
 The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in console mode. To stop, simply close the console window or kill the process.
 
@@ -139,7 +139,11 @@ Read the Docker documentation to see all available commands.
 
 The server includes a default self-signed certificate to encrypt connections. This certificate is also included in the official NVDA Remote add-on, so this is a big security risk.
 
-It is strongly recommended that you create your own certificate before starting the server for the first time. You can do it by running the NVDARemoteCertificate script on almost all platforms. The script takes no arguments. Follow the on-screen instructions to complete the process.
+It is strongly recommended that you create your own certificate before starting the server for the first time. You can do it by running the NVDARemoteCertificate script on almost all platforms:
+
+sudo NVDARemoteCertificate
+
+The script takes no arguments. Follow the on-screen instructions to complete the process.
 
 The script will create a 4096 bit RSA private key and a certificate, and combine them in a single server.pem file. Once finished, if the server is running, restart it.
 
