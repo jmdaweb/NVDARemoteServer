@@ -68,7 +68,7 @@ class LoggerThread(Thread):
 		self.log=None
 		try:
 			if debug==False:
-				self.log=codecs.open(logfile, "w", encoding)
+				self.log=codecs.open(logfile, "w", "utf-8")
 				sys.stdout=self.log
 				sys.stderr=self.log
 			print "Loggin system initialized."
@@ -90,7 +90,7 @@ class LoggerThread(Thread):
 					self.printError(item)
 				sys.stdout.flush()
 			except:
-				pass
+				self.printError(sys.exc_info())
 		print "Closing logger thread..."
 		try:
 			if self.log is not None:
@@ -512,8 +512,8 @@ if __name__ == "__main__":
 	#If debug is enabled, all platform checks are skipped
 	if 'debug' in sys.argv:
 		debug=True
-		sys.stdout=codecs.getwriter(encoding)(sys.stdout)
-		sys.stderr=codecs.getwriter(encoding)(sys.stderr)
+		sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
+		sys.stderr=codecs.getwriter("utf-8")(sys.stderr)
 		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
 		dm=serverDaemon(options.pidfile)
