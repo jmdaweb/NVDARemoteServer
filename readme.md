@@ -159,6 +159,7 @@ You can test your changes in debugging mode before modifying the configuration f
 * --port=port: listen only on the specified tcp port.
 * --logfile=path, --pidfile=path: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead.
 * --configfile=path: read config file from path. All the previous options can be edited in the configuration file.
+* --loglevel=n, where n is a number between 0 (almost quiet) and 3 (very verbose).
 
 Note: the command line arguments take precedence over the supplied ones in the configuration file.
 

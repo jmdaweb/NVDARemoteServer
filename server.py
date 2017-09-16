@@ -52,7 +52,9 @@ def printError():
 		return
 	loggerThread.queue.put(sys.exc_info())
 
-def printDebugMessage(msg):
+def printDebugMessage(msg, level):
+	if level>options.loglevel:
+		return
 	global loggerThread
 	if loggerThread is None:
 		loggerThread=LoggerThread()
@@ -123,12 +125,12 @@ class baseServer(Thread):
 		del self.clients[client.id]
 
 	def client_disconnected(self, client):
-		printDebugMessage("Client "+str(client.id)+" has disconnected.")
+		printDebugMessage("Client "+str(client.id)+" has disconnected.", 1)
 		if client.password!="":
-			printDebugMessage("Sending notification to other clients about client "+str(client.id))
+			printDebugMessage("Sending notification to other clients about client "+str(client.id), 2)
 			client.send_to_others(type='client_left', user_id=client.id, client=client.as_dict())
 		self.remove_client(client)
-		printDebugMessage("Client "+str(client.id)+" removed.")
+		printDebugMessage("Client "+str(client.id)+" removed.", 2)
 
 	def searchId(self, socket):
 		id=0
@@ -146,42 +148,42 @@ class Server(baseServer):
 		self.port = options.port
 		self.bind_host=options.interface
 		self.channels={}
-		printDebugMessage("Initialized instance variables")
+		printDebugMessage("Initialized instance variables", 2)
 		self.createServerSocket(self.port, self.bind_host)
 
 	def createServerSocket(self, port, bind_host):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		printDebugMessage("Socket created.")
+		printDebugMessage("Socket created.", 2)
 		if hasattr(sys, 'frozen'):
 			certfile=os.path.join(sys.prefix, 'server.pem')
 		else:
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile, server_side=True)
-		printDebugMessage("Enabled ssl in socket.")
-		printDebugMessage("Setting socket options...")
+		printDebugMessage("Enabled ssl in socket.", 2)
+		printDebugMessage("Setting socket options...", 2)
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, port))
 		self.server_socket.listen(5)
-		printDebugMessage("Socket has started listening on port "+str(self.port))
+		printDebugMessage("Socket has started listening on port "+str(self.port), 0)
 
 	def run(self):
 		try:
 			import signal
 			if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
-				printDebugMessage("Configuring signal handlers")
+				printDebugMessage("Configuring signal handlers", 2)
 				signal.signal(signal.SIGINT, self.sighandler)
 				signal.signal(signal.SIGTERM, self.sighandler)
 			else:
-				printDebugMessage("Warning: this server has not been tested on your platform. We don't have added signals handlers here to avoid errors. Probably you will have to kill the process manually to stop the server.")
+				printDebugMessage("Warning: this server has not been tested on your platform. We don't have added signals handlers here to avoid errors. Probably you will have to kill the process manually to stop the server.", 0)
 		except:
-			printDebugMessage("Error setting handler for signals")
+			printDebugMessage("Error setting handler for signals", 0)
 			printError()
 		self.running = True
 		self.last_ping_time = time.time()
-		printDebugMessage("NVDA Remote Server is ready.")
-		printDebugMessage("The server is using "+protocol)
-		printDebugMessage("The server is running with pid "+str(os.getpid()))
+		printDebugMessage("NVDA Remote Server is ready.", 0)
+		printDebugMessage("The server is using "+protocol, 0)
+		printDebugMessage("The server is running with pid "+str(os.getpid()), 0)
 		try:
 			while self.running:
 				try:
@@ -189,12 +191,12 @@ class Server(baseServer):
 				except:
 					printError()
 				if not self.running:
-					printDebugMessage("Shuting down server...")
+					printDebugMessage("Shuting down server...", 2)
 					break
 				for sock in e:
 					id=self.searchId(sock)
 					if id!=0:
-						printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...")
+						printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...", 1)
 						self.clients[id].close()
 				for sock in w:
 					id=self.searchId(sock)
@@ -218,9 +220,9 @@ class Server(baseServer):
 	def accept_new_connection(self):
 		try:
 			client_sock, addr = self.server_socket.accept()
-			printDebugMessage("New incoming connection from address "+addr[0]+", port "+str(addr[1]))
+			printDebugMessage("New incoming connection from address "+addr[0]+", port "+str(addr[1]), 1)
 		except:
-			printDebugMessage("Error while accepting a new connection.")
+			printDebugMessage("Error while accepting a new connection.", 0)
 			printError()
 			try:
 				self.server_socket.shutdown(socket.SHUT_RDWR)
@@ -228,26 +230,26 @@ class Server(baseServer):
 				printError()
 			self.server_socket.close()
 			del self.server_socket
-			printDebugMessage("The server socket has been closed and deleted. The server will create it again.")
+			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
 			self.createServerSocket(self.port, self.bind_host)
 			return
-		printDebugMessage("Setting socket options...")
+		printDebugMessage("Setting socket options...", 2)
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, struct.pack('LL', 60, 0))
 		client = Client(server=self, socket=client_sock)
 		self.add_client(client)
-		printDebugMessage("Added a new client.")
+		printDebugMessage("Added a new client.", 2)
 
 	def close(self):
 		self.running = False
-		printDebugMessage("Closing channels...")
+		printDebugMessage("Closing channels...", 2)
 		for c in self.channels.values():
 			c.running=False
-		printDebugMessage("Disconnecting clients...")
+		printDebugMessage("Disconnecting clients...", 2)
 		for c in self.clients.values():
 			c.close()
-		printDebugMessage("Closing server socket...")
+		printDebugMessage("Closing server socket...", 2)
 		try:
 			self.server_socket.shutdown(socket.SHUT_RDWR)
 		except:
@@ -257,7 +259,7 @@ class Server(baseServer):
 		loggerThread.join()
 
 	def sighandler(self, signum, frame):
-		printDebugMessage("Received system signal. Waiting for server stop.")
+		printDebugMessage("Received system signal. Waiting for server stop.", 0)
 		self.running=False
 
 class Channel(baseServer):
@@ -265,7 +267,7 @@ class Channel(baseServer):
 		super(Channel, self).__init__()
 		self.server=server
 		self.password=password
-		printDebugMessage("Created new channel with password "+password)
+		printDebugMessage("Created new channel with password "+password, 3)
 		self.queue=Queue(0)
 		self.queue.put(None)
 		self.checkThread=CheckThread(self)
@@ -282,7 +284,7 @@ class Channel(baseServer):
 			for sock in e:
 				id=self.searchId(sock)
 				if id!=0:
-					printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...")
+					printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...", 0)
 					self.clients[id].close()
 			for sock in w:
 				id=self.searchId(sock)
@@ -293,7 +295,7 @@ class Channel(baseServer):
 				if id!=0:
 					self.clients[id].handle_data()
 			self.queue.put(None)
-		printDebugMessage("Terminating channel with password "+self.password)
+		printDebugMessage("Terminating channel with password "+self.password, 3)
 		self.terminate()
 		self.checkThread.running=False
 		del self.server.channels[self.password]
@@ -326,11 +328,11 @@ class CheckThread(Thread):
 			except:
 				if self.running:
 					#the channel is blocked, we need to close it
-					printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...")
+					printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...", 3)
 					self.channel.terminate()
 					del self.server.channels[self.channel.password]
 					self.channel._Thread__stop()
-				printDebugMessage("Checker thread for channel "+self.channel.password+" has finished")
+				printDebugMessage("Checker thread for channel "+self.channel.password+" has finished", 3)
 				break
 
 class Client(object):
@@ -352,12 +354,12 @@ class Client(object):
 		try:
 			data = self.buffer + self.socket.recv(16384)
 		except:
-			printDebugMessage("Socket error in client "+str(self.id)+" while receiving data")
+			printDebugMessage("Socket error in client "+str(self.id)+" while receiving data", 0)
 			printError()
 			self.close()
 			return
 		if data == '': #Disconnect
-			printDebugMessage("Received empty buffer from client "+str(self.id)+", disconnecting")
+			printDebugMessage("Received empty buffer from client "+str(self.id)+", disconnecting", 1)
 			self.close()
 			return
 		if '\n' not in data:
@@ -375,7 +377,7 @@ class Client(object):
 		except ValueError:
 			#we don't understand the parsed data, but we can send it to all clients in this channel
 			printError()
-			printDebugMessage("parse error, sending raw message")
+			printDebugMessage("parse error, sending raw message", 0)
 			self.send_data_to_others(line+"\n")
 			return
 		if 'type' not in parsed:
@@ -408,7 +410,7 @@ class Client(object):
 		self.send_to_others(type='client_joined', user_id=self.id, client=self.as_dict())
 		if not self.server.isAlive():
 			self.server.start()
-		printDebugMessage("Client "+str(self.id)+" joined channel "+self.password)
+		printDebugMessage("Client "+str(self.id)+" joined channel "+self.password, 3)
 
 	def do_protocol_version(self, obj):
 		version = obj.get('version')
@@ -421,7 +423,7 @@ class Client(object):
 		while self.check_key(res):
 			res=self.generate_key()
 		self.send(type='generate_key', key=res)
-		printDebugMessage("Client "+str(self.id)+" generated a key")
+		printDebugMessage("Client "+str(self.id)+" generated a key", 2)
 
 	def generate_key(self):
 		res = str(random.randrange(1, 9))
@@ -468,7 +470,7 @@ class Client(object):
 				self.socket.sendall(self.buffer2)
 				self.buffer2=""
 			except:
-				printDebugMessage("Socket error in client "+str(self.id)+" while sending data")
+				printDebugMessage("Socket error in client "+str(self.id)+" while sending data", 0)
 				printError()
 				self.close()
 
@@ -478,7 +480,7 @@ class Client(object):
 				if (c.password==self.password)&(c!=self):
 					c.socket_send(data)
 		except:
-			printDebugMessage("Error sending to others.")
+			printDebugMessage("Error sending to others.", 0)
 			printError()
 			return
 
@@ -490,7 +492,7 @@ class Client(object):
 				if (c.password==self.password)&(c!=self):
 					c.send(origin=origin, **obj)
 		except:
-			printDebugMessage("Error sending to others.")
+			printDebugMessage("Error sending to others.", 0)
 			printError()
 			return
 

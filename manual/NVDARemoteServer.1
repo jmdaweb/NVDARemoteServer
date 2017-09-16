@@ -43,6 +43,8 @@ Currently the following options are supported:
 \-\-logfile=/path/to/log: specify the path to the log file. In debug mode no logfile is written.
 .P
 \-\-configfile=/path/to/configfile: read options from the config file in the specified path. By default /etc/NVDARemoteServer.conf
+.P
+\-\-loglevel=n: set log level. You must provide a value between 0 and 3. Default: 3, maximum information.
 .SH NOTES
 .P
 You can change server settings by editing the configuration file. See NVDARemoteServer.conf (5) for more details. The options \-\-configfile, \-\-logfile and \-\-pidfile can affect the server in daemon mode too. Edit the service files to fit your needs.

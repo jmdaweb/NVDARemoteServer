@@ -9,11 +9,13 @@ interface=None
 port=None
 logfile=None
 pidfile=None
+loglevel=None
 def setup():
-	global configfile, port, interface, pidfile, logfile
+	global configfile, port, interface, pidfile, logfile, loglevel
 	#set default arguments
 	port=6837
 	interface=""
+	loglevel=3
 	if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS'))|(platform.system().startswith('CYGWIN')):
 		pidfile="/var/run/NVDARemoteServer.pid"
 		logfile="/var/log/NVDARemoteServer.log"
@@ -43,7 +45,7 @@ def parseArguments():
 			option=arg.split("=")
 			try:
 				option[0]=option[0].replace("--", "")
-				if option[0]=="port":
+				if option[0] in ["port", "loglevel"]:
 					option[1]=int(option[1])
 				options[option[0]]=option[1]
 			except:
@@ -62,7 +64,7 @@ def readConfig():
 			continue
 		option=line.split("=")
 		try:
-			if option[0]=="port":
+			if option[0] in ["port", "loglevel"]:
 				option[1]=int(option[1])
 			options[option[0]]=option[1]
 		except:

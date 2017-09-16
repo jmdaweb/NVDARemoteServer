@@ -16,6 +16,8 @@ Each setting goes in a line, and has the following format: option=value
 Spaces between option and value, before option and after value are not allowed. The server will fail and switch to default settings if it can't parse the configuration.
 .P
 The file has unix-style line breaks, and is encoded in UTF\-8.
+.P
+All options are lowercase.
 .SH OPTIONS
 .P
 The following options are available. You can uncomment them in the file or add new lines.
@@ -43,6 +45,14 @@ pidfile
 When the server is running, the process id is stored in a file. Here you can set the path for that file. By default it's /var/run/NVDARemoteServer.pid
 .P
 Example: pidfile=/home/john/run/NVDARemoteServer.pid
+.P
+loglevel
+.P
+Set the information that the server will write to the log. You must enter a value between 0 and 3. 0 means only errors and warnings, 1 adds connection info, 2 is used for debugging purposes and 3 prints also the channel passwords.
+.P
+Warning! Although level 3 is set by default, you must change it to give less information, as level 3 is a security risk specially in production environments.
+.P
+Example: loglevel=2
 .SH SEE ALSO
 NVDARemoteServer (1), NVDARemoteCertificate (1)
 .SH BUGS
