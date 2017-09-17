@@ -10,8 +10,9 @@ port=None
 logfile=None
 pidfile=None
 loglevel=None
+pemfile=None
 def setup():
-	global configfile, port, interface, pidfile, logfile, loglevel
+	global configfile, port, interface, pidfile, logfile, loglevel, pemfile
 	#set default arguments
 	port=6837
 	interface=""
@@ -20,13 +21,16 @@ def setup():
 		pidfile="/var/run/NVDARemoteServer.pid"
 		logfile="/var/log/NVDARemoteServer.log"
 		configfile="/etc/NVDARemoteServer.conf"
+		pemfile="/usr/share/NVDARemoteServer/server.pem"
 	else:
 		if hasattr(sys, 'frozen'):
 			logfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.log")
 			configfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.conf")
+			pemfile=os.path.join(sys.prefix, 'server.pem')
 		else:
 			logfile=os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.log")
 			configfile=os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.conf")
+			pemfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		pidfile=""
 	arguments=parseArguments()
 	if "configfile" in arguments.keys():

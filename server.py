@@ -154,11 +154,7 @@ class Server(baseServer):
 	def createServerSocket(self, port, bind_host):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		printDebugMessage("Socket created.", 2)
-		if hasattr(sys, 'frozen'):
-			certfile=os.path.join(sys.prefix, 'server.pem')
-		else:
-			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
-		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=certfile, server_side=True)
+		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=options.pemfile, server_side=True)
 		printDebugMessage("Enabled ssl in socket.", 2)
 		printDebugMessage("Setting socket options...", 2)
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
