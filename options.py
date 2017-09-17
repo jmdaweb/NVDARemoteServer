@@ -6,16 +6,18 @@ import os
 #global variables
 configfile=None
 interface=None
+interface6=None
 port=None
 logfile=None
 pidfile=None
 loglevel=None
 pemfile=None
 def setup():
-	global configfile, port, interface, pidfile, logfile, loglevel, pemfile
+	global configfile, port, interface, pidfile, logfile, loglevel, pemfile, interface6
 	#set default arguments
 	port=6837
 	interface=""
+	interface6=""
 	loglevel=3
 	if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS'))|(platform.system().startswith('CYGWIN')):
 		pidfile="/var/run/NVDARemoteServer.pid"

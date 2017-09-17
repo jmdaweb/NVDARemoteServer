@@ -147,20 +147,30 @@ class Server(baseServer):
 		super(Server, self).__init__()
 		self.port = options.port
 		self.bind_host=options.interface
+		self.bind_host6=options.interface6
 		self.channels={}
 		printDebugMessage("Initialized instance variables", 2)
-		self.createServerSocket(self.port, self.bind_host)
+		self.createServerSocket(self.port, self.bind_host, self.bind_host6)
 
-	def createServerSocket(self, port, bind_host):
+	def createServerSocket(self, port, bind_host, bind_host6):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		if socket.has_ipv6:
+			self.server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 		printDebugMessage("Socket created.", 2)
 		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=options.pemfile, server_side=True)
+		if socket.has_ipv6:
+			self.server_socket6 = ssl.wrap_socket(self.server_socket6, certfile=options.pemfile, server_side=True)
 		printDebugMessage("Enabled ssl in socket.", 2)
 		printDebugMessage("Setting socket options...", 2)
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.server_socket.bind((bind_host, port))
 		self.server_socket.listen(5)
+		if socket.has_ipv6:
+			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			self.server_socket6.bind((bind_host6, port, 0, 0))
+			self.server_socket6.listen(5)
 		printDebugMessage("Socket has started listening on port "+str(self.port), 0)
 
 	def run(self):
@@ -183,7 +193,10 @@ class Server(baseServer):
 		try:
 			while self.running:
 				try:
-					r, w, e = select.select(self.client_sockets+[self.server_socket], self.client_sockets, self.client_sockets, 60)
+					if socket.has_ipv6:
+						r, w, e = select.select(self.client_sockets+[self.server_socket, self.server_socket6], self.client_sockets, self.client_sockets, 60)
+					else:
+						r, w, e = select.select(self.client_sockets+[self.server_socket], self.client_sockets, self.client_sockets, 60)
 				except:
 					printError()
 				if not self.running:
@@ -200,8 +213,12 @@ class Server(baseServer):
 						self.clients[id].confirmSend()
 				for sock in r:
 					if sock is self.server_socket:
-						self.accept_new_connection()
+						self.accept_new_connection(sock)
 						continue
+					if socket.has_ipv6:
+						if sock is self.server_socket6:
+							self.accept_new_connection(sock)
+							continue
 					id=self.searchId(sock)
 					if id!=0:
 						self.clients[id].handle_data()
@@ -213,21 +230,24 @@ class Server(baseServer):
 		except:
 			printError()
 
-	def accept_new_connection(self):
+	def accept_new_connection(self, srv_sock):
 		try:
-			client_sock, addr = self.server_socket.accept()
+			client_sock, addr = srv_sock.accept()
 			printDebugMessage("New incoming connection from address "+addr[0]+", port "+str(addr[1]), 1)
 		except:
 			printDebugMessage("Error while accepting a new connection.", 0)
 			printError()
 			try:
 				self.server_socket.shutdown(socket.SHUT_RDWR)
+				if socket.has_ipv6:
+					self.server_socket6.shutdown(socket.SHUT_RDWR)
 			except:
 				printError()
 			self.server_socket.close()
-			del self.server_socket
+			if socket.has_ipv6:
+				self.server_socket6.close()
 			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
-			self.createServerSocket(self.port, self.bind_host)
+			self.createServerSocket(self.port, self.bind_host, self.bind_host6)
 			return
 		printDebugMessage("Setting socket options...", 2)
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
@@ -248,9 +268,13 @@ class Server(baseServer):
 		printDebugMessage("Closing server socket...", 2)
 		try:
 			self.server_socket.shutdown(socket.SHUT_RDWR)
+			if socket.has_ipv6:
+				self.server_socket6.shutdown(socket.SHUT_RDWR)
 		except:
 			printError()
 		self.server_socket.close()
+		if socket.has_ipv6:
+			self.server_socket6.close()
 		loggerThread.running=False
 		loggerThread.join()
 
