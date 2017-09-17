@@ -21,8 +21,12 @@ def setup():
 		logfile="/var/log/NVDARemoteServer.log"
 		configfile="/etc/NVDARemoteServer.conf"
 	else:
-		logfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.log")
-		configfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.conf")
+		if hasattr(sys, 'frozen'):
+			logfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.log")
+			configfile=os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.conf")
+		else:
+			logfile=os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.log")
+			configfile=os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.conf")
 		pidfile=""
 	arguments=parseArguments()
 	if "configfile" in arguments.keys():
