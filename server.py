@@ -164,13 +164,17 @@ class Server(baseServer):
 		printDebugMessage("Setting socket options...", 2)
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		self.server_socket.bind((bind_host, port))
-		self.server_socket.listen(5)
 		if socket.has_ipv6:
 			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			self.server_socket6.bind((bind_host6, port, 0, 0))
 			self.server_socket6.listen(5)
+		try:
+			self.server_socket.bind((bind_host, port))
+			self.server_socket.listen(5)
+		except:
+			self.server_socket.close()
+			self.server_socket=None
 		printDebugMessage("Socket has started listening on port "+str(self.port), 0)
 
 	def run(self):
@@ -194,7 +198,10 @@ class Server(baseServer):
 			while self.running:
 				try:
 					if socket.has_ipv6:
-						r, w, e = select.select(self.client_sockets+[self.server_socket, self.server_socket6], self.client_sockets, self.client_sockets, 60)
+						if self.server_socket is not None:
+							r, w, e = select.select(self.client_sockets+[self.server_socket, self.server_socket6], self.client_sockets, self.client_sockets, 60)
+						else:
+							r, w, e = select.select(self.client_sockets+[self.server_socket6], self.client_sockets, self.client_sockets, 60)
 					else:
 						r, w, e = select.select(self.client_sockets+[self.server_socket], self.client_sockets, self.client_sockets, 60)
 				except:
@@ -237,13 +244,18 @@ class Server(baseServer):
 		except:
 			printDebugMessage("Error while accepting a new connection.", 0)
 			printError()
-			try:
-				self.server_socket.shutdown(socket.SHUT_RDWR)
-				if socket.has_ipv6:
+			if self.server_socket is not None:
+				try:
+					self.server_socket.shutdown(socket.SHUT_RDWR)
+				except:
+					printError()
+			if socket.has_ipv6:
+				try:
 					self.server_socket6.shutdown(socket.SHUT_RDWR)
-			except:
-				printError()
-			self.server_socket.close()
+				except:
+					printError()
+			if self.server_socket is not None:
+				self.server_socket.close()
 			if socket.has_ipv6:
 				self.server_socket6.close()
 			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
@@ -266,13 +278,18 @@ class Server(baseServer):
 		for c in self.clients.values():
 			c.close()
 		printDebugMessage("Closing server socket...", 2)
-		try:
-			self.server_socket.shutdown(socket.SHUT_RDWR)
-			if socket.has_ipv6:
+		if self.server_socket is not None:
+			try:
+				self.server_socket.shutdown(socket.SHUT_RDWR)
+			except:
+				printError()
+		if socket.has_ipv6:
+			try:
 				self.server_socket6.shutdown(socket.SHUT_RDWR)
-		except:
-			printError()
-		self.server_socket.close()
+			except:
+				printError()
+		if self.server_socket is not None:
+			self.server_socket.close()
 		if socket.has_ipv6:
 			self.server_socket6.close()
 		loggerThread.running=False
