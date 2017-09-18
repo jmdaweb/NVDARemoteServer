@@ -175,6 +175,9 @@ class Server(baseServer):
 		except:
 			self.server_socket.close()
 			self.server_socket=None
+			printDebugMessage("IPV4 socket has not been created", 0)
+			if socket.has_ipv6==False:
+				raise # If there is no IPV6 support and IPV4 socket can't listen, stop the server
 		printDebugMessage("Socket has started listening on port "+str(self.port), 0)
 
 	def run(self):
