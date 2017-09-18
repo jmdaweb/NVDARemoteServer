@@ -155,7 +155,7 @@ Starting with version 1.5, NVDARemoteServer includes a configuration file that y
 
 You can test your changes in debugging mode before modifying the configuration file. Although the changes in the configuration also are applied when you run the server in debug mode, you can pass some commandline parameters to perform tests. The following options are available:
 
-* --interface=ip: listen only on the specified ip address. This setting doesn't affect IPV6 interfaces.
+* --interface=ip: listen only on the specified ip address. This setting doesn't affect IPV6 interfaces. In some platforms, this setting will not work if IPV6 socket binds to all interfaces.
 * --interface6=ip: listen only on the specified IPV6 address. This setting doesn't affect IPV4 interfaces.
 * --port=port: listen only on the specified tcp port.
 * --logfile=path, --pidfile=path: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead.
