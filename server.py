@@ -344,7 +344,6 @@ class Channel(baseServer):
 	def terminate(self):
 		for client in self.clients.values():
 			client.close()
-			self.client_disconnected(client)
 
 class CheckThread(Thread):
 	def __init__(self, channel):
