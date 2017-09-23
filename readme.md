@@ -158,6 +158,7 @@ You can test your changes in debugging mode before modifying the configuration f
 * --interface=ip: listen only on the specified ip address. This setting doesn't affect IPV6 interfaces. In some platforms, this setting will not work if IPV6 socket binds to all interfaces.
 * --interface6=ip: listen only on the specified IPV6 address. This setting doesn't affect IPV4 interfaces.
 * --port=port: listen only on the specified tcp port.
+* --port6=port: listen on the specified port, but only for IPV6. By default, use the value specified in --port. Use this value if you want different ports for IPV4 and IPV6 sockets.
 * --logfile=path, --pidfile=path: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead.
 * --configfile=path: read config file from path. All the previous options can be edited in the configuration file.
 * --loglevel=n, where n is a number between 0 (almost quiet) and 3 (very verbose).

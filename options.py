@@ -8,12 +8,13 @@ configfile=None
 interface=None
 interface6=None
 port=None
+port6=None
 logfile=None
 pidfile=None
 loglevel=None
 pemfile=None
 def setup():
-	global configfile, port, interface, pidfile, logfile, loglevel, pemfile, interface6
+	global configfile, port, port6, interface, pidfile, logfile, loglevel, pemfile, interface6
 	#set default arguments
 	port=6837
 	interface=""
@@ -47,6 +48,8 @@ def setup():
 	#the command line arguments are parsed after the configfile. They take priority over the options in the file
 	for k, v in arguments.iteritems():
 		setattr(sys.modules[__name__], k, v)
+	if port6==None:
+		port6=port
 
 def parseArguments():
 	options={}
@@ -55,7 +58,7 @@ def parseArguments():
 			option=arg.split("=")
 			try:
 				option[0]=option[0].replace("--", "")
-				if option[0] in ["port", "loglevel"]:
+				if option[0] in ["port", "port6", "loglevel"]:
 					option[1]=int(option[1])
 				options[option[0]]=option[1]
 			except:
@@ -74,7 +77,7 @@ def readConfig():
 			continue
 		option=line.split("=")
 		try:
-			if option[0] in ["port", "loglevel"]:
+			if option[0] in ["port", "port6", "loglevel"]:
 				option[1]=int(option[1])
 			options[option[0]]=option[1]
 		except:

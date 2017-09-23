@@ -146,13 +146,14 @@ class Server(baseServer):
 	def __init__(self):
 		super(Server, self).__init__()
 		self.port = options.port
+		self.port6=options.port6
 		self.bind_host=options.interface
 		self.bind_host6=options.interface6
 		self.channels={}
 		printDebugMessage("Initialized instance variables", 2)
-		self.createServerSocket(self.port, self.bind_host, self.bind_host6)
+		self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 
-	def createServerSocket(self, port, bind_host, bind_host6):
+	def createServerSocket(self, port, port6, bind_host, bind_host6):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		if socket.has_ipv6:
 			self.server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
@@ -167,18 +168,19 @@ class Server(baseServer):
 		if socket.has_ipv6:
 			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			self.server_socket6.bind((bind_host6, port, 0, 0))
+			self.server_socket6.bind((bind_host6, port6, 0, 0))
 			self.server_socket6.listen(5)
+			printDebugMessage("IPV6 socket has started listening on port "+str(self.port6), 0)
 		try:
 			self.server_socket.bind((bind_host, port))
 			self.server_socket.listen(5)
+			printDebugMessage("IPV4 socket has started listening on port "+str(self.port), 0)
 		except:
 			self.server_socket.close()
 			self.server_socket=None
 			printDebugMessage("IPV4 socket has not been created", 0)
 			if socket.has_ipv6==False:
 				raise # If there is no IPV6 support and IPV4 socket can't listen, stop the server
-		printDebugMessage("Socket has started listening on port "+str(self.port), 0)
 
 	def run(self):
 		try:
