@@ -125,7 +125,7 @@ class baseServer(Thread):
 		del self.clients[client.id]
 
 	def client_disconnected(self, client):
-		printDebugMessage("Client "+str(client.id)+" has disconnected.", 1)
+		printDebugMessage("Client "+str(client.id)+" has disconnected.", 2)
 		if client.password!="":
 			printDebugMessage("Sending notification to other clients about client "+str(client.id), 2)
 			client.send_to_others(type='client_left', user_id=client.id, client=client.as_dict())
@@ -264,13 +264,13 @@ class Server(baseServer):
 			if socket.has_ipv6:
 				self.server_socket6.close()
 			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
-			self.createServerSocket(self.port, self.bind_host, self.bind_host6)
+			self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 			return
 		printDebugMessage("Setting socket options...", 2)
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, struct.pack('LL', 60, 0))
-		client = Client(server=self, socket=client_sock)
+		client = Client(server=self, socket=client_sock, address=addr)
 		self.add_client(client)
 		printDebugMessage("Added a new client.", 2)
 
@@ -379,9 +379,10 @@ class CheckThread(Thread):
 class Client(object):
 	id = 0
 
-	def __init__(self, server, socket):
+	def __init__(self, server, socket, address):
 		self.server = server
 		self.socket = socket
+		self.address=address
 		self.buffer = ""
 		self.buffer2=""
 		self.password=""
@@ -486,6 +487,7 @@ class Client(object):
 		except:
 			printError()
 		self.socket.close()
+		printDebugMessage("Connection from "+self.address[0]+", port "+str(self.address[1])+" closed.", 1)
 		self.server.client_disconnected(self)
 
 	def send(self, type, origin=None, clients=None, client=None, **kwargs):
