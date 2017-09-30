@@ -1,3 +1,11 @@
+nvda-remote-server (1.6-1) stable; urgency=low
+
+  * Added IPV6 support and more options
+    Closes: #8234568
+
+ -- Jose Manuel Delicado <jmdaweb@hotmail.com>  Fri, 06 Oct 2017 10:00:00 +0530
+
+
 nvda-remote-server (1.5-1) stable; urgency=low
 
   * Added options module and a separate thread for writing the log file.
