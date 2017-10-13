@@ -134,7 +134,7 @@ class baseServer(Thread):
 
 	def searchId(self, socket):
 		id=0
-		for c in self.clients.values():
+		for c in list(self.clients.values()):
 			if socket==c.socket:
 				id=c.id
 				break
@@ -235,7 +235,7 @@ class Server(baseServer):
 					if id!=0:
 						self.clients[id].handle_data()
 				if time.time() - self.last_ping_time >= self.PING_TIME:
-					for channel in self.channels.values():
+					for channel in list(self.channels.values()):
 						channel.ping()
 					self.last_ping_time = time.time()
 			self.close()
@@ -277,10 +277,10 @@ class Server(baseServer):
 	def close(self):
 		self.running = False
 		printDebugMessage("Closing channels...", 2)
-		for c in self.channels.values():
+		for c in list(self.channels.values()):
 			c.running=False
 		printDebugMessage("Disconnecting clients...", 2)
-		for c in self.clients.values():
+		for c in list(self.clients.values()):
 			c.close()
 		printDebugMessage("Closing server socket...", 2)
 		if self.server_socket is not None:
@@ -317,7 +317,7 @@ class Channel(baseServer):
 	def run(self):
 		self.running=True
 		self.checkThread.start()
-		while self.running and len(self.clients.values())>0:
+		while self.running and len(list(self.clients.values()))>0:
 			try:
 				sleep(0.01) # Prevent 100% cpu usage when there's at least one writeable socket
 				r, w, e = select.select(self.client_sockets, self.client_sockets, self.client_sockets, 60)
@@ -343,11 +343,11 @@ class Channel(baseServer):
 		del self.server.channels[self.password]
 
 	def ping(self):
-		for client in self.clients.values():
+		for client in list(self.clients.values()):
 			client.send(type='ping')
 
 	def terminate(self):
-		for client in self.clients.values():
+		for client in list(self.clients.values()):
 			client.close()
 
 class CheckThread(Thread):
@@ -444,7 +444,7 @@ class Client(object):
 		self.connection_type = obj.get('connection_type')
 		clients = []
 		client_ids = []
-		for c in self.server.clients.values():
+		for c in list(self.server.clients.values()):
 			if c is not self and self.password==c.password:
 				clients.append(c.as_dict())
 				client_ids.append(c.id)
@@ -475,7 +475,7 @@ class Client(object):
 
 	def check_key(self, key):
 		check=False
-		for v in self.server.channels.values():
+		for v in list(self.server.channels.values()):
 			if v.password==key:
 				check=True
 				break
@@ -519,7 +519,7 @@ class Client(object):
 
 	def send_data_to_others(self, data):
 		try:
-			for c in self.server.clients.values():
+			for c in list(self.server.clients.values()):
 				if (c.password==self.password)&(c!=self):
 					c.socket_send(data)
 		except:
@@ -531,7 +531,7 @@ class Client(object):
 		if origin is None:
 			origin = self.id
 		try:
-			for c in self.server.clients.values():
+			for c in list(self.server.clients.values()):
 				if (c.password==self.password)&(c!=self):
 					c.send(origin=origin, **obj)
 		except:

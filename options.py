@@ -43,10 +43,10 @@ def setup():
 		config=readConfig()
 	except:
 		print ("Can't open the configuration file, using default or commandline values")
-	for k, v in config.iteritems():
+	for k, v in list(config.items()):
 		setattr(sys.modules[__name__], k, v)
 	#the command line arguments are parsed after the configfile. They take priority over the options in the file
-	for k, v in arguments.iteritems():
+	for k, v in list(arguments.items()):
 		setattr(sys.modules[__name__], k, v)
 	if port6==None:
 		port6=port
