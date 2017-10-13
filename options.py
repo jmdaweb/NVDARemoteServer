@@ -42,7 +42,7 @@ def setup():
 	try:
 		config=readConfig()
 	except:
-		print "Can't open the configuration file, using default or commandline values"
+		print ("Can't open the configuration file, using default or commandline values")
 	for k, v in config.iteritems():
 		setattr(sys.modules[__name__], k, v)
 	#the command line arguments are parsed after the configfile. They take priority over the options in the file

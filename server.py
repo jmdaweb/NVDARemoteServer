@@ -71,9 +71,9 @@ class LoggerThread(Thread):
 				self.log=codecs.open(logfile, "w", "utf-8")
 				sys.stdout=self.log
 				sys.stderr=self.log
-			print "Loggin system initialized."
+			print ("Loggin system initialized.")
 		except:
-			print "Error opening NVDARemoteServer.log. Incorrect permissions or read only environment."
+			print ("Error opening NVDARemoteServer.log. Incorrect permissions or read only environment.")
 			self.printError(sys.exc_info())
 		self.running=True
 		self.queue=Queue(0)
@@ -83,15 +83,15 @@ class LoggerThread(Thread):
 			try:
 				item=self.queue.get(True, None)
 				self.queue.task_done()
-				print time.asctime()
+				print (time.asctime())
 				if isinstance(item, str) or isinstance(item, unicode):
-					print item
+					print (item)
 				elif isinstance(item, tuple):
 					self.printError(item)
 				sys.stdout.flush()
 			except:
 				self.printError(sys.exc_info())
-		print "Closing logger thread..."
+		print ("Closing logger thread...")
 		try:
 			if self.log is not None:
 				self.log.close()
@@ -103,7 +103,7 @@ class LoggerThread(Thread):
 			exc, type, trace=item
 			traceback.print_exception(exc, type, trace)
 		except:
-			print "Can't print all stack trace, text encoding error"
+			print ("Can't print all stack trace, text encoding error")
 		finally:
 			sys.stdout.flush()
 			sys.stderr.flush()
@@ -570,11 +570,11 @@ if __name__ == "__main__":
 			elif "kill" == sys.argv[1]:
 				dm.kill()
 			else:
-				print "Unknown command"
+				print ("Unknown command")
 				sys.exit(2)
 			sys.exit(0)
 		else:
-			print "usage: %s start|stop|restart" % sys.argv[0]
+			print ("usage: %s start|stop|restart" % sys.argv[0])
 			sys.exit(2)
 	else:
 		startAndWait()
