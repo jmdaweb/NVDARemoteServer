@@ -2,7 +2,7 @@
 import sys, os, time, atexit
 from signal import SIGTERM, SIGKILL
 
-class Daemon:
+class Daemon(object):
 	"""
 	A generic daemon class.
 	
@@ -25,7 +25,7 @@ class Daemon:
 			if pid > 0:
 				# exit first parent
 				sys.exit(0) 
-		except OSError, e: 
+		except OSError as e: 
 			sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
 			sys.exit(1)
 	
@@ -40,7 +40,7 @@ class Daemon:
 			if pid > 0:
 				# exit from second parent
 				sys.exit(0) 
-		except OSError, e: 
+		except OSError as e: 
 			sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
 			sys.exit(1) 
 	
@@ -105,7 +105,7 @@ class Daemon:
 			while 1:
 				os.kill(pid, SIGTERM)
 				time.sleep(0.1)
-		except OSError, err:
+		except OSError as err:
 			err = str(err)
 			if err.find("No such process") > 0:
 				if os.path.exists(self.pidfile):
@@ -136,7 +136,7 @@ class Daemon:
 			while 1:
 				os.kill(pid, SIGKILL)
 				time.sleep(0.1)
-		except OSError, err:
+		except OSError as err:
 			err = str(err)
 			if err.find("No such process") > 0:
 				if os.path.exists(self.pidfile):
