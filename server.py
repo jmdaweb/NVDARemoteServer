@@ -11,14 +11,19 @@ import platform
 import codecs
 import struct
 from threading import Thread, Lock
-from Queue import Queue
+import locale
+encoding=locale.getpreferredencoding()
+if sys.version[0]=='2':
+	from Queue import Queue
+	reload(sys)
+	sys.setdefaultencoding(encoding)
+	strtype=basestring
+else:
+	from queue import Queue
+	strtype=str
 from functools import wraps
 from time import sleep
 protocol="SSL v 23"
-import locale
-encoding=locale.getpreferredencoding()
-reload(sys)
-sys.setdefaultencoding(encoding)
 import options
 
 #use the higuest available ssl protocol version
@@ -84,7 +89,7 @@ class LoggerThread(Thread):
 				item=self.queue.get(True, None)
 				self.queue.task_done()
 				print (time.asctime())
-				if isinstance(item, str) or isinstance(item, unicode):
+				if isinstance(item, strtype):
 					print (item)
 				elif isinstance(item, tuple):
 					self.printError(item)
@@ -436,7 +441,7 @@ class Client(object):
 
 	def do_join(self, obj):
 		self.password = obj.get('channel', None)
-		if not self.password in self.server.channels.keys():
+		if not self.password in list(self.server.channels.keys()):
 			self.server.channels[self.password]=Channel(self.server, self.password)
 		self.server.remove_client(self)
 		self.server=self.server.channels[self.password]
@@ -469,7 +474,7 @@ class Client(object):
 
 	def generate_key(self):
 		res = str(random.randrange(1, 9))
-		for n in xrange(6):
+		for n in range(6):
 			res += str(random.randrange(0, 9))
 		return res
 
