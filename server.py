@@ -14,11 +14,13 @@ from threading import Thread, Lock
 import locale
 encoding=locale.getpreferredencoding()
 if sys.version[0]=='2':
+	python_version=2
 	from Queue import Queue
 	reload(sys)
 	sys.setdefaultencoding(encoding)
 	strtype=basestring
 else:
+	python_version=3
 	from queue import Queue
 	strtype=str
 from functools import wraps
@@ -399,7 +401,10 @@ class Client(object):
 
 	def handle_data(self):
 		try:
-			data = self.buffer + self.socket.recv(16384)
+			if python_version==2:
+				data = self.buffer + self.socket.recv(16384)
+			else:
+				data = self.buffer + self.socket.recv(16384).decode()
 		except:
 			printDebugMessage("Socket error in client "+str(self.id)+" while receiving data", 0)
 			printError()
@@ -515,7 +520,10 @@ class Client(object):
 	def confirmSend(self):
 		if self.buffer2!="":
 			try:
-				self.socket.sendall(self.buffer2)
+				if python_version==2:
+					self.socket.sendall(self.buffer2)
+				else:
+					self.socket.sendall(bytes(self.buffer2, "utf-8"))
 				self.buffer2=""
 			except:
 				printDebugMessage("Socket error in client "+str(self.id)+" while sending data", 0)
