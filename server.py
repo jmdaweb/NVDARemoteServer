@@ -566,10 +566,11 @@ if __name__ == "__main__":
 	options.setup()
 	logfile=options.logfile
 	#If debug is enabled, all platform checks are skipped
-	if 'debug' in sys.argv:
+	if "debug" in sys.argv:
 		debug=True
-		sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
-		sys.stderr=codecs.getwriter("utf-8")(sys.stderr)
+		if python_version==2:
+			sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
+			sys.stderr=codecs.getwriter("utf-8")(sys.stderr)
 		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
 		dm=serverDaemon(options.pidfile)
