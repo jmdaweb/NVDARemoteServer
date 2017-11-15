@@ -15,7 +15,7 @@ optdepends=()
 provides=()
 conflicts=()
 replaces=()
-backup=()
+backup=('etc/NVDARemoteServer.conf')
 options=()
 install=
 changelog=
@@ -25,6 +25,8 @@ validpgpkeys=()
 
 prepare() {
 echo preparing...
+sed -i "s/.*=\/var\/log\/NVDARemoteServer.log.*/logfile=\/run\/NVDARemoteServer\/NVDARemoteServer.log/" etc/NVDARemoteServer.conf
+sed -i "s/.*=\/var\/run\/NVDARemoteServer.pid.*/pidfile=\/run\/NVDARemoteServer\/NVDARemoteServer.pid/" etc/NVDARemoteServer.conf
 }
 
 build() {
