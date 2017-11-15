@@ -47,17 +47,27 @@ class Daemon(object):
 		# redirect standard file descriptors
 		sys.stdout.flush()
 		sys.stderr.flush()
-		si = file(self.stdin, 'r')
-		so = file(self.stdout, 'a+')
-		se = file(self.stderr, 'a+', 0)
+		si = open(self.stdin, 'r')
+		so = open(self.stdout, 'a+')
+		# http://bugs.python.org/issue17404
+		se = open(self.stderr, 'a+', buffering=1)
 		os.dup2(si.fileno(), sys.stdin.fileno())
 		os.dup2(so.fileno(), sys.stdout.fileno())
 		os.dup2(se.fileno(), sys.stderr.fileno())
+		si.close()
+		so.close()
+		se.close()
 	
 		# write pidfile
 		atexit.register(self.delpid)
 		pid = str(os.getpid())
-		file(self.pidfile,'w+').write("%s\n" % pid)
+		try:
+			file = open(self.pidfile,'w+')
+		except:
+			print("Can't open file '%s' for writing. Perhaps the config is broken. If this instance is started by a service manager such as systemd or open-rc it might have consequences!"%self.pidfile)
+			return
+		file.write("%s\n" % pid)
+		file.close()
 	
 	def delpid(self):
 		os.remove(self.pidfile)
@@ -68,7 +78,7 @@ class Daemon(object):
 		"""
 		# Check for a pidfile to see if the daemon already runs
 		try:
-			pf = file(self.pidfile,'r')
+			pf = open(self.pidfile,'r')
 			pid = int(pf.read().strip())
 			pf.close()
 		except IOError:
@@ -89,7 +99,7 @@ class Daemon(object):
 		"""
 		# Get the pid from the pidfile
 		try:
-			pf = file(self.pidfile,'r')
+			pf = open(self.pidfile,'r')
 			pid = int(pf.read().strip())
 			pf.close()
 		except IOError:
@@ -120,7 +130,7 @@ class Daemon(object):
 		"""
 		# Get the pid from the pidfile
 		try:
-			pf = file(self.pidfile,'r')
+			pf = open(self.pidfile,'r')
 			pid = int(pf.read().strip())
 			pf.close()
 		except IOError:
