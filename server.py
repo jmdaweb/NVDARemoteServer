@@ -379,7 +379,6 @@ class CheckThread(Thread):
 					printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...", 3)
 					self.channel.terminate()
 					del self.server.channels[self.channel.password]
-					self.channel._Thread__stop()
 				printDebugMessage("Checker thread for channel "+self.channel.password+" has finished", 3)
 				break
 
