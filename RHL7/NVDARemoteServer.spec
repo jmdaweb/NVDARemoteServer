@@ -48,7 +48,7 @@ if ! test -e /var/log/NVDARemoteServer.log
 then
 touch /var/log/NVDARemoteServer.log
 fi
-chown nvdaremoteserver:nvdaremoteserver /var/log/nvdaremoteserver.log
+chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
 if ! test -e /var/run/NVDARemoteServer
 then
 mkdir /var/run/NVDARemoteServer
