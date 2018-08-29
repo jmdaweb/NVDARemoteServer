@@ -9,6 +9,6 @@ touch /var/log/NVDARemoteServer.log
 chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
 fi
 systemctl daemon-reload
-NVDARemoteServer start
+service NVDARemoteServer start
 set +e
 exit 0
