@@ -6,9 +6,9 @@ set -e
 if ! test -e /var/log/NVDARemoteServer.log
 then
 touch /var/log/NVDARemoteServer.log
-chown nvdaremoteserver.nvdaremoteserver /var/log/NVDARemoteServer.log
+chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
 fi
 systemctl daemon-reload
-systemctl start NVDARemoteServer
+NVDARemoteServer start
 set +e
 exit 0

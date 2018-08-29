@@ -6,7 +6,7 @@ set -e
 if ! test -e /var/log/NVDARemoteServer.log
 then
 touch /var/log/NVDARemoteServer.log
-chown nvdaremoteserver.nvdaremoteserver /var/log/nvdaremoteserver.log
+chown nvdaremoteserver:nvdaremoteserver /var/log/nvdaremoteserver.log
 fi
 update-rc.d NVDARemoteServer defaults
 service NVDARemoteServer start
