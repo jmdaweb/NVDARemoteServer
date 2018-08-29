@@ -17,7 +17,7 @@
 # Location of NVDARemote server binary
 BIN="/usr/bin/python /usr/share/NVDARemoteServer/server.py"
 # The NVDARemote server should be launched by this user account
-USER=root
+USER=nvdaremoteserver
 
 if test -e /lib/lsb/init-functions
 then
@@ -27,12 +27,12 @@ fi
 # Carry out specific functions when asked to by the system
 case "$1" in
     start)
-	su $USER -c "$BIN start"
+	su $USER -c "$BIN start --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid"
 	touch /var/lock/subsys/nvdaremoteserver
 	exit $?
 	;;
     stop)
-	$BIN stop
+	su $USER -c "$BIN stop  --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid"
 	rm -f /var/lock/subsys/nvdaremoteserver
 	exit $?
 	;;
@@ -47,7 +47,7 @@ force-reload)
 	$0 reload || exit $?
 	;;
 status)
-	if test -e /var/run/NVDARemoteServer.pid
+	if test -e /var/run/NVDARemoteServer/NVDARemoteServer.pid
 	then
 		echo NVDARemoteServer is running
 	else

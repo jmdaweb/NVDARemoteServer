@@ -40,10 +40,36 @@ install -m 0644 NVDARemoteCertificate.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NV
 rm -rf $RPM_BUILD_ROOT
 %post
 chkconfig --add nvdaremoteserver
+if ! getent passwd nvdaremoteserver > /dev/null
+then
+useradd -s /bin/false -U --system -M -d /nonexistent nvdaremoteserver
+fi
+if ! test -e /var/log/NVDARemoteServer.log
+then
+touch /var/log/NVDARemoteServer.log
+fi
+chown nvdaremoteserver:nvdaremoteserver /var/log/nvdaremoteserver.log
+if ! test -e /var/run/NVDARemoteServer
+then
+mkdir /var/run/NVDARemoteServer
+fi
+chown -R nvdaremoteserver:nvdaremoteserver /var/run/NVDARemoteServer
+chmod 755 /var/run/NVDARemoteServer
 NVDARemoteServer start
 %preun
 NVDARemoteServer stop
 chkconfig --del nvdaremoteserver
+%postun
+if test -e /var/run/NVDARemoteServer
+then
+rm -rf /var/run/NVDARemoteServer
+fi
+if test -e /var/log/NVDARemoteServer.log
+then
+rm -f /var/log/NVDARemoteServer.log
+fi
+userdel nvdaremoteserver
+groupdel nvdaremoteserver
 %files
 %config(noreplace) /etc/NVDARemoteServer.conf
 /etc/init.d/nvdaremoteserver

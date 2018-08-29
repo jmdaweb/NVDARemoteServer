@@ -23,7 +23,7 @@ case "$1" in
 	su $USER -c "$BIN start --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid"
 	;;
     stop)
-	su $user -c "$BIN stop  --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid"
+	su $USER -c "$BIN stop  --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid"
 	;;
     restart)
 	$0 stop || exit 1
