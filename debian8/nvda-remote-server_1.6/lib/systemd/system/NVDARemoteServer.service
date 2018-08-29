@@ -3,6 +3,7 @@ Description=NVDARemote relay server
 After=network.target
 
 [Service]
+User=nvdaremoteserver
 Type=forking
 PIDFile=/var/run/NVDARemoteServer.pid
 ExecStart=/usr/bin/python /usr/share/NVDARemoteServer/server.py start

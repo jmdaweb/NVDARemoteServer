@@ -9,6 +9,14 @@ if test -e /usr/share/NVDARemoteServer
 then
 rm -rf /usr/share/NVDARemoteServer
 fi
+if test $1 = purge
+then
+if test -e /var/log/NVDARemoteServer.log
+then
+rm -f /var/log/NVDARemoteServer.log
+fi
+userdel nvdaremoteserver
+fi
 update-rc.d NVDARemoteServer remove
 fi
 set +e

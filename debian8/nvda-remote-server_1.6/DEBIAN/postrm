@@ -10,6 +10,14 @@ then
 rm -rf /usr/share/NVDARemoteServer
 fi
 fi
+if test $1 = purge
+then
+if test -e /var/log/NVDARemoteServer.log
+then
+rm -f /var/log/NVDARemoteServer.log
+fi
+userdel nvdaremoteserver
+fi
 systemctl daemon-reload
 set +e
 exit 0

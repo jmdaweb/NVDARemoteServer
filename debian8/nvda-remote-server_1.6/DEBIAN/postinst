@@ -3,7 +3,12 @@
  # This script runs after installing the package 
 
 set -e
+if ! test -e /var/log/NVDARemoteServer.log
+then
+touch /var/log/NVDARemoteServer.log
+chown nvdaremoteserver.nvdaremoteserver /var/log/NVDARemoteServer.log
+fi
 systemctl daemon-reload
-service NVDARemoteServer start
+systemctl start NVDARemoteServer
 set +e
 exit 0
