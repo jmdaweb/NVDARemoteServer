@@ -188,3 +188,18 @@ If you run a Debian 8 or RHL 7 based OpenVZ or Docker container, don't install t
 
 Solution: install Debian 7 or RHL 6 package instead, or run systemd in a privileged container.
 
+### Problems installing the Debian 8 package when systemd-sysv is not installed
+
+Sometimes, calling systemctl causes an error because systemd is not running (for example, after upgrading from Debian 7 to Debian 8). As a consequence, the server package is not installed.
+
+Solution: systemd-sysv is required to install this package. If you tried installing it, run apt -f install or apt-get -f install. Then, reboot your computer. Finally, run dpkg --configure nvda-remote-server.
+
+### Installing on Mac os x Sierra and later
+
+Mac Os Sierra doesn't allow untrusted software to be installed or used by default. In addition, this option has been removed from System Preferences application. To allow untrusted software:
+
+* Go to the utilities folder, and open terminal.
+* Type the following command: sudo spctl --master-disable
+* Enter your password. Now, if system integrity protection has been disabled, you can install the package as described above.
+
+Caution! Allowing untrusted applications is a security risk. To revert to the recommended settings, run sudo spctl --master-enable
