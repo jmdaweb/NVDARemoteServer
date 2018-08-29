@@ -9,6 +9,10 @@ if test -e /usr/share/NVDARemoteServer
 then
 rm -rf /usr/share/NVDARemoteServer
 fi
+if test -e /var/run/NVDARemoteServer
+then
+rm -rf /var/run/NVDARemoteServer
+fi
 fi
 if test $1 = purge
 then
