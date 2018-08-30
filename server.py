@@ -399,20 +399,22 @@ class Client(object):
 		self.sendLock=Lock()
 
 	def handle_data(self):
+		sock_data=''
 		try:
 			if python_version==2:
-				data = self.buffer + self.socket.recv(16384)
+				sock_data = self.socket.recv(16384)
 			else:
-				data = self.buffer + self.socket.recv(16384).decode()
+				sock_data = self.socket.recv(16384).decode()
 		except:
 			printDebugMessage("Socket error in client "+str(self.id)+" while receiving data", 0)
 			printError()
 			self.close()
 			return
-		if data == '': #Disconnect
+		if sock_data == '': #Disconnect
 			printDebugMessage("Received empty buffer from client "+str(self.id)+", disconnecting", 1)
 			self.close()
 			return
+		data=self.buffer + sock_data
 		if '\n' not in data:
 			self.buffer = data
 			return
