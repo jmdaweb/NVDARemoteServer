@@ -458,6 +458,8 @@ class Client(object):
 				clients.append(c.as_dict())
 				client_ids.append(c.id)
 		self.send(type='channel_joined', channel=self.password, user_ids=client_ids, clients=clients)
+		if options.motd:
+			self.send(type='motd', motd=options.motd, force_display=options.motd_force_display)
 		self.send_to_others(type='client_joined', user_id=self.id, client=self.as_dict())
 		if not self.server.isAlive():
 			self.server.start()

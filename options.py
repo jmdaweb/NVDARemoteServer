@@ -13,8 +13,10 @@ logfile=None
 pidfile=None
 loglevel=None
 pemfile=None
+motd=None
+motd_force_display=False
 def setup():
-	global configfile, port, port6, interface, pidfile, logfile, loglevel, pemfile, interface6
+	global configfile, port, port6, interface, pidfile, logfile, loglevel, pemfile, interface6, motd, motd_force_display
 	#set default arguments
 	port=6837
 	interface=""
@@ -60,6 +62,11 @@ def parseArguments():
 				option[0]=option[0].replace("--", "")
 				if option[0] in ["port", "port6", "loglevel"]:
 					option[1]=int(option[1])
+				if option[0]=='motd_force_display':
+					option[1]=bool(int(option[1]))
+				if option[0]=='motd':
+					if len(option)>2:
+						option[1]='='.join(option[1:])
 				options[option[0]]=option[1]
 			except:
 				pass
@@ -79,6 +86,11 @@ def readConfig():
 		try:
 			if option[0] in ["port", "port6", "loglevel"]:
 				option[1]=int(option[1])
+			if option[0]=='motd_force_display':
+				option[1]=bool(int(option[1]))
+			if option[0]=='motd':
+				if len(option)>2:
+					option[1]='='.join(option[1:])
 			options[option[0]]=option[1]
 		except:
 			pass
