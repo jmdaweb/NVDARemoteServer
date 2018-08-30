@@ -75,6 +75,18 @@ The pem file must contain firstly the private key without passphrase encryption,
 By default, use server.pem located in the same path as server.py.
 .P
 Example: pemfile=/etc/apache2/ssl/certificate.pem
+.P
+motd
+.P
+This is the message displayed to all clients which join a channel. If you collect user data, this is a good place to specify an URL to your privacy policy, if available. The message must be written in a single line. Multiline support is not available yet. By default no message is displayed.
+.P
+Example: motd=Hello, welcome to my relay server
+.P
+motd_force_display
+.P
+The message of the day can be displayed once (only for first-time clients) or each time a client joins a channel. Possible values for this setting: 0=False, other integer values mean True. Defaults to False (do not force display).
+.P
+Example: motd_force_display=1
 .SH SEE ALSO
 NVDARemoteServer (1), NVDARemoteCertificate (1)
 .SH BUGS

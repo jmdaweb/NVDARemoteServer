@@ -85,7 +85,7 @@ Change or add more tags if you plan to push the image to a Docker registry.
 
 ## Running
 
-Before you start, check that the tcp port 6837 is allowed through your firewall.
+Before you start, check that the tcp port you have chosen for the server (by default 6837) is allowed through your firewall.
 
 On Unix platforms, including Mac Os x, there is a script located in /usr/bin called NVDARemoteServer. You can run this script without parameters to get a short help message.
 
@@ -163,6 +163,8 @@ You can test your changes in debugging mode before modifying the configuration f
 * --configfile=path: read config file from path. All the previous options can be edited in the configuration file.
 * --loglevel=n, where n is a number between 0 (almost quiet) and 3 (very verbose).
 * --pemfile=path: path to the private key and certificate used for ssl connections. They must be in the same file.
+* --motd=string: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes.
+* --motd_force_display=integer: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display.
 
 Note: the command line arguments take precedence over the supplied ones in the configuration file.
 

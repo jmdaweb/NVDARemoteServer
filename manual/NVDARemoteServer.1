@@ -51,6 +51,10 @@ Currently the following options are supported:
 \-\-loglevel=n: set log level. You must provide a value between 0 and 3. Default: 3, maximum information.
 .P
 \-\-pemfile=path: use private key and certificate from file specified in path for ssl connections.
+.P
+\-\-motd=string: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes.
+.P
+\-\-motd_force_display=integer: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display.
 .SH NOTES
 .P
 You can change server settings by editing the configuration file. See NVDARemoteServer.conf (5) for more details. The options \-\-configfile, \-\-logfile and \-\-pidfile can affect the server in daemon mode too. Edit the service files to fit your needs.
