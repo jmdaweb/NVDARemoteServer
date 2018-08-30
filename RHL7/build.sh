@@ -14,6 +14,7 @@ if ! test -e ~/rpmbuild/SPECS
 then
 mkdir -p ~/rpmbuild/SPECS
 fi
+cp NVDARemoteServer.spec ~/rpmbuild/SPECS
 cp NVDARemoteServer NVDARemoteServer.service ../*.py ../*.pem ../LICENSE ../manual/* ../*.conf ../NVDARemoteCertificate ~/rpmbuild/SOURCES/NVDARemoteServer-1.7
 cd ~/rpmbuild/SOURCES
 tar -czf server.tar.gz NVDARemoteServer-1.7
