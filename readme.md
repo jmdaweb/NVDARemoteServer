@@ -12,40 +12,47 @@ This server is multiplatform, so you can install it under Windows, Mac and many 
 
 ## Building
 
-Building NVDA Remote Relay server is very easy. On most platforms, you only need to run the build.sh script corresponding to your platform, and install the generated package after that.
+Building NVDA Remote Relay server is very easy. On most platforms, you only need to run the build.sh script corresponding to your platform, and install the generated package after that. Unless specified, you should clone this repository and run all commands as root.
 
 ### Building for debian based distributions
 
 1. Navigate to the debian directory inside this repo (choose between Debian 7 or Debian 8). If you run Debian versions later than Debian 8, or Ubuntu 15.04 and later, the Debian 8 package is what you need.
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script: sudo ./build.sh
-4. Install the package: sudo dpkg -i NVDARemoteServer.deb
+3. Run the script: ./build.sh
+4. Install the package: dpkg -i NVDARemoteServer.deb
 
-To uninstall it, run sudo dpkg --purge nvda-remote-server
+To uninstall it, run dpkg --purge nvda-remote-server
 
-To uninstall it keeping the configuration files, run sudo dpkg --remove nvda-remote-server
+To uninstall it keeping the configuration files, run dpkg --remove nvda-remote-server
 
 ### Building for Centos and RHL based distributions
 
-You must choose between Centos 6 (RHL6 folder) or Centos 7 (RHL 7). Follow the instructions included in that folders. Finally, install the package using rpm: rpm -U NVDARemoteServer.rpm
+To build the rpm version, the rpmdevtools package is required. Install it using your package manager.
 
-To uninstall it, run sudo rpm -e NVDARemoteServer
+1. Navigate to the RHL directory inside this repo (choose between RHL 6 or RHL 7). If you run Centos versions later than Centos 7, or Fedora, the RHL 7 package is what you need.
+2. Ensure that the build.sh script can be executed: chmod +x build.sh
+3. Run the script: ./build.sh. The final rpm will be located at ~/rpmbuild/RPMS/noarch directory.
+4. Install the package using rpm: rpm -U NVDARemoteServer.rpm
+
+To uninstall it, run rpm -e NVDARemoteServer
 
 ### Building for Mac Os x
 
 1. Navigate to the Mac Os x directory inside this repo.
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
 3. Run the script: sudo ./build.sh
-4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: sudo installer -pkg NVDARemoteServer.pkg -target /
+4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: installer -pkg NVDARemoteServer.pkg -target /
 
-To uninstall it, run sudo NVDARemoteUninstall
+To uninstall it, run NVDARemoteUninstall
 
 ### Building for Arch based distributions
 
+Note: you must clone the repository and perform the following actions in a standard, non-privileged user account.
+
 1. Navigate to the Arch directory inside this repo.
 2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script without root privileges: ./build.sh
-4. Install the package with pacman: sudo pacman -U NVDARemoteServer.pkg.tar.xz.
+3. Run the script: ./build.sh
+4. Install the package with pacman: sudo pacman -U NVDARemoteServer.pkg.tar.xz
 
 To uninstall it, run: sudo pacman --remove NVDARemoteServer
 
