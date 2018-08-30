@@ -1,8 +1,10 @@
 #!/bin/bash
+CURDIR=$PWD
 if ! test -e ~/rpmbuild
 then
 cd ~
 rpmdev-setuptree
+cd $CURDIR
 fi
 if ! test -e ~/rpmbuild/SOURCES/NVDARemoteServer-1.7
 then
