@@ -1,5 +1,5 @@
 Name: NVDARemoteServer
-Version: 1.6
+Version: 1.7
 Release: 1.el6
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
@@ -91,6 +91,8 @@ groupdel nvdaremoteserver
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %doc LICENSE
 %changelog
+* Sat Sep 01 2018 Jose Manuel Delicado <jm.delicado@nvda.es> - 1.7-1
+- Added compatibility with Python 3. Added message of the day.
 * Fri Oct 06 2017 Jose Manuel Delicado <jmdaweb@hotmail.com> - 1.6-1
 - Added IPV6 support and more options
 * Sat Sep 09 2017 Jose Manuel Delicado <jmdaweb@hotmail.com> - 1.5-1
