@@ -1,4 +1,5 @@
 #!/bin/bash
+VERSION=1.7
 mkdir -p package/usr/bin
 mkdir -p package/etc
 mkdir -p package/usr/share/NVDARemoteServer
@@ -17,4 +18,4 @@ gzip -n -9 package/usr/share/man/man5/NVDARemoteServer.conf.5
 chmod +x package/usr/bin/NVDARemoteServer
 chmod +x package/usr/bin/NVDARemoteCertificate
 chmod +x package/usr/bin/NVDARemoteUninstall
-pkgbuild --identifier NVDARemoteServer --version 1.7 --install-location / --root package NVDARemoteServer.pkg
+pkgbuild --identifier NVDARemoteServer --version $VERSION --install-location / --root package NVDARemoteServer.pkg
