@@ -12,7 +12,7 @@ This server is multiplatform, so you can install it under Windows, Mac and many 
 
 ## Building
 
-Building NVDA Remote Relay server is very easy. On most platforms, you only need to run the build.sh script corresponding to your platform, and install the generated package after that. Unless specified, you should clone this repository and run all commands as root.
+Building NVDA Remote Relay server is very easy. On most platforms, you only need to run the build.sh script corresponding to your platform, and install the generated package after that. Unless otherwise specified, you should clone this repository and run all commands as root.
 
 ### Building for debian based distributions
 
