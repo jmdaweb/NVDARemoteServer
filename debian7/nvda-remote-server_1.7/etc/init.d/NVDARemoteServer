@@ -20,10 +20,10 @@ USER=nvdaremoteserver
 # Carry out specific functions when asked to by the system
 case "$1" in
     start)
-	su $USER -c "$BIN start --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid"
+	su $USER -c "$BIN start --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid" -s /bin/sh
 	;;
     stop)
-	su $USER -c "$BIN stop  --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid"
+	su $USER -c "$BIN stop  --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid" -s /bin/sh
 	;;
     restart)
 	$0 stop || exit 1
