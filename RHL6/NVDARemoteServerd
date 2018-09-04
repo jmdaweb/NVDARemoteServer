@@ -27,12 +27,12 @@ fi
 # Carry out specific functions when asked to by the system
 case "$1" in
     start)
-	su $USER -c "$BIN start --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid" -s /bin/sh
+	su $USER -c "$BIN start" -s /bin/sh
 	touch /var/lock/subsys/nvdaremoteserver
 	exit $?
 	;;
     stop)
-	su $USER -c "$BIN stop  --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid" -s /bin/sh
+	su $USER -c "$BIN stop " -s /bin/sh
 	rm -f /var/lock/subsys/nvdaremoteserver
 	exit $?
 	;;

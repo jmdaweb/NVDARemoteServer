@@ -36,5 +36,6 @@ chmod -x nvda-remote-server_$VERSION/usr/share/man/man1/NVDARemoteCertificate.1.
 chmod -x nvda-remote-server_$VERSION/usr/share/doc/nvda-remote-server/changelog.Debian.gz
 chmod -x nvda-remote-server_$VERSION/lib/systemd/system/NVDARemoteServer.service
 chmod -x nvda-remote-server_$VERSION/etc/NVDARemoteServer.conf
+sed -i "s/.*=\/var\/run\/NVDARemoteServer.pid.*/pidfile=\/var\/run\/NVDARemoteServer\/NVDARemoteServer.pid/" nvda-remote-server_$VERSION/etc/NVDARemoteServer.conf
 #build the package
 dpkg-deb --build nvda-remote-server_$VERSION

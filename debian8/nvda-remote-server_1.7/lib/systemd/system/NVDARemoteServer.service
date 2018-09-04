@@ -6,9 +6,9 @@ After=network.target
 User=nvdaremoteserver
 Type=forking
 PIDFile=/var/run/NVDARemoteServer/NVDARemoteServer.pid
-ExecStart=/usr/bin/python /usr/share/NVDARemoteServer/server.py start --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid
-ExecStop=/usr/bin/python /usr/share/NVDARemoteServer/server.py stop --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid
-ExecReload=/usr/bin/python /usr/share/NVDARemoteServer/server.py restart --pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid
+ExecStart=/usr/bin/python /usr/share/NVDARemoteServer/server.py start
+ExecStop=/usr/bin/python /usr/share/NVDARemoteServer/server.py stop
+ExecReload=/usr/bin/python /usr/share/NVDARemoteServer/server.py restart
 
 [Install]
 WantedBy=multi-user.target

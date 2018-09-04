@@ -18,6 +18,7 @@ fi
 cp NVDARemoteServer.spec ~/rpmbuild/SPECS
 cp NVDARemoteServer NVDARemoteServer.service ../*.py ../*.pem ../LICENSE ../manual/* ../*.conf ../NVDARemoteCertificate ~/rpmbuild/SOURCES/NVDARemoteServer-$VERSION
 cd ~/rpmbuild/SOURCES
+sed -i "s/.*=\/var\/run\/NVDARemoteServer.pid.*/pidfile=\/var\/run\/NVDARemoteServer\/NVDARemoteServer.pid/" NVDARemoteServer-$VERSION/NVDARemoteServer.conf
 tar -czf server.tar.gz NVDARemoteServer-$VERSION
 cd ..
 rpmbuild -ba SPECS/NVDARemoteServer.spec
