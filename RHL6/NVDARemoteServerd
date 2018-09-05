@@ -18,6 +18,8 @@
 BIN="/usr/bin/python /usr/share/NVDARemoteServer/server.py"
 # The NVDARemote server should be launched by this user account
 USER=nvdaremoteserver
+# Location of NVDARemote server pidfile
+PIDFILE=/var/run/NVDARemoteServer/NVDARemoteServer.pid
 
 if test -e /lib/lsb/init-functions
 then
@@ -47,7 +49,7 @@ force-reload)
 	$0 reload || exit $?
 	;;
 status)
-	if test -e /var/run/NVDARemoteServer/NVDARemoteServer.pid
+	if test -e $PIDFILE
 	then
 		echo NVDARemoteServer is running
 	else
