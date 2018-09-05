@@ -24,3 +24,6 @@ class NVDARemoteService(win32serviceutil.ServiceFramework):
 
 	def SvcDoRun(self):
 		self.srv.run()
+
+if __name__ == '__main__':
+	win32serviceutil.HandleCommandLine(NVDARemoteService)
