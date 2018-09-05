@@ -29,8 +29,11 @@ class NVDARemoteService(win32serviceutil.ServiceFramework):
 
 if __name__ == '__main__':
 	if len(sys.argv)==1:
-		servicemanager.Initialize()
+		servicemanager.Initialize(NVDARemoteService._svc_name_, os.path.abspath(servicemanager.__file__))
 		servicemanager.PrepareToHostSingle(NVDARemoteService)
-		servicemanager.StartServiceCtrlDispatcher()
+		try:
+			servicemanager.StartServiceCtrlDispatcher()
+		except:
+			win32serviceutil.usage()
 	else:
 		win32serviceutil.HandleCommandLine(NVDARemoteService)
