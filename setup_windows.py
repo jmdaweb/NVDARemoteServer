@@ -35,12 +35,9 @@ options = {
    {
     'script': 'server.py',
     'dest_base': 'NVDARemoteServer',
-}
-  ],
-  service = [
+},
    {
-    'modules': ['service'],
-    'cmdline_style':'pywin32',
+    'script': 'service.py',
     'dest_base': 'NVDARemoteService',
 }
   ],

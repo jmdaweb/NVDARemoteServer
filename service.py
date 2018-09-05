@@ -6,6 +6,8 @@ import server
 import os
 import sys
 import options
+import servicemanager
+
 class NVDARemoteService(win32serviceutil.ServiceFramework):
 	_svc_name_ = "NVDARemoteService"
 	_svc_display_name_ = "NVDARemote relay server"
@@ -26,4 +28,9 @@ class NVDARemoteService(win32serviceutil.ServiceFramework):
 		self.srv.run()
 
 if __name__ == '__main__':
-	win32serviceutil.HandleCommandLine(NVDARemoteService)
+	if len(sys.argv)==1:
+		servicemanager.Initialize()
+		servicemanager.PrepareToHostSingle(NVDARemoteService)
+		servicemanager.StartServiceCtrlDispatcher()
+	else:
+		win32serviceutil.HandleCommandLine(NVDARemoteService)
