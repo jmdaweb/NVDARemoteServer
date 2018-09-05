@@ -170,10 +170,12 @@ class Server(baseServer):
 			self.server_socket6 = ssl.wrap_socket(self.server_socket6, certfile=options.pemfile, server_side=True)
 		printDebugMessage("Enabled ssl in socket.", 2)
 		printDebugMessage("Setting socket options...", 2)
-		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+		if platform.system()!='Windows':
+			self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		if socket.has_ipv6:
-			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+			if platform.system()!='Windows':
+				self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			self.server_socket6.bind((bind_host6, port6, 0, 0))
 			self.server_socket6.listen(5)
@@ -275,8 +277,9 @@ class Server(baseServer):
 			return
 		printDebugMessage("Setting socket options...", 2)
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
-		client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, struct.pack('LL', 60, 0))
+		if platform.system()!='Windows':
+			client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+			client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, struct.pack('LL', 60, 0))
 		client = Client(server=self, socket=client_sock, address=addr)
 		self.add_client(client)
 		printDebugMessage("Added a new client.", 2)
