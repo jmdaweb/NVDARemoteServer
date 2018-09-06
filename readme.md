@@ -92,7 +92,7 @@ Change or add more tags if you plan to push the image to a Docker registry.
 
 ## Running
 
-Before you start, check that the tcp port you have chosen for the server (by default 6837) is allowed through your firewall.
+Before you begin, check that the tcp port you have chosen for the server (by default 6837) is allowed through your firewall.
 
 On Unix platforms, including Mac Os x, there is a script located in /usr/bin called NVDARemoteServer. You can run this script without parameters to get a short help message.
 
@@ -118,9 +118,7 @@ On Centos 6, Centos 7, Arch and Debian based distributions, the NVDA Remote Rela
 
 If you want to configure the service to run at system startup, run sudo NVDARemoteServer enable. Run sudo NVDARemoteServer disable to configure the service to start manually.
 
-The procedure to run the server on Windows is different. There is an executable in the dist folder that you can run to start the server in console mode. To stop, simply close the console window or kill the process.
-
-If you want to install the server as a system service, run service_manager.cmd as administrator and choose the right options on the displayed menu.
+If you want to install the server as a system service on Windows, run service_manager.cmd as administrator and choose the right options on the displayed menu.
 
 Run debug.cmd to start the server in debugging mode.
 
@@ -134,7 +132,9 @@ You can change jmdaweb/nvda-remote-server:latest to your custom image name if yo
 
 Do you run the server in production mode and it suddenly is stopped? Now you can look at the following files:
 
-On Linux and Mac Os x: go to /var/log/NVDARemoteServer.log
+On most Linux distributions and Mac Os x: go to /var/log/NVDARemoteServer.log
+
+On Arch Linux: go to /run/NVDARemoteServer/NVDARemoteServer.log
 
 On Windows: NVDARemoteServer.log is located inside the program folder.
 
@@ -166,12 +166,12 @@ You can test your changes in debugging mode before modifying the configuration f
 * --interface6=ip: listen only on the specified IPV6 address. This setting doesn't affect IPV4 interfaces.
 * --port=port: listen only on the specified tcp port.
 * --port6=port: listen on the specified port, but only for IPV6. By default, use the value specified in --port. Use this value if you want different ports for IPV4 and IPV6 sockets.
-* --logfile=path, --pidfile=path: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead.
-* --configfile=path: read config file from path. All the previous options can be edited in the configuration file.
+* --logfile=path, --pidfile=path: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead. If you change pidfile in the configuration file and use the server as a system daemon, update the pidfile variable in the service units for the status command to work properly.
 * --loglevel=n, where n is a number between 0 (almost quiet) and 3 (very verbose).
 * --pemfile=path: path to the private key and certificate used for ssl connections. They must be in the same file.
 * --motd=string: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes.
 * --motd_force_display=integer: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display.
+* --configfile=path: read config file from path. All the previous options can be edited in the configuration file.
 
 Note: the command line arguments take precedence over the supplied ones in the configuration file.
 

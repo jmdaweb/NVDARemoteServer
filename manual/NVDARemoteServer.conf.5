@@ -56,6 +56,8 @@ pidfile
 .P
 When the server is running, the process id is stored in a file. Here you can set the path for that file. By default it's /var/run/NVDARemoteServer.pid
 .P
+If you change pidfile in the configuration file and use the server as a system daemon, update the pidfile variable in the service units for the status command to work properly.
+.P
 Example: pidfile=/home/john/run/NVDARemoteServer.pid
 .P
 loglevel
