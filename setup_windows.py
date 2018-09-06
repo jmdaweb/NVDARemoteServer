@@ -8,12 +8,10 @@ def get_data():
  if platform.architecture()[0][:2] == "32":
   return [
   ("Microsoft.VC90.CRT", glob("windows/msvc32/Microsoft.VC90.CRT/*")),
-  ("Microsoft.VC90.MFC", glob("windows/msvc32/Microsoft.VC90.MFC/*")),
   ("", ["windows/msvc32/openssl.exe", "windows/msvc32/openssl.cnf"])]
  elif platform.architecture()[0][:2] == "64":
   return [
   ("Microsoft.VC90.CRT", glob("windows/msvc64/Microsoft.VC90.CRT/*")),
-  ("Microsoft.VC90.MFC", glob("windows/msvc64/Microsoft.VC90.MFC/*")),
   ("", ["windows/msvc64/openssl.exe", "windows/msvc64/openssl.cnf"])]
 
 if __name__ == '__main__':
