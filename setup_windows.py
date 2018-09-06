@@ -35,10 +35,6 @@ options = {
    {
     'script': 'server.py',
     'dest_base': 'NVDARemoteServer',
-},
-   {
-    'script': 'service.py',
-    'dest_base': 'NVDARemoteService',
 }
   ],
   install_requires = [

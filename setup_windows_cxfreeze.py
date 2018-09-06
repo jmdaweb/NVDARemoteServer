@@ -29,7 +29,6 @@ options = {
    'build_exe': build_exe_options,
   },
   executables = [
-    Executable("server.py", targetName="NVDARemoteServer.exe"),
-    Executable("service.py", targetName="NVDARemoteService.exe")
+    Executable("server.py", targetName="NVDARemoteServer.exe")
   ]
  )

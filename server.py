@@ -562,12 +562,6 @@ def startAndWait():
 	srv=Server()
 	srv.run()
 
-if (platform.system()=="Linux")|(platform.system()=="Darwin")|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
-	import daemon
-	class serverDaemon(daemon.Daemon):
-		def run(self):
-			startAndWait()
-
 if __name__ == "__main__":
 	options.setup()
 	logfile=options.logfile
@@ -579,6 +573,10 @@ if __name__ == "__main__":
 			sys.stderr=codecs.getwriter("utf-8")(sys.stderr)
 		startAndWait()
 	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
+		import daemon
+		class serverDaemon(daemon.Daemon):
+			def run(self):
+				startAndWait()
 		dm=serverDaemon(options.pidfile)
 		if len(sys.argv) >= 2:
 			if 'start' == sys.argv[1]:
@@ -594,7 +592,38 @@ if __name__ == "__main__":
 				sys.exit(2)
 			sys.exit(0)
 		else:
-			print ("usage: %s start|stop|restart" % sys.argv[0])
+			print ("usage: %s start|stop|restart|kill [options]. Read the server documentation for more information." % sys.argv[0])
 			sys.exit(2)
+	elif platform.system()=='Windows':
+		import win32serviceutil
+		import win32service
+		import win32event
+		import servicemanager
+		class NVDARemoteService(win32serviceutil.ServiceFramework):
+			_svc_name_ = "NVDARemoteService"
+			_svc_display_name_ = "NVDARemote relay server"
+			_svc_deps_ = []
+			def __init__(self, args):
+				win32serviceutil.ServiceFramework.__init__(self, args)
+				self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
+				self.srv=Server()
+
+			def SvcStop(self):
+				self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+				self.srv.running=False
+				win32event.SetEvent(self.hWaitStop)
+
+			def SvcDoRun(self):
+				self.srv.run()
+
+		if len(sys.argv)==1:
+			servicemanager.Initialize(NVDARemoteService._svc_name_, os.path.abspath(servicemanager.__file__))
+			servicemanager.PrepareToHostSingle(NVDARemoteService)
+			try:
+				servicemanager.StartServiceCtrlDispatcher()
+			except:
+				win32serviceutil.usage()
+		else:
+			win32serviceutil.HandleCommandLine(NVDARemoteService)
 	else:
 		startAndWait()

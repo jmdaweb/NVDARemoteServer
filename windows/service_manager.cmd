@@ -26,42 +26,42 @@ if %choice%==9 goto quit
 goto menu
 :install
 echo installing...
-"%~dp0NVDARemoteService.exe" install
+"%~dp0NVDARemoteServer.exe" install
 pause
 goto menu
 :remove
 echo uninstalling...
-"%~dp0NVDARemoteService.exe" remove
+"%~dp0NVDARemoteServer.exe" remove
 pause
 goto menu
 :start
 echo starting...
-"%~dp0NVDARemoteService.exe" start
+"%~dp0NVDARemoteServer.exe" start
 pause
 goto menu
 :stop
 echo stopping...
-"%~dp0NVDARemoteService.exe" stop
+"%~dp0NVDARemoteServer.exe" stop
 pause
 goto menu
 :interactive
 echo Enabling interactive mode...
-"%~dp0NVDARemoteService.exe" --interactive update
+"%~dp0NVDARemoteServer.exe" --interactive update
 pause
 goto menu
 :auto
 echo configuring service to run at system startup...
-"%~dp0NVDARemoteService.exe" --startup auto update
+"%~dp0NVDARemoteServer.exe" --startup auto update
 pause
 goto menu
 :manual
 echo configuring service to run manually...
-"%~dp0NVDARemoteService.exe" --startup manual update
+"%~dp0NVDARemoteServer.exe" --startup manual update
 pause
 goto menu
 :disable
 echo disabling service...
-"%~dp0NVDARemoteService.exe" --startup disabled update
+"%~dp0NVDARemoteServer.exe" --startup disabled update
 pause
 goto menu
 :quit
