@@ -10,7 +10,7 @@ import random
 import platform
 import codecs
 import struct
-from threading import Thread, Lock
+from threading import Thread, Lock, Event
 import locale
 encoding=locale.getpreferredencoding()
 if sys.version[0]=='2':
@@ -320,8 +320,8 @@ class Channel(baseServer):
 		self.server=server
 		self.password=password
 		printDebugMessage("Created new channel with password "+password, 3)
-		self.queue=Queue(0)
-		self.queue.put(None)
+		self.evt=Event()
+		self.evt.set()
 		self.checkThread=CheckThread(self)
 
 	def run(self):
@@ -346,10 +346,11 @@ class Channel(baseServer):
 				id=self.searchId(sock)
 				if id!=0:
 					self.clients[id].handle_data()
-			self.queue.put(None)
+			self.evt.set()
 		printDebugMessage("Terminating channel with password "+self.password, 3)
 		self.terminate()
 		self.checkThread.running=False
+		self.evt.set()
 		del self.server.channels[self.password]
 
 	def ping(self):
@@ -371,19 +372,16 @@ class CheckThread(Thread):
 
 	def run(self):
 		self.running=True
-		while True:
-			try:
-				#we have to consume all items in the queue, even if our channel has been closed
-				self.channel.queue.get(True, self.timeout)
-				self.channel.queue.task_done()
-			except:
-				if self.running:
-					#the channel is blocked, we need to close it
-					printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...", 3)
-					self.channel.terminate()
-					del self.server.channels[self.channel.password]
-				printDebugMessage("Checker thread for channel "+self.channel.password+" has finished", 3)
-				break
+		while self.running:
+			self.channel.evt.wait(self.timeout)
+			if not self.channel.evt.isSet():
+				#the channel is blocked, we need to close it
+				printDebugMessage("Channel with password "+self.channel.password+" is blocked. Stopping thread...", 3)
+				self.channel.terminate()
+				del self.server.channels[self.channel.password]
+			else:
+				self.channel.evt.clear()
+		printDebugMessage("Checker thread for channel "+self.channel.password+" has finished", 3)
 
 class Client(object):
 	id = 0
