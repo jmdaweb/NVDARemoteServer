@@ -3,15 +3,15 @@ import sys
 block_cipher = None
 import platform
 arch=platform.architecture()[0][:2]
-libs=[("win32serviceutil.pyd", ".")]
+libs=[]
 if sys.version.startswith("3"):
  arch=arch+"_py3"
- libs=libs+[("windows/msvc"+arch+"/*.dll", ".")]
+ libs=[("windows/msvc"+arch+"/*.dll", ".")]
 
 a = Analysis(['server.py'],
              pathex=[],
              binaries=libs,
-             datas=[("windows/*.cmd", "."), ("windows/msvc"+arch+"/openssl*", "."), ("server.pem", ".")],
+             datas=[("windows/*.cmd", "."), ("windows/msvc"+arch+"/openssl*", "."), ("server.pem", "."), ("NVDARemoteServer.conf", ".")],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
