@@ -91,6 +91,8 @@ groupdel nvdaremoteserver
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %doc LICENSE
 %changelog
+* Sat Sep 15 2018 Jose Manuel Delicado <jm.delicado@nvda.es> - 1.8-1
+- Stability and performance improvements
 * Sat Sep 01 2018 Jose Manuel Delicado <jm.delicado@nvda.es> - 1.7-1
 - Added compatibility with Python 3. Added message of the day.
 * Fri Oct 06 2017 Jose Manuel Delicado <jmdaweb@hotmail.com> - 1.6-1

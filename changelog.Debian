@@ -1,3 +1,11 @@
+nvda-remote-server (1.8-1) stable; urgency=low
+
+  * Stability and performance improvements.
+    Closes: #9334568
+
+ -- Jose Manuel Delicado <jm.delicado@nvda.es>  Sat, 15 Sep 2018 10:00:00 +0530
+
+
 nvda-remote-server (1.7-1) stable; urgency=low
 
   * Added compatibility with Python 3. Added message of the day.
