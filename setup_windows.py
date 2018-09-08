@@ -19,7 +19,7 @@ if __name__ == '__main__':
   name = "NVDARemote server",
   author = "Jose Manuel Delicado",
   author_email = "jm.delicado@nvda.es",
-  version = "1.7",
+  version = "1.8",
   url = "https://github.com/jmdaweb/NVDARemoteServer",
   data_files = get_data()+[("", ["server.pem", "windows/service_manager.cmd", "windows/debug.cmd", "windows/NVDARemoteCertificate.cmd", "NVDARemoteServer.conf"])],
 options = {
