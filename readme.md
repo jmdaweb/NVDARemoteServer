@@ -70,17 +70,23 @@ To uninstall it, run NVDARemoteUninstall
 
 ### Building for Windows
 
-You only need Python 2.7.x and the pywin32 and py2exe packages. Open a command prompt and navigate to the root folder of this repository, then run:
+You need one or multiple Python installations, depending on what you want to build. Install the x86 and x64 versions if you want to build the server for both architectures. Go to the [Python downloads page](https://www.python.org/downloads/) and choose:
 
-python setup_windows.py py2exe
+* Python 2.x (2.7.15 or later) if you want to maximize compatibility with older Windows versions, including Windows xp. The server will also work on Windows 10.
+* Python 3.x (3.6.6 or later) if you want to take advantage of all the Python performance and security improvements. Windows service currently is not working on Python 3.7.0, so official builds still use Python 3.6.
 
-The binaries will be placed in the dist folder.
+You need also Python for Windows Extensions, build 223 or later. Install this package running `pip install pywin32` command.
+
+Finally, you must install a packager in order to build the binary version. If you are building with Python 2.x, you can use Pyinstaller (install with `pip install pyinstaller`) or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller can be used.
+
+Once the build environment is ready, open a command prompt and navigate to the root folder of this repository, then:
+
+* If you want to use py2exe, run: `python setup_windows.py py2exe`
+* If you prefer pyinstaller, run: `pyinstaller pyinstaller.spec`
+
+The binaries will be placed in the dist folder. If you build for multiple architectures, using multiple Python installations and packagers, remember saving the dist folder contents to another location before building again. To avoid conflicts, remove the build and dist directories after saving the dist contents.
 
 The server is almost portable, there is no installation required. If you install the Windows service, remember uninstalling it before moving the server to another location or removing it.
-
-### Building for Windows x64
-
-You need Python 2.7.x for x64 installed and the pywin32 and py2exe packages. The steps are the same for Windows x86 and x64.
 
 ### Building the Docker image
 
