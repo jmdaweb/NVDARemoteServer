@@ -77,14 +77,15 @@ You need one or multiple Python installations, depending on what you want to bui
 
 You need also Python for Windows Extensions, build 223 or later. Install this package running `pip install pywin32` command.
 
-Finally, you must install a packager in order to build the binary version. If you are building with Python 2.x, you can use Pyinstaller (install with `pip install pyinstaller`) or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller can be used.
+Finally, you must install a packager in order to build the binary version. If you are building with Python 2.x, you can use Pyinstaller (install with `pip install pyinstaller`), cx-freeze (install with `pip install cx-freeze`), or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller and cx-freeze are supported.
 
 Once the build environment is ready, open a command prompt and navigate to the root folder of this repository, then:
 
 * If you want to use py2exe, run: `python setup_windows.py py2exe`
-* If you prefer pyinstaller, run: `pyinstaller pyinstaller.spec`
+* If you prefer pyinstaller, run: `pyinstaller pyinstaller.spec`. Run `python -OO -m PyInstaller pyinstaller.spec` if you want to apply code optimizations.
+* If you prefer cx-freeze, run: `python setup_windows_cxfreeze.py build`.
 
-The binaries will be placed in the dist folder. If you build for multiple architectures, using multiple Python installations and packagers, remember saving the dist folder contents to another location before building again. To avoid conflicts, remove the build and dist directories after saving the dist contents.
+The binaries will be placed in the dist folder. For cx-freeze builds, the binaries will be placed in the build folder. If you build for multiple architectures, using multiple Python installations and packagers, remember saving the dist folder contents to another location before building again. To avoid conflicts, remove the build and dist directories after saving the dist contents.
 
 The server is almost portable, there is no installation required. If you install the Windows service, remember uninstalling it before moving the server to another location or removing it.
 
