@@ -85,7 +85,9 @@ Once the build environment is ready, open a command prompt and navigate to the r
 * If you prefer pyinstaller, run: `pyinstaller pyinstaller.spec`. Run `python -OO -m PyInstaller pyinstaller.spec` if you want to apply code optimizations.
 * If you prefer cx-freeze, run: `python setup_windows_cxfreeze.py build`.
 
-The binaries will be placed in the dist folder. For cx-freeze builds, the binaries will be placed in the build folder. If you build for multiple architectures, using multiple Python installations and packagers, remember saving the dist folder contents to another location before building again. To avoid conflicts, remove the build and dist directories after saving the dist contents.
+Note: if you build with several Python versions on the same machine, don't add python to the path environment variable during installation. Instead, use the Python launcher included with Python 3, or specify the full path to your python executable. For example: `C:\\python27x86\\python setup_windows.py py2exe`.
+
+The binaries will be placed in the dist folder. For cx-freeze builds, the binaries will be placed in the build folder. If you build for multiple architectures, using multiple Python installations and packagers, remember saving the dist folder contents (in case of cx-freeze, the build folder) to another location before building again. To avoid conflicts, remove the build and dist directories after saving their contents.
 
 The server is almost portable, there is no installation required. If you install the Windows service, remember uninstalling it before moving the server to another location or removing it.
 
