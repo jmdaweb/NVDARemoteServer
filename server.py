@@ -572,7 +572,6 @@ def startAndWait():
 		except:
 			pass
 	serverThread.join(70)
-	global loggerThread
 	if loggerThread:
 		loggerThread.running=False
 		loggerThread.join()
