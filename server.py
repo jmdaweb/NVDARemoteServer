@@ -53,6 +53,7 @@ debug=False
 logfile=None
 loggerThread=None
 serverThread=None
+closeEvent=Event()
 import traceback
 def printError():
 	global loggerThread
@@ -301,8 +302,6 @@ class Server(baseServer):
 			self.server_socket.close()
 		if socket.has_ipv6:
 			self.server_socket6.close()
-		loggerThread.running=False
-		loggerThread.join()
 
 class Channel(baseServer):
 	def __init__(self, server, password):
@@ -560,7 +559,20 @@ def startAndWait():
 		printDebugMessage("Error setting handler for signals", 0)
 		printError()
 	serverThread=Server()
-	serverThread.run()
+	serverThread.start()
+	try:
+		time.sleep(10)
+	except:
+		pass
+	while serverThread.running: # Wait actively to catch system signals
+		try:
+			time.sleep(1)
+		except:
+			pass
+	serverThread.join()
+	if loggerThread:
+		loggerThread.running=False
+		loggerThread.join()
 
 if __name__ == "__main__":
 	options.setup()
