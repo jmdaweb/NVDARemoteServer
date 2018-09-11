@@ -53,7 +53,6 @@ debug=False
 logfile=None
 loggerThread=None
 serverThread=None
-closeEvent=Event()
 import traceback
 def printError():
 	global loggerThread
