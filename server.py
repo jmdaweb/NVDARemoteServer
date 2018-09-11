@@ -52,6 +52,7 @@ ssl.wrap_socket = sslwrap(ssl.wrap_socket)
 debug=False
 logfile=None
 loggerThread=None
+serverThread=None
 import traceback
 def printError():
 	global loggerThread
@@ -67,6 +68,10 @@ def printDebugMessage(msg, level):
 		loggerThread=LoggerThread()
 		loggerThread.start()
 	loggerThread.queue.put(msg)
+
+def sighandler(signum, frame):
+	printDebugMessage("Received system signal. Waiting for server stop.", 0)
+	serverThread.running=False
 
 class LoggerThread(Thread):
 	def __init__(self):
@@ -158,7 +163,6 @@ class Server(baseServer):
 		self.bind_host6=options.interface6
 		self.channels={}
 		printDebugMessage("Initialized instance variables", 2)
-		self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
 		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -192,17 +196,7 @@ class Server(baseServer):
 				raise # If there is no IPV6 support and IPV4 socket can't listen, stop the server
 
 	def run(self):
-		try:
-			import signal
-			if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
-				printDebugMessage("Configuring signal handlers", 2)
-				signal.signal(signal.SIGINT, self.sighandler)
-				signal.signal(signal.SIGTERM, self.sighandler)
-			else:
-				printDebugMessage("Warning: this server has not been tested on your platform. We don't have added signals handlers here to avoid errors. Probably you will have to kill the process manually to stop the server.", 0)
-		except:
-			printDebugMessage("Error setting handler for signals", 0)
-			printError()
+		self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 		self.running = True
 		self.last_ping_time = time.time()
 		printDebugMessage("NVDA Remote Server is ready.", 0)
@@ -309,10 +303,6 @@ class Server(baseServer):
 			self.server_socket6.close()
 		loggerThread.running=False
 		loggerThread.join()
-
-	def sighandler(self, signum, frame):
-		printDebugMessage("Received system signal. Waiting for server stop.", 0)
-		self.running=False
 
 class Channel(baseServer):
 	def __init__(self, server, password):
@@ -557,8 +547,20 @@ class Client(object):
 			return
 
 def startAndWait():
-	srv=Server()
-	srv.run()
+	global serverThread
+	try:
+		import signal
+		if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
+			printDebugMessage("Configuring signal handlers", 2)
+			signal.signal(signal.SIGINT, sighandler)
+			signal.signal(signal.SIGTERM, sighandler)
+		else:
+			printDebugMessage("Warning: this server has not been tested on your platform. We don't have added signals handlers here to avoid errors. Probably you will have to kill the process manually to stop the server.", 0)
+	except:
+		printDebugMessage("Error setting handler for signals", 0)
+		printError()
+	serverThread=Server()
+	serverThread.run()
 
 if __name__ == "__main__":
 	options.setup()
@@ -604,15 +606,14 @@ if __name__ == "__main__":
 			def __init__(self, args):
 				win32serviceutil.ServiceFramework.__init__(self, args)
 				self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
-				self.srv=Server()
 
 			def SvcStop(self):
 				self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-				self.srv.running=False
+				serverThread.running=False
 				win32event.SetEvent(self.hWaitStop)
 
 			def SvcDoRun(self):
-				self.srv.run()
+				startAndWait()
 
 		if len(sys.argv)==1:
 			servicemanager.Initialize(NVDARemoteService._svc_name_, os.path.abspath(servicemanager.__file__))
