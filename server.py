@@ -93,8 +93,11 @@ class LoggerThread(Thread):
 	def run(self):
 		while self.running or not self.queue.empty():
 			try:
-				item=self.queue.get(True, None)
+				item=self.queue.get(True, 10)
 				self.queue.task_done()
+			except:
+				continue
+			try:
 				print (time.asctime())
 				if isinstance(item, strtype):
 					print (item)
@@ -569,6 +572,7 @@ def startAndWait():
 		except:
 			pass
 	serverThread.join(70)
+	global loggerThread
 	if loggerThread:
 		loggerThread.running=False
 		loggerThread.join()
