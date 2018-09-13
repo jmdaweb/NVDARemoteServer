@@ -130,6 +130,7 @@ class baseServer(Thread):
 		self.clients={}
 		self.client_sockets=[]
 		self.running=False
+		self.evt=Event()
 
 	def add_client(self, client):
 		self.clients[client.id] = client
@@ -165,7 +166,6 @@ class Server(baseServer):
 		self.bind_host=options.interface
 		self.bind_host6=options.interface6
 		self.channels={}
-		self.checkEvent=Event()
 		printDebugMessage("Initialized instance variables", 2)
 
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
@@ -208,8 +208,9 @@ class Server(baseServer):
 		printDebugMessage("The server is running with pid "+str(os.getpid()), 0)
 		try:
 			while self.running:
-				self.checkEvent.set()
+				self.evt.set()
 				try:
+					sleep(0.01)
 					if socket.has_ipv6:
 						if self.server_socket is not None:
 							r, w, e = select.select(self.client_sockets+[self.server_socket, self.server_socket6], self.client_sockets, self.client_sockets, 60)
@@ -227,10 +228,12 @@ class Server(baseServer):
 					if id!=0:
 						printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...", 1)
 						self.clients[id].close()
+						self.evt.set()
 				for sock in w:
 					id=self.searchId(sock)
 					if id!=0:
 						self.clients[id].confirmSend()
+						self.evt.set()
 				for sock in r:
 					if sock is self.server_socket:
 						self.accept_new_connection(sock)
@@ -285,7 +288,7 @@ class Server(baseServer):
 
 	def close(self):
 		self.running = False
-		self.checkEvent.set()
+		self.evt.set()
 		printDebugMessage("Closing channels...", 2)
 		for c in list(self.channels.values()):
 			c.running=False
@@ -314,7 +317,6 @@ class Channel(baseServer):
 		self.server=server
 		self.password=password
 		printDebugMessage("Created new channel with password "+password, 3)
-		self.evt=Event()
 		self.evt.set()
 		self.checkThread=CheckThread(self)
 
@@ -332,10 +334,12 @@ class Channel(baseServer):
 				if id!=0:
 					printDebugMessage("The client "+str(id)+" has connection problems. Disconnecting...", 0)
 					self.clients[id].close()
+					self.evt.set()
 			for sock in w:
 				id=self.searchId(sock)
 				if id!=0:
 					self.clients[id].confirmSend()
+					self.evt.set()
 			for sock in r:
 				id=self.searchId(sock)
 				if id!=0:
@@ -368,7 +372,7 @@ class CheckThread(Thread):
 		self.running=True
 		while self.running:
 			try:
-				time.sleep(1)
+				sleep(1)
 			except:
 				pass
 			self.channel.evt.wait(self.timeout)
@@ -409,6 +413,7 @@ class Client(object):
 			printError()
 			self.close()
 			return
+		self.server.evt.set()
 		if sock_data == '': #Disconnect
 			printDebugMessage("Received empty buffer from client "+str(self.id)+", disconnecting", 1)
 			self.close()
@@ -570,15 +575,15 @@ def startAndWait():
 	serverThread=Server()
 	serverThread.start()
 	try:
-		time.sleep(10)
+		sleep(10)
 	except:
 		pass
 	while serverThread.running: # Wait actively to catch system signals
 		try:
-			time.sleep(1)
-			serverThread.checkEvent.wait(80)
-			if serverThread.checkEvent.isSet(): # clear and continue
-				serverThread.checkEvent.clear()
+			sleep(1)
+			serverThread.evt.wait(80)
+			if serverThread.evt.isSet(): # clear and continue
+				serverThread.evt.clear()
 			else:
 				if serverThread.running: # The server is frozen
 					printDebugMessage("The server thread seems frozen, stopping the daemon.", 0)
