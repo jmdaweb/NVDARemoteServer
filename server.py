@@ -165,6 +165,7 @@ class Server(baseServer):
 		self.bind_host=options.interface
 		self.bind_host6=options.interface6
 		self.channels={}
+		self.checkEvent=Event()
 		printDebugMessage("Initialized instance variables", 2)
 
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
@@ -207,6 +208,7 @@ class Server(baseServer):
 		printDebugMessage("The server is running with pid "+str(os.getpid()), 0)
 		try:
 			while self.running:
+				self.checkEvent.set()
 				try:
 					if socket.has_ipv6:
 						if self.server_socket is not None:
@@ -283,6 +285,7 @@ class Server(baseServer):
 
 	def close(self):
 		self.running = False
+		self.checkEvent.set()
 		printDebugMessage("Closing channels...", 2)
 		for c in list(self.channels.values()):
 			c.running=False
@@ -364,6 +367,10 @@ class CheckThread(Thread):
 	def run(self):
 		self.running=True
 		while self.running:
+			try:
+				time.sleep(1)
+			except:
+				pass
 			self.channel.evt.wait(self.timeout)
 			if not self.channel.evt.isSet():
 				#the channel is blocked, we need to close it
@@ -569,6 +576,13 @@ def startAndWait():
 	while serverThread.running: # Wait actively to catch system signals
 		try:
 			time.sleep(1)
+			serverThread.checkEvent.wait(80)
+			if serverThread.checkEvent.isSet(): # clear and continue
+				serverThread.checkEvent.clear()
+			else:
+				if serverThread.running: # The server is frozen
+					printDebugMessage("The server thread seems frozen, stopping the daemon.", 0)
+					break
 		except:
 			pass
 	serverThread.join(70)
