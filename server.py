@@ -13,6 +13,7 @@ import struct
 from threading import Thread, Lock, Event
 import locale
 encoding=locale.getpreferredencoding()
+import gc
 if sys.version[0]=='2':
 	python_version=2
 	from Queue import Queue
@@ -580,6 +581,7 @@ def startAndWait():
 		pass
 	while serverThread.running: # Wait actively to catch system signals
 		try:
+			gc.collect()
 			sleep(1)
 			serverThread.evt.wait(80)
 			if serverThread.evt.isSet(): # clear and continue
