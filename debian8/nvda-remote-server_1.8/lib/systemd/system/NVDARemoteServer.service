@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=nvdaremoteserver
 Type=forking
-PIDFile=/var/run/NVDARemoteServer/NVDARemoteServer.pid
+PIDFile=/var/run/NVDARemoteServer.pid
 ExecStart=/usr/bin/python /usr/share/NVDARemoteServer/server.py start
 ExecStop=/usr/bin/python /usr/share/NVDARemoteServer/server.py stop
 ExecReload=/usr/bin/python /usr/share/NVDARemoteServer/server.py restart
