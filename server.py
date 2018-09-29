@@ -28,6 +28,7 @@ from functools import wraps
 from time import sleep
 protocol="SSL v 23"
 import options
+import errno
 
 #use the higuest available ssl protocol version
 def sslwrap(func):
@@ -70,9 +71,38 @@ def printDebugMessage(msg, level):
 		loggerThread.start()
 	loggerThread.queue.put(msg)
 
+def create_sock_pair(port=0):
+	have_socketpair = hasattr(socket, 'socketpair')
+	if have_socketpair:
+		client_sock, srv_sock = socket.socketpair()
+		return client_sock, srv_sock
+	temp_srv_sock = socket.socket()
+	temp_srv_sock.setblocking(False)
+	temp_srv_sock.bind(('127.0.0.1', port))
+	port = temp_srv_sock.getsockname()[1]
+	temp_srv_sock.listen(1)
+	client_sock = socket.socket()
+	client_sock.setblocking(False)
+	try:
+		client_sock.connect(('127.0.0.1', port))
+	except socket.error as err:
+		if err.errno != errno.EWOULDBLOCK:
+			raise
+	timeout = 1
+	readable = select.select([temp_srv_sock], [], [], timeout)[0]
+	if temp_srv_sock not in readable:
+		raise Exception('Client socket not connected in {} second(s)'.format(timeout))
+	srv_sock, _ = temp_srv_sock.accept()
+	temp_srv_sock.close()
+	return client_sock, srv_sock
+
+close_notifier, close_listener=create_sock_pair()
+
 def sighandler(signum, frame):
 	printDebugMessage("Received system signal. Waiting for server stop.", 0)
 	serverThread.running=False
+	if python_version==3:
+		raise
 
 class LoggerThread(Thread):
 	def __init__(self):
@@ -214,11 +244,11 @@ class Server(baseServer):
 					sleep(0.01)
 					if socket.has_ipv6:
 						if self.server_socket is not None:
-							r, w, e = select.select(self.client_sockets+[self.server_socket, self.server_socket6], self.client_sockets, self.client_sockets, 60)
+							r, w, e = select.select(self.client_sockets+[self.server_socket, self.server_socket6, close_listener], self.client_sockets, self.client_sockets, 60)
 						else:
-							r, w, e = select.select(self.client_sockets+[self.server_socket6], self.client_sockets, self.client_sockets, 60)
+							r, w, e = select.select(self.client_sockets+[self.server_socket6, close_listener], self.client_sockets, self.client_sockets, 60)
 					else:
-						r, w, e = select.select(self.client_sockets+[self.server_socket], self.client_sockets, self.client_sockets, 60)
+						r, w, e = select.select(self.client_sockets+[self.server_socket, close_listener], self.client_sockets, self.client_sockets, 60)
 				except:
 					printError()
 				if not self.running:
@@ -293,6 +323,7 @@ class Server(baseServer):
 		printDebugMessage("Closing channels...", 2)
 		for c in list(self.channels.values()):
 			c.running=False
+			c.join(10)
 		printDebugMessage("Disconnecting clients...", 2)
 		for c in list(self.clients.values()):
 			c.close()
@@ -327,7 +358,7 @@ class Channel(baseServer):
 		while self.running and len(list(self.clients.values()))>0:
 			try:
 				sleep(0.01) # Prevent 100% cpu usage when there's at least one writeable socket
-				r, w, e = select.select(self.client_sockets, self.client_sockets, self.client_sockets, 60)
+				r, w, e = select.select(self.client_sockets+[close_listener], self.client_sockets, self.client_sockets, 60)
 			except:
 				printError()
 			for sock in e:
@@ -350,6 +381,7 @@ class Channel(baseServer):
 		self.terminate()
 		self.checkThread.running=False
 		self.evt.set()
+		self.checkThread.join(5)
 		del self.server.channels[self.password]
 
 	def ping(self):
@@ -575,6 +607,10 @@ def startAndWait():
 		printError()
 	serverThread=Server()
 	serverThread.start()
+	if python_version==2:
+		close_notifier.sendall('\n')
+	else:
+		close_notifier.sendall(bytes('\n', "utf-8"))
 	try:
 		sleep(10)
 	except:
@@ -593,9 +629,11 @@ def startAndWait():
 		except:
 			pass
 	serverThread.join(70)
-	if loggerThread:
-		loggerThread.running=False
-		loggerThread.join()
+	close_listener.recv(16384)
+	close_notifier.close()
+	close_listener.close()
+	loggerThread.running=False
+	loggerThread.join()
 
 if __name__ == "__main__":
 	options.setup()
