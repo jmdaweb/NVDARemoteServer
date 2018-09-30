@@ -4,6 +4,8 @@
 
 set -e
 systemctl daemon-reload
+systemd-sysusers
+systemd-tmpfiles --create
 NVDARemoteServer start
 set +e
 exit 0

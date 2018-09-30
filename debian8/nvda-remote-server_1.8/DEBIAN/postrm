@@ -20,6 +20,8 @@ if test -e /var/log/NVDARemoteServer.log
 then
 rm -f /var/log/NVDARemoteServer.log
 fi
+userdel nvdaremoteserver
+systemd-tmpfiles --remove
 fi
 systemctl daemon-reload
 set +e
