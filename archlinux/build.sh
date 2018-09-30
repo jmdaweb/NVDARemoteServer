@@ -1,5 +1,6 @@
 #!/bin/bash
 mkdir -p src/etc
+mkdir -p src/usr/bin
 mkdir -p src/usr/share/NVDARemoteServer
 mkdir -p src/usr/share/man/man1
 mkdir -p src/usr/share/man/man5
@@ -8,7 +9,7 @@ mkdir -p src/usr/lib/tmpfiles.d
 mkdir -p src/usr/lib/systemd/system
 mkdir pkg
 cp ../server.py ../options.py ../server.pem ../daemon.py src/usr/share/NVDARemoteServer
-cp ../NVDARemoteCertificate src/usr/bin
+cp ../NVDARemoteCertificate ../systemd/NVDARemoteServer src/usr/bin
 chmod +x src/usr/bin/NVDARemoteServer
 chmod +x src/usr/bin/NVDARemoteCertificate
 cp ../NVDARemoteServer.conf src/etc

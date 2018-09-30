@@ -2,6 +2,7 @@
 #please, run this script as root
 #make directories
 VERSION=1.8
+mkdir -p nvda-remote-server_$VERSION/usr/bin
 mkdir -p nvda-remote-server_$VERSION/usr/share/doc/nvda-remote-server
 mkdir -p nvda-remote-server_$VERSION/usr/share/NVDARemoteServer
 mkdir -p nvda-remote-server_$VERSION/usr/share/man/man1
@@ -11,7 +12,7 @@ mkdir -p nvda-remote-server_$VERSION/lib/systemd/system
 mkdir -p nvda-remote-server_$VERSION/usr/lib/sysusers.d
 mkdir -p nvda-remote-server_$VERSION/usr/lib/tmpfiles.d
 #copy files
-cp ../NVDARemoteCertificate nvda-remote-server_$VERSION/usr/bin
+cp ../NVDARemoteCertificate ../systemd/NVDARemoteServer nvda-remote-server_$VERSION/usr/bin
 cp ../NVDARemoteServer.conf nvda-remote-server_$VERSION/etc
 cp ../server.py ../options.py ../server.pem ../daemon.py nvda-remote-server_$VERSION/usr/share/NVDARemoteServer
 cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 nvda-remote-server_$VERSION/usr/share/man/man1
