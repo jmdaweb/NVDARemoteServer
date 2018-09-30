@@ -1,1 +1,2 @@
 d /run/NVDARemoteServer 0755 nvdaremoteserver nvdaremoteserver -
+f /var/log/NVDARemoteServer.log 0644 nvdaremoteserver nvdaremoteserver -
