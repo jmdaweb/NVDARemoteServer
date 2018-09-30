@@ -49,12 +49,6 @@ then
 touch /var/log/NVDARemoteServer.log
 fi
 chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
-if ! test -e /var/run/NVDARemoteServer
-then
-mkdir /var/run/NVDARemoteServer
-fi
-chown -R nvdaremoteserver:nvdaremoteserver /var/run/NVDARemoteServer
-chmod 755 /var/run/NVDARemoteServer
 NVDARemoteServer start
 %preun
 NVDARemoteServer stop
