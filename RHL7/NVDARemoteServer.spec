@@ -19,7 +19,6 @@ chmod -x LICENSE
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/NVDARemoteServer
 install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/systemd/system
 install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/tmpfiles.d
-install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/sysusers.d
 install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
 install -m 0755 -d $RPM_BUILD_ROOT/etc
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man1
@@ -33,7 +32,6 @@ install -m 0755 NVDARemoteCertificate $RPM_BUILD_ROOT/usr/bin/NVDARemoteCertific
 install -m 0644 NVDARemoteServer.conf $RPM_BUILD_ROOT/etc/NVDARemoteServer.conf
 install -m 0644 NVDARemoteServer.service $RPM_BUILD_ROOT/usr/lib/systemd/system/NVDARemoteServer.service
 install -m 0644 NVDARemoteServer.tmpfiles $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/NVDARemoteServer.conf
-install -m 0644 NVDARemoteServer.sysusers $RPM_BUILD_ROOT/usr/lib/sysusers.d/NVDARemoteServer.conf
 gzip -n -9 NVDARemoteServer.1
 install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
 gzip -n -9 NVDARemoteServer.conf.5
@@ -44,17 +42,23 @@ install -m 0644 NVDARemoteCertificate.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NV
 rm -rf $RPM_BUILD_ROOT
 %post
 systemctl daemon-reload
-if ! test -e /var/log/NVDARemoteServer.log
+if ! getent passwd nvdaremoteserver > /dev/null
 then
-touch /var/log/NVDARemoteServer.log
+useradd -s /bin/false -U --system -M -d /nonexistent nvdaremoteserver
 fi
-chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
+systemd-tmpfiles --create
 NVDARemoteServer start
 %postun
+if test -e /var/run/NVDARemoteServer
+then
+rm -rf /var/run/NVDARemoteServer
+fi
 if test -e /var/log/NVDARemoteServer.log
 then
 rm -f /var/log/NVDARemoteServer.log
 fi
+userdel nvdaremoteserver
+groupdel nvdaremoteserver
 systemctl daemon-reload
 %preun
 NVDARemoteServer stop
@@ -74,7 +78,6 @@ NVDARemoteServer stop
 /usr/share/NVDARemoteServer/daemon.pyc
 /usr/share/NVDARemoteServer/daemon.pyo
 /usr/lib/systemd/system/NVDARemoteServer.service
-/usr/lib/sysusers.d/NVDARemoteServer.conf
 /usr/lib/tmpfiles.d/NVDARemoteServer.conf
 /usr/share/man/man1/NVDARemoteServer.1.gz
 /usr/share/man/man5/NVDARemoteServer.conf.5.gz
