@@ -8,7 +8,7 @@ User=nvdaremoteserver
 PIDFile=/run/NVDARemoteServer/NVDARemoteServer.pid
 ExecStart=/usr/bin/python /usr/share/NVDARemoteServer/server.py start
 ExecStop=/usr/bin/python /usr/share/NVDARemoteServer/server.py stop
-ExecReload=/usr/bin/python2 /usr/share/NVDARemoteServer/server.py restart
+ExecReload=/usr/bin/python /usr/share/NVDARemoteServer/server.py restart
 Restart=on-abnormal
 RestartSec=30s
 
