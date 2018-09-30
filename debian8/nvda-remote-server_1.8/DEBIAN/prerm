@@ -4,5 +4,6 @@
 
 set -e
 NVDARemoteServer stop
+NVDARemoteServer disable
 set +e
 exit 0

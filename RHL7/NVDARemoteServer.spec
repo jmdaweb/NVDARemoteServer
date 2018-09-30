@@ -62,6 +62,7 @@ groupdel nvdaremoteserver
 systemctl daemon-reload
 %preun
 NVDARemoteServer stop
+NVDARemoteServer disable
 %files
 /usr/bin/NVDARemoteServer
 /usr/bin/NVDARemoteCertificate
