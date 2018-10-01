@@ -9,6 +9,7 @@ touch /var/log/NVDARemoteServer.log
 fi
 chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
 update-rc.d NVDARemoteServer defaults
+NVDARemoteServer enable
 NVDARemoteServer start
 set +e
 exit 0

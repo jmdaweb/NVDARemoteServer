@@ -49,6 +49,7 @@ then
 touch /var/log/NVDARemoteServer.log
 fi
 chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
+NVDARemoteServer enable
 NVDARemoteServer start
 %preun
 NVDARemoteServer stop
@@ -63,7 +64,6 @@ then
 rm -f /var/log/NVDARemoteServer.log
 fi
 userdel nvdaremoteserver
-groupdel nvdaremoteserver
 %files
 %config(noreplace) /etc/NVDARemoteServer.conf
 /etc/init.d/nvdaremoteserver

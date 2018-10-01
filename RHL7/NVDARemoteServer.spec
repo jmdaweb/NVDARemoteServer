@@ -47,6 +47,7 @@ then
 useradd -s /bin/false -U --system -M -d /nonexistent nvdaremoteserver
 fi
 systemd-tmpfiles --create
+NVDARemoteServer enable
 NVDARemoteServer start
 %postun
 if test -e /var/run/NVDARemoteServer
@@ -58,7 +59,6 @@ then
 rm -f /var/log/NVDARemoteServer.log
 fi
 userdel nvdaremoteserver
-groupdel nvdaremoteserver
 systemctl daemon-reload
 %preun
 NVDARemoteServer stop
