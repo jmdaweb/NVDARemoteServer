@@ -3,7 +3,7 @@ pkgname=NVDARemoteServer
 pkgver=1.8
 pkgrel=1
 epoch=
-pkgdesc=""
+pkgdesc="NVDA Remote relay server"
 arch=('any')
 url="https://github.com/jmdaweb/NVDARemoteServer"
 license=('GPL')
@@ -17,7 +17,7 @@ conflicts=()
 replaces=()
 backup=('etc/NVDARemoteServer.conf')
 options=()
-install=
+install=NVDARemoteServer.install
 changelog=
 noextract=()
 md5sums=()
@@ -25,7 +25,6 @@ validpgpkeys=()
 
 prepare() {
 echo preparing...
-sed -i "s/.*=\/var\/log\/NVDARemoteServer.log.*/logfile=\/run\/NVDARemoteServer\/NVDARemoteServer.log/" etc/NVDARemoteServer.conf
 sed -i "s/.*=\/var\/run\/NVDARemoteServer.pid.*/pidfile=\/run\/NVDARemoteServer\/NVDARemoteServer.pid/" etc/NVDARemoteServer.conf
 }
 

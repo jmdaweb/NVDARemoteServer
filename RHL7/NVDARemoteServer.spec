@@ -18,6 +18,7 @@ This remote server allows NVDARemote users to redirect their traffic.
 chmod -x LICENSE
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/NVDARemoteServer
 install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/systemd/system
+install -m 0755 -d $RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
 install -m 0755 -d $RPM_BUILD_ROOT/etc
 install -m 0755 -d $RPM_BUILD_ROOT/usr/share/man/man1
@@ -30,6 +31,7 @@ install -m 0755 NVDARemoteServer $RPM_BUILD_ROOT/usr/bin/NVDARemoteServer
 install -m 0755 NVDARemoteCertificate $RPM_BUILD_ROOT/usr/bin/NVDARemoteCertificate
 install -m 0644 NVDARemoteServer.conf $RPM_BUILD_ROOT/etc/NVDARemoteServer.conf
 install -m 0644 NVDARemoteServer.service $RPM_BUILD_ROOT/usr/lib/systemd/system/NVDARemoteServer.service
+install -m 0644 NVDARemoteServer.tmpfiles $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/NVDARemoteServer.conf
 gzip -n -9 NVDARemoteServer.1
 install -m 0644 NVDARemoteServer.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteServer.1.gz
 gzip -n -9 NVDARemoteServer.conf.5
@@ -44,17 +46,8 @@ if ! getent passwd nvdaremoteserver > /dev/null
 then
 useradd -s /bin/false -U --system -M -d /nonexistent nvdaremoteserver
 fi
-if ! test -e /var/log/NVDARemoteServer.log
-then
-touch /var/log/NVDARemoteServer.log
-fi
-chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
-if ! test -e /var/run/NVDARemoteServer
-then
-mkdir /var/run/NVDARemoteServer
-fi
-chown -R nvdaremoteserver:nvdaremoteserver /var/run/NVDARemoteServer
-chmod 755 /var/run/NVDARemoteServer
+systemd-tmpfiles --create
+NVDARemoteServer enable
 NVDARemoteServer start
 %postun
 if test -e /var/run/NVDARemoteServer
@@ -69,6 +62,7 @@ userdel nvdaremoteserver
 systemctl daemon-reload
 %preun
 NVDARemoteServer stop
+NVDARemoteServer disable
 %files
 /usr/bin/NVDARemoteServer
 /usr/bin/NVDARemoteCertificate
@@ -85,6 +79,7 @@ NVDARemoteServer stop
 /usr/share/NVDARemoteServer/daemon.pyc
 /usr/share/NVDARemoteServer/daemon.pyo
 /usr/lib/systemd/system/NVDARemoteServer.service
+/usr/lib/tmpfiles.d/NVDARemoteServer.conf
 /usr/share/man/man1/NVDARemoteServer.1.gz
 /usr/share/man/man5/NVDARemoteServer.conf.5.gz
 /usr/share/man/man1/NVDARemoteCertificate.1.gz

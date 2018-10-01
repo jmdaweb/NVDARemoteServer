@@ -3,18 +3,9 @@
  # This script runs after installing the package 
 
 set -e
-if ! test -e /var/log/NVDARemoteServer.log
-then
-touch /var/log/NVDARemoteServer.log
-fi
-chown nvdaremoteserver:nvdaremoteserver /var/log/NVDARemoteServer.log
-if ! test -e /var/run/NVDARemoteServer
-then
-mkdir /var/run/NVDARemoteServer
-fi
-chown -R nvdaremoteserver:nvdaremoteserver /var/run/NVDARemoteServer
-chmod 755 /var/run/NVDARemoteServer
 systemctl daemon-reload
+systemd-tmpfiles --create
+NVDARemoteServer enable
 NVDARemoteServer start
 set +e
 exit 0

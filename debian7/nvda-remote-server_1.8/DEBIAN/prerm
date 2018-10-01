@@ -3,6 +3,7 @@
  # This script runs before removing the package 
 
 set -e
-service NVDARemoteServer stop
+NVDARemoteServer stop
+NVDARemoteServer disable
 set +e
 exit 0
