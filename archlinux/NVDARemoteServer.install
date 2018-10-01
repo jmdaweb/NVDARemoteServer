@@ -1,0 +1,23 @@
+#!/bin/bash
+post_remove(){
+if test -e /usr/share/NVDARemoteServer
+then
+rm -rf /usr/share/NVDARemoteServer
+fi
+if test -e /run/NVDARemoteServer
+then
+rm -rf /run/NVDARemoteServer
+fi
+if test -e /var/log/NVDARemoteServer.log
+then
+rm -f /var/log/NVDARemoteServer.log
+fi
+userdel nvdaremoteserver
+}
+post_install(){
+NVDARemoteServer enable
+}
+pre_remove(){
+NVDARemoteServer stop
+NVDARemoteServer disable
+}
