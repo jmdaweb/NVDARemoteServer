@@ -1,5 +1,12 @@
 @echo off
 title NVDARemote server service manager
+fltmc 1>nul 2>nul || (
+cd /d "%~dp0"
+cmd /u /c echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/c cd ""%~dp0"" && ""%~dpnx0""", "", "runas", 1 > "%temp%\GetAdmin.vbs"
+cscript "%temp%\GetAdmin.vbs"
+del /f /q "%temp%\GetAdmin.vbs" 1>nul 2>nul
+exit
+)
 :menu
 cls
 echo Welcome to the NVDARemote server service manager.
