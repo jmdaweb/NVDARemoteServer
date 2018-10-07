@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=1.8
+VERSION=1.9
 CURDIR=$PWD
 if ! test -e ~/rpmbuild
 then
