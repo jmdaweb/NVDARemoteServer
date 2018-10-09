@@ -86,7 +86,7 @@ userdel nvdaremoteserver
 %doc LICENSE
 %changelog
 * Wed Oct 10 2018 Jose Manuel Delicado <jm.delicado@nvda.es> - 1.9-1
-- Fixed a critical bug which caused the server to stop permanently after rebooting the system.
+- Stability improvements.
 * Sat Sep 15 2018 Jose Manuel Delicado <jm.delicado@nvda.es> - 1.8-1
 - Stability and performance improvements
 * Sat Sep 01 2018 Jose Manuel Delicado <jm.delicado@nvda.es> - 1.7-1

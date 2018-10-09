@@ -1,6 +1,6 @@
 nvda-remote-server (1.9-1) stable; urgency=low
 
-  * Fixed a critical bug which caused the server to stop permanently after rebooting the system.
+  * Stability improvements.
     Closes: #9334578
 
  -- Jose Manuel Delicado <jm.delicado@nvda.es>  Wed, 10 Oct 2018 10:00:00 +0530
