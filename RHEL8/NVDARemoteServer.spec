@@ -69,15 +69,9 @@ NVDARemoteServer disable
 %config(noreplace) /etc/NVDARemoteServer.conf
 %dir /usr/share/NVDARemoteServer
 /usr/share/NVDARemoteServer/server.py
-/usr/share/NVDARemoteServer/server.pyc
-/usr/share/NVDARemoteServer/server.pyo
 /usr/share/NVDARemoteServer/options.py
-/usr/share/NVDARemoteServer/options.pyc
-/usr/share/NVDARemoteServer/options.pyo
 /usr/share/NVDARemoteServer/server.pem
 /usr/share/NVDARemoteServer/daemon.py
-/usr/share/NVDARemoteServer/daemon.pyc
-/usr/share/NVDARemoteServer/daemon.pyo
 /usr/lib/systemd/system/NVDARemoteServer.service
 /usr/lib/tmpfiles.d/NVDARemoteServer.conf
 /usr/share/man/man1/NVDARemoteServer.1.gz
