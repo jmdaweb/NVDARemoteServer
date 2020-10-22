@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
-import sys, os, time, atexit
+import sys
+import os
+import time
+import atexit
 from signal import SIGTERM, SIGKILL
+
 
 class Daemon(object):
 	"""
@@ -16,34 +20,31 @@ class Daemon(object):
 	
 	def daemonize(self):
 		"""
-		do the UNIX double-fork magic, see Stevens' "Advanced 
+		do the UNIX double-fork magic, see Stevens' "Advanced
 		Programming in the UNIX Environment" for details (ISBN 0201563177)
 		http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16
 		"""
-		try: 
-			pid = os.fork() 
+		try:
+			pid = os.fork()
 			if pid > 0:
 				# exit first parent
-				sys.exit(0) 
-		except OSError as e: 
+				sys.exit(0)
+		except OSError as e:
 			sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
 			sys.exit(1)
-	
 		# decouple from parent environment
-		os.chdir("/") 
-		os.setsid() 
-		os.umask(0) 
-	
+		os.chdir("/")
+		os.setsid()
+		os.umask(0)
 		# do second fork
-		try: 
-			pid = os.fork() 
+		try:
+			pid = os.fork()
 			if pid > 0:
 				# exit from second parent
-				sys.exit(0) 
-		except OSError as e: 
+				sys.exit(0)
+		except OSError as e:
 			sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
-			sys.exit(1) 
-	
+			sys.exit(1)
 		# redirect standard file descriptors
 		sys.stdout.flush()
 		sys.stderr.flush()
@@ -57,18 +58,17 @@ class Daemon(object):
 		si.close()
 		so.close()
 		se.close()
-	
 		# write pidfile
 		atexit.register(self.delpid)
 		pid = str(os.getpid())
 		try:
-			file = open(self.pidfile,'w+')
+			file = open(self.pidfile, 'w+')
 		except:
-			print("Can't open file '%s' for writing. Perhaps the config is broken. If this instance is started by a service manager such as systemd or open-rc it might have consequences!"%self.pidfile)
+			print("Can't open file '%s' for writing. Perhaps the config is broken. If this instance is started by a service manager such as systemd or open-rc it might have consequences!" % self.pidfile)
 			return
 		file.write("%s\n" % pid)
 		file.close()
-	
+
 	def delpid(self):
 		os.remove(self.pidfile)
 
@@ -78,12 +78,11 @@ class Daemon(object):
 		"""
 		# Check for a pidfile to see if the daemon already runs
 		try:
-			pf = open(self.pidfile,'r')
+			pf = open(self.pidfile, 'r')
 			pid = int(pf.read().strip())
 			pf.close()
 		except IOError:
 			pid = None
-	
 		if pid:
 			message = "pidfile %s already exist. Daemon already running?\n"
 			sys.stderr.write(message % self.pidfile)
@@ -99,18 +98,17 @@ class Daemon(object):
 		"""
 		# Get the pid from the pidfile
 		try:
-			pf = open(self.pidfile,'r')
+			pf = open(self.pidfile, 'r')
 			pid = int(pf.read().strip())
 			pf.close()
 		except IOError:
 			pid = None
-	
 		if not pid:
 			message = "pidfile %s does not exist. Daemon not running?\n"
 			sys.stderr.write(message % self.pidfile)
-			return # not an error in a restart
+			return  # not an error in a restart
 
-		# Try killing the daemon process	
+		# Try killing the daemon process
 		try:
 			while 1:
 				os.kill(pid, SIGTERM)
@@ -121,7 +119,7 @@ class Daemon(object):
 				if os.path.exists(self.pidfile):
 					os.remove(self.pidfile)
 			else:
-				print (str(err))
+				print(str(err))
 				sys.exit(1)
 
 	def kill(self):
@@ -130,18 +128,17 @@ class Daemon(object):
 		"""
 		# Get the pid from the pidfile
 		try:
-			pf = open(self.pidfile,'r')
+			pf = open(self.pidfile, 'r')
 			pid = int(pf.read().strip())
 			pf.close()
 		except IOError:
 			pid = None
-	
 		if not pid:
 			message = "pidfile %s does not exist. Daemon not running?\n"
 			sys.stderr.write(message % self.pidfile)
-			return # not an error in a restart
+			return  # not an error in a restart
 
-		# Try killing the daemon process	
+		# Try killing the daemon process
 		try:
 			while 1:
 				os.kill(pid, SIGKILL)
@@ -152,7 +149,7 @@ class Daemon(object):
 				if os.path.exists(self.pidfile):
 					os.remove(self.pidfile)
 			else:
-				print (str(err))
+				print(str(err))
 				sys.exit(1)
 
 	def restart(self):
