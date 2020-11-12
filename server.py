@@ -470,7 +470,7 @@ class Client(object):
 		if options.motd:
 			self.send(type='motd', motd=options.motd, force_display=options.motd_force_display)
 		self.send_to_others(type='client_joined', user_id=self.id, client=self.as_dict())
-		if not self.server.isAlive():
+		if not self.server.is_alive():
 			self.server.start()
 		printDebugMessage("Client " + str(self.id) + " joined channel " + self.password, 3)
 
