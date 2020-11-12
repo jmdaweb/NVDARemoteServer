@@ -12,8 +12,13 @@ import codecs
 import struct
 from threading import Thread, Lock, Event
 import locale
-encoding=locale.getpreferredencoding()
 import gc
+encoding=locale.getpreferredencoding()
+from functools import wraps
+from time import sleep
+import options
+import errno
+import traceback
 if sys.version[0]=='2':
 	python_version=2
 	from Queue import Queue
@@ -24,11 +29,8 @@ else:
 	python_version=3
 	from queue import Queue
 	strtype=str
-from functools import wraps
-from time import sleep
 protocol="SSL v 23"
-import options
-import errno
+
 
 #use the higuest available ssl protocol version
 def sslwrap(func):
@@ -55,21 +57,24 @@ debug=False
 logfile=None
 loggerThread=None
 serverThread=None
-import traceback
+
+
 def printError():
 	global loggerThread
 	if loggerThread is None:
 		return
 	loggerThread.queue.put(sys.exc_info())
 
+
 def printDebugMessage(msg, level):
-	if level>options.loglevel:
+	if level > options.loglevel:
 		return
 	global loggerThread
 	if loggerThread is None:
-		loggerThread=LoggerThread()
+		loggerThread = LoggerThread()
 		loggerThread.start()
 	loggerThread.queue.put(msg)
+
 
 def create_sock_pair(port=0):
 	have_socketpair = hasattr(socket, 'socketpair')
@@ -96,13 +101,15 @@ def create_sock_pair(port=0):
 	temp_srv_sock.close()
 	return client_sock, srv_sock
 
-close_notifier, close_listener=create_sock_pair()
+close_notifier, close_listener = create_sock_pair()
+
 
 def sighandler(signum, frame):
 	printDebugMessage("Received system signal. Waiting for server stop.", 0)
-	serverThread.running=False
-	if python_version==3:
+	serverThread.running = False
+	if python_version == 3:
 		raise
+
 
 class LoggerThread(Thread):
 	def __init__(self):
@@ -154,6 +161,7 @@ class LoggerThread(Thread):
 			sys.stdout.flush()
 			sys.stderr.flush()
 
+
 class baseServer(Thread):
 	def __init__(self):
 		super(baseServer, self).__init__()
@@ -187,6 +195,7 @@ class baseServer(Thread):
 				break
 		return id
 
+
 class Server(baseServer):
 	PING_TIME = 300
 
@@ -200,35 +209,38 @@ class Server(baseServer):
 		printDebugMessage("Initialized instance variables", 2)
 
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
-		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.server_sockets=[]
+		server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		if socket.has_ipv6:
-			self.server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+			server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 		printDebugMessage("Socket created.", 2)
-		self.server_socket = ssl.wrap_socket(self.server_socket, certfile=options.pemfile, server_side=True)
+		server_socket = ssl.wrap_socket(server_socket, certfile=options.pemfile, server_side=True)
 		if socket.has_ipv6:
-			self.server_socket6 = ssl.wrap_socket(self.server_socket6, certfile=options.pemfile, server_side=True)
+			server_socket6 = ssl.wrap_socket(server_socket6, certfile=options.pemfile, server_side=True)
 		printDebugMessage("Enabled ssl in socket.", 2)
 		printDebugMessage("Setting socket options...", 2)
 		if platform.system()!='Windows':
-			self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
-		self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+		server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		if socket.has_ipv6:
 			if platform.system()!='Windows':
-				self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
-			self.server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			self.server_socket6.bind((bind_host6, port6, 0, 0))
-			self.server_socket6.listen(5)
+				server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+			server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			server_socket6.bind((bind_host6, port6, 0, 0))
+			server_socket6.listen(5)
+			self.server_sockets.append(server_socket6)
 			printDebugMessage("IPV6 socket has started listening on port "+str(self.port6), 0)
 		try:
-			self.server_socket.bind((bind_host, port))
-			self.server_socket.listen(5)
+			server_socket.bind((bind_host, port))
+			server_socket.listen(5)
+			self.server_sockets.append(server_socket)
 			printDebugMessage("IPV4 socket has started listening on port "+str(self.port), 0)
 		except:
-			self.server_socket.close()
-			self.server_socket=None
+			server_socket.close()
+			server_socket=None
 			printDebugMessage("IPV4 socket has not been created", 0)
 			if socket.has_ipv6==False:
-				raise # If there is no IPV6 support and IPV4 socket can't listen, stop the server
+				raise  # If there is no IPV6 support and IPV4 socket can't listen, stop the server
 
 	def run(self):
 		self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
@@ -242,13 +254,7 @@ class Server(baseServer):
 				self.evt.set()
 				try:
 					sleep(0.01)
-					if socket.has_ipv6:
-						if self.server_socket is not None:
-							r, w, e = select.select(self.client_sockets+[self.server_socket, self.server_socket6, close_listener], self.client_sockets, self.client_sockets, 60)
-						else:
-							r, w, e = select.select(self.client_sockets+[self.server_socket6, close_listener], self.client_sockets, self.client_sockets, 60)
-					else:
-						r, w, e = select.select(self.client_sockets+[self.server_socket, close_listener], self.client_sockets, self.client_sockets, 60)
+					r, w, e = select.select(self.client_sockets+self.server_sockets+[close_listener], self.client_sockets, self.client_sockets, 60)
 				except:
 					printError()
 				if not self.running:
@@ -266,13 +272,9 @@ class Server(baseServer):
 						self.clients[id].confirmSend()
 						self.evt.set()
 				for sock in r:
-					if sock is self.server_socket:
+					if sock in self.server_sockets:
 						self.accept_new_connection(sock)
 						continue
-					if socket.has_ipv6:
-						if sock is self.server_socket6:
-							self.accept_new_connection(sock)
-							continue
 					id=self.searchId(sock)
 					if id!=0:
 						self.clients[id].handle_data()
@@ -291,20 +293,14 @@ class Server(baseServer):
 		except:
 			printDebugMessage("Error while accepting a new connection.", 0)
 			printError()
-			if self.server_socket is not None:
-				try:
-					self.server_socket.shutdown(socket.SHUT_RDWR)
-				except:
-					printError()
-			if socket.has_ipv6:
-				try:
-					self.server_socket6.shutdown(socket.SHUT_RDWR)
-				except:
-					printError()
-			if self.server_socket is not None:
-				self.server_socket.close()
-			if socket.has_ipv6:
-				self.server_socket6.close()
+			for s in self.server_sockets:
+				if s is not None:
+					try:
+						s.shutdown(socket.SHUT_RDWR)
+					except:
+						printError()
+				if s is not None:
+					s.close()
 			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
 			self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 			return
@@ -328,20 +324,14 @@ class Server(baseServer):
 		for c in list(self.clients.values()):
 			c.close()
 		printDebugMessage("Closing server socket...", 2)
-		if self.server_socket is not None:
-			try:
-				self.server_socket.shutdown(socket.SHUT_RDWR)
-			except:
-				printError()
-		if socket.has_ipv6:
-			try:
-				self.server_socket6.shutdown(socket.SHUT_RDWR)
-			except:
-				printError()
-		if self.server_socket is not None:
-			self.server_socket.close()
-		if socket.has_ipv6:
-			self.server_socket6.close()
+		for s in self.server_sockets:
+			if s is not None:
+				try:
+					s.shutdown(socket.SHUT_RDWR)
+				except:
+					printError()
+			if s is not None:
+				s.close()
 
 class Channel(baseServer):
 	def __init__(self, server, password):
@@ -392,6 +382,7 @@ class Channel(baseServer):
 		for client in list(self.clients.values()):
 			client.close()
 
+
 class CheckThread(Thread):
 	def __init__(self, channel):
 		super(CheckThread, self).__init__()
@@ -417,6 +408,7 @@ class CheckThread(Thread):
 			else:
 				self.channel.evt.clear()
 		printDebugMessage("Checker thread for channel "+self.channel.password+" has finished", 3)
+
 
 class Client(object):
 	id = 0
@@ -592,11 +584,12 @@ class Client(object):
 			printError()
 			return
 
+
 def startAndWait():
 	global serverThread
 	try:
 		import signal
-		if (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system()=='Windows')|(platform.system().startswith('CYGWIN'))|(platform.system().startswith('MSYS')):
+		if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system() == 'Windows') | (platform.system().startswith('CYGWIN')) | (platform.system().startswith('MSYS')):
 			printDebugMessage("Configuring signal handlers", 2)
 			signal.signal(signal.SIGINT, sighandler)
 			signal.signal(signal.SIGTERM, sighandler)
@@ -605,9 +598,9 @@ def startAndWait():
 	except:
 		printDebugMessage("Error setting handler for signals", 0)
 		printError()
-	serverThread=Server()
+	serverThread = Server()
 	serverThread.start()
-	if python_version==2:
+	if python_version == 2:
 		close_notifier.sendall('\n')
 	else:
 		close_notifier.sendall(bytes('\n', "utf-8"))
@@ -615,15 +608,15 @@ def startAndWait():
 		sleep(10)
 	except:
 		pass
-	while serverThread.running: # Wait actively to catch system signals
+	while serverThread.running:  # Wait actively to catch system signals
 		try:
 			gc.collect()
 			sleep(1)
 			serverThread.evt.wait(80)
-			if serverThread.evt.isSet(): # clear and continue
+			if serverThread.evt.isSet():  # clear and continue
 				serverThread.evt.clear()
 			else:
-				if serverThread.running: # The server is frozen
+				if serverThread.running:  # The server is frozen
 					printDebugMessage("The server thread seems frozen, stopping the daemon.", 0)
 					break
 		except:
@@ -632,25 +625,26 @@ def startAndWait():
 	close_listener.recv(16384)
 	close_notifier.close()
 	close_listener.close()
-	loggerThread.running=False
+	loggerThread.running = False
 	loggerThread.join()
+
 
 if __name__ == "__main__":
 	options.setup()
-	logfile=options.logfile
-	#If debug is enabled, all platform checks are skipped
+	logfile = options.logfile
+	# If debug is enabled, all platform checks are skipped
 	if "debug" in sys.argv:
-		debug=True
-		if python_version==2:
-			sys.stdout=codecs.getwriter("utf-8")(sys.stdout)
-			sys.stderr=codecs.getwriter("utf-8")(sys.stderr)
+		debug = True
+		if python_version == 2:
+			sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
+			sys.stderr = codecs.getwriter("utf-8")(sys.stderr)
 		startAndWait()
-	elif (platform.system()=='Linux')|(platform.system()=='Darwin')|(platform.system().startswith('MSYS')):
+	elif (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system().startswith('MSYS')):
 		import daemon
 		class serverDaemon(daemon.Daemon):
 			def run(self):
 				startAndWait()
-		dm=serverDaemon(options.pidfile)
+		dm = serverDaemon(options.pidfile)
 		if len(sys.argv) >= 2:
 			if 'start' == sys.argv[1]:
 				dm.start()
@@ -667,7 +661,7 @@ if __name__ == "__main__":
 		else:
 			print ("usage: %s start|stop|restart|kill [options]. Read the server documentation for more information." % sys.argv[0])
 			sys.exit(2)
-	elif platform.system()=='Windows':
+	elif platform.system() == 'Windows':
 		import win32serviceutil
 		import win32service
 		import win32event
@@ -682,13 +676,13 @@ if __name__ == "__main__":
 
 			def SvcStop(self):
 				self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-				serverThread.running=False
+				serverThread.running = False
 				win32event.SetEvent(self.hWaitStop)
 
 			def SvcDoRun(self):
 				startAndWait()
 
-		if len(sys.argv)==1:
+		if len(sys.argv) == 1:
 			servicemanager.Initialize(NVDARemoteService._svc_name_, os.path.abspath(servicemanager.__file__))
 			servicemanager.PrepareToHostSingle(NVDARemoteService)
 			try:
