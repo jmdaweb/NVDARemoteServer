@@ -228,10 +228,15 @@ class Server(baseServer):
 			if platform.system() != 'Windows':
 				server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 			server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			server_socket6.bind((bind_host6, port6, 0, 0))
-			server_socket6.listen(5)
-			self.server_sockets.append(server_socket6)
-			printDebugMessage("IPV6 socket has started listening on port " + str(self.port6), 0)
+			try:
+				server_socket6.bind((bind_host6, port6, 0, 0))
+				server_socket6.listen(5)
+				self.server_sockets.append(server_socket6)
+				printDebugMessage("IPV6 socket has started listening on port " + str(self.port6), 0)
+			except:
+				server_socket6.close()
+				server_socket6 = None
+				printDebugMessage("IPV6 socket has not been created. That means the configured interface and port are used by another application, or your system does not support IPV6. The server may still process incoming IPV4 connections", 0)
 		try:
 			server_socket.bind((bind_host, port))
 			server_socket.listen(5)
@@ -240,8 +245,8 @@ class Server(baseServer):
 		except:
 			server_socket.close()
 			server_socket = None
-			printDebugMessage("IPV4 socket has not been created", 0)
-			if not socket.has_ipv6:
+			printDebugMessage("IPV4 socket has not been created. In most situations, this means IPV6 socket will process incoming IPV4 connections, so you can ignore this message.", 0)
+			if self.server_sockets == [] or not socket.has_ipv6:
 				raise  # If there is no IPV6 support and IPV4 socket can't listen, stop the server
 
 	def run(self):
