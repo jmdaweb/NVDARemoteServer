@@ -13,7 +13,6 @@ import struct
 from threading import Thread, Lock, Event
 import locale
 import gc
-from functools import wraps
 from time import sleep
 import options
 import errno
@@ -29,31 +28,6 @@ else:
 	python_version = 3
 	from queue import Queue
 	strtype = str
-protocol = "SSL v 23"
-
-
-# Use the higuest available ssl protocol version
-def sslwrap(func):
-	@wraps(func)
-	def bar(*args, **kw):
-		global protocol
-		if hasattr(ssl, 'PROTOCOL_TLSv1_2'):
-			kw['ssl_version'] = ssl.PROTOCOL_TLSv1_2
-			protocol = "TLS v 1.2"
-		elif hasattr(ssl, 'PROTOCOL_TLSv1_1'):
-			kw['ssl_version'] = ssl.PROTOCOL_TLSv1_1
-			protocol = "TLS v 1.1"
-		elif hasattr(ssl, 'PROTOCOL_TLSv1'):
-			kw['ssl_version'] = ssl.PROTOCOL_TLSv1
-			protocol = "TLS v 1"
-		elif hasattr(ssl, 'PROTOCOL_SSLv3'):
-			kw['ssl_version'] = ssl.PROTOCOL_SSLv3
-			protocol = "SSL v 3"
-		return func(*args, **kw)
-	return bar
-
-
-ssl.wrap_socket = sslwrap(ssl.wrap_socket)
 debug = False
 logfile = None
 loggerThread = None
@@ -255,7 +229,6 @@ class Server(baseServer):
 		self.running = True
 		self.last_ping_time = time.time()
 		printDebugMessage("NVDA Remote Server is ready.", 0)
-		printDebugMessage("The server is using " + protocol, 0)
 		printDebugMessage("The server is running with pid " + str(os.getpid()), 0)
 		try:
 			while self.running:
