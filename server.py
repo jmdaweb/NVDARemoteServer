@@ -212,23 +212,16 @@ class Server(baseServer):
 
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
 		self.server_sockets = []
-		server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		if socket.has_ipv6:
-			server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
-		printDebugMessage("Socket created.", 2)
-		server_socket = ssl.wrap_socket(server_socket, certfile=options.pemfile, server_side=True)
-		if socket.has_ipv6:
-			server_socket6 = ssl.wrap_socket(server_socket6, certfile=options.pemfile, server_side=True)
-		printDebugMessage("Enabled ssl in socket.", 2)
-		printDebugMessage("Setting socket options...", 2)
-		if platform.system() != 'Windows':
-			server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
-		server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		if socket.has_ipv6:
-			if platform.system() != 'Windows':
-				server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
-			server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			try:
+				server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+				printDebugMessage("IPV6 socket created.", 2)
+				server_socket6 = ssl.wrap_socket(server_socket6, certfile=options.pemfile, server_side=True)
+				printDebugMessage("Enabled ssl in IPV6 socket.", 2)
+				printDebugMessage("Setting socket options...", 2)
+				if platform.system() != 'Windows':
+					server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+				server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 				server_socket6.bind((bind_host6, port6, 0, 0))
 				server_socket6.listen(5)
 				self.server_sockets.append(server_socket6)
@@ -238,6 +231,14 @@ class Server(baseServer):
 				server_socket6 = None
 				printDebugMessage("IPV6 socket has not been created. That means the configured interface and port are used by another application, or your system does not support IPV6. The server may still process incoming IPV4 connections", 0)
 		try:
+			server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			printDebugMessage("IPV4 socket created.", 2)
+			server_socket = ssl.wrap_socket(server_socket, certfile=options.pemfile, server_side=True)
+			printDebugMessage("Enabled ssl in IPV4 socket.", 2)
+			printDebugMessage("Setting socket options...", 2)
+			if platform.system() != 'Windows':
+				server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
+			server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			server_socket.bind((bind_host, port))
 			server_socket.listen(5)
 			self.server_sockets.append(server_socket)
@@ -246,8 +247,8 @@ class Server(baseServer):
 			server_socket.close()
 			server_socket = None
 			printDebugMessage("IPV4 socket has not been created. In most situations, this means IPV6 socket will process incoming IPV4 connections, so you can ignore this message.", 0)
-			if self.server_sockets == [] or not socket.has_ipv6:
-				raise  # If there is no IPV6 support and IPV4 socket can't listen, stop the server
+		if self.server_sockets == []:
+			raise  # If there are no sockets in the list, stop the server
 
 	def run(self):
 		self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
