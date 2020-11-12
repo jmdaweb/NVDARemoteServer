@@ -296,13 +296,11 @@ class Server(baseServer):
 			printDebugMessage("Error while accepting a new connection.", 0)
 			printError()
 			for s in self.server_sockets:
-				if s is not None:
-					try:
-						s.shutdown(socket.SHUT_RDWR)
-					except:
-						printError()
-				if s is not None:
-					s.close()
+				try:
+					s.shutdown(socket.SHUT_RDWR)
+				except:
+					printError()
+				s.close()
 			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
 			self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 			return
@@ -327,13 +325,11 @@ class Server(baseServer):
 			c.close()
 		printDebugMessage("Closing server socket...", 2)
 		for s in self.server_sockets:
-			if s is not None:
-				try:
-					s.shutdown(socket.SHUT_RDWR)
-				except:
-					printError()
-			if s is not None:
-				s.close()
+			try:
+				s.shutdown(socket.SHUT_RDWR)
+			except:
+				printError()
+			s.close()
 
 
 class Channel(baseServer):
