@@ -8,7 +8,7 @@ The NVDA Remote Relay server is a multiplatform, free and open source server for
 
 Do you want to control several computers located inside your home from outside? You can't forward the tcp port 6837 for all of them, so this server is for you.
 
-This server is multiplatform, so you can install it under Windows, Mac and many Linux distributions, including Arch, Debian and Centos. If you have installed python 2.x on your system, probably you will be able to run this server.
+This server is multiplatform, so you can install it under Windows, Mac and many Linux distributions, including Arch, Debian and Centos. If you have installed python 2.x or 3.x on your system, probably you will be able to run this server.
 
 ## Building
 
@@ -17,44 +17,44 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 ### Building for debian based distributions
 
 1. Navigate to the debian directory inside this repo (choose between Debian 7 or Debian 8). If you run Debian versions later than Debian 8, or Ubuntu 15.04 and later, the Debian 8 package is what you need.
-2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script: ./build.sh
-4. Install the package: dpkg -i NVDARemoteServer.deb
+2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
+3. Run the script: `./build.sh`
+4. Install the package: `dpkg -i NVDARemoteServer.deb`
 
-To uninstall it, run dpkg --purge nvda-remote-server
+To uninstall it, run `dpkg --purge nvda-remote-server`
 
-To uninstall it keeping the configuration files, run dpkg --remove nvda-remote-server
+To uninstall it keeping the configuration files, run `dpkg --remove nvda-remote-server`
 
-### Building for Centos and RHL based distributions
+### Building for Centos and RHEL based distributions
 
 To build the rpm version, the rpmdevtools package is required. Install it using your package manager.
 
-1. Navigate to the RHL directory inside this repo (choose between RHL 6 or RHL 7). If you run Centos versions later than Centos 7, or Fedora, the RHL 7 package is what you need.
-2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script: ./build.sh. The final rpm will be located at ~/rpmbuild/RPMS/noarch directory.
-4. Install the package using rpm: rpm -U NVDARemoteServer.rpm
+1. Navigate to the RHEL directory inside this repo (choose between RHEL 6, RHEL 7 or RHEL 8). If you run Centos versions later than Centos 8, or Fedora, the RHL 8 package is what you need.
+2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
+3. Run the script: `./build.sh`. The final rpm will be located at `~/rpmbuild/RPMS/noarch` directory.
+4. Install the package using rpm: `rpm -U NVDARemoteServer.rpm`
 
-To uninstall it, run rpm -e NVDARemoteServer
+To uninstall it, run `rpm -e NVDARemoteServer`
 
 ### Building for Mac Os x
 
 1. Navigate to the Mac Os x directory inside this repo.
-2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script: sudo ./build.sh
-4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: installer -pkg NVDARemoteServer.pkg -target /
+2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
+3. Run the script: `sudo ./build.sh`
+4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: `installer -pkg NVDARemoteServer.pkg -target /`
 
-To uninstall it, run NVDARemoteUninstall
+To uninstall it, run `NVDARemoteUninstall`
 
 ### Building for Arch based distributions
 
 Note: you must clone the repository and perform the following actions in a standard, non-privileged user account.
 
 1. Navigate to the Arch directory inside this repo.
-2. Ensure that the build.sh script can be executed: chmod +x build.sh
-3. Run the script: ./build.sh
-4. Install the package with pacman: sudo pacman -U NVDARemoteServer.pkg.tar.xz
+2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
+3. Run the script: `./build.sh`
+4. Install the package with pacman: `sudo pacman -U NVDARemoteServer.pkg.tar.xz`
 
-To uninstall it, run: sudo pacman --remove NVDARemoteServer
+To uninstall it, run: `sudo pacman --remove NVDARemoteServer`
 
 ### Building for MSYS2 platform on Windows
 
@@ -64,9 +64,9 @@ To uninstall it, run: sudo pacman --remove NVDARemoteServer
 ### Installing on Cygwin
 
 1. Navigate to the Cygwin directory from Cygwin Bash shell.
-2. Run install.sh: ./install.sh
+2. Run install.sh: `./install.sh`
 
-To uninstall it, run NVDARemoteUninstall
+To uninstall it, run `NVDARemoteUninstall`
 
 ### Building for Windows
 
@@ -95,9 +95,9 @@ The server is almost portable, there is no installation required. If you install
 
 You need Docker installed on a Linux system. Navigate to the docker directory and run:
 
-docker build -t nvda-remote-server .
+`docker build -t nvda-remote-server .`
 
-Change or add more tags if you plan to push the image to a Docker registry.
+Change or add more tags if you plan to push the image to a Docker registry. For example: `docker build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.0 .`
 
 ## Running
 
@@ -107,25 +107,25 @@ On Unix platforms, including Mac Os x, there is a script located in /usr/bin cal
 
 If you want to start the server in debugging mode (useful to see activity and errors) run:
 
-sudo NVDARemoteServer debug
+`sudo NVDARemoteServer debug`
 
 On most platforms, you can stop the server by pressing ctrl+c if it is running in this mode.
 
 To start the server, run:
 
-sudo NVDARemoteServer start
+`sudo NVDARemoteServer start`
 
 To stop it, run:
 
-sudo NVDARemoteServer stop
+`sudo NVDARemoteServer stop`
 
-Run sudo NVDARemoteServer restart to restart the server.
+Run `sudo NVDARemoteServer restart` to restart the server.
 
-If the server freezes, run sudo NVDARemoteServer kill to kill the process.
+If the server freezes, run `sudo NVDARemoteServer kill` to kill the process.
 
-On Centos 6, Centos 7, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. You can run NVDARemoteServer status to see if the service is running.
+On Centos 6, Centos 7, Centos 8, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. You can run `NVDARemoteServer status` to see if the service is running.
 
-If you want to configure the service to run at system startup, run sudo NVDARemoteServer enable. Run sudo NVDARemoteServer disable to configure the service to start manually.
+If you want to configure the service to run at system startup, run `sudo NVDARemoteServer enable`. Run `sudo NVDARemoteServer disable` to configure the service to start manually.
 
 If you want to install the server as a system service on Windows, run service_manager.cmd as administrator and choose the right options on the displayed menu.
 
@@ -133,9 +133,29 @@ Run debug.cmd to start the server in debugging mode.
 
 If you want to run the server inside a Docker container, use a command similar to the following:
 
-docker run -d -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest
+`docker run -d -p 6837:6837 --rm jmdaweb/nvda-remote-server:latest`
+
+The command above destroys the container once it is stopped. If you want a permanent container which you can start and stop without creation and removal, run:
+
+`docker run -d -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest`
+
+Or, if you want to create it and run later:
+
+`docker create -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest`
 
 You can change jmdaweb/nvda-remote-server:latest to your custom image name if you have built it. The --name argument specifies the container name. If you want to use a diferent port, change the first part after -p. The second must be always 6837.
+
+Once created, you can start your container with the following command:
+
+`docker start my_nvda_remote`
+
+To stop it, run this command:
+
+`docker stop my_nvda_remote`
+
+Run this command to remove the container:
+
+`docker rm my_nvda_remote`
 
 ## Log files
 
@@ -147,7 +167,7 @@ On Arch Linux: go to /run/NVDARemoteServer/NVDARemoteServer.log
 
 On Windows: NVDARemoteServer.log is located inside the program folder.
 
-On a Docker container: run docker logs containername. For example: docker logs my_nvda_remote
+On a Docker container: run `docker logs containername`. For example: `docker logs my_nvda_remote`
 
 Read the Docker documentation to see all available commands.
 
@@ -157,7 +177,7 @@ The server includes a default self-signed certificate to encrypt connections. Th
 
 It is strongly recommended that you create your own certificate before starting the server for the first time. You can do it by running the NVDARemoteCertificate script on almost all platforms:
 
-sudo NVDARemoteCertificate
+`sudo NVDARemoteCertificate`
 
 The script takes no arguments. Follow the on-screen instructions to complete the process.
 
@@ -165,24 +185,36 @@ The script will create a 4096 bit RSA private key and a certificate, and combine
 
 On Windows, a pre-built OpenSSL version is included in the server directory. You can run NVDARemoteCertificate.cmd to create a certificate.
 
+If your server is running inside a Docker container, you can run a command similar to the following:
+
+`docker exec -t -i my_nvda_remote NVDARemoteCertificate`
+
 ## Configuration file and extra commandline options
 
 Starting with version 1.5, NVDARemoteServer includes a configuration file that you can modify to change some server settings. You must restart the server after modifying this file. The comments in the file will guide you when changing settings.
 
+By default, the configuration file is located inside the program folder (Windows) or in /etc (all other distributions), and it is named `NVDARemoteServer.conf`.
+
 You can test your changes in debugging mode before modifying the configuration file. Although the changes in the configuration also are applied when you run the server in debug mode, you can pass some commandline parameters to perform tests. The following options are available:
 
-* --interface=ip: listen only on the specified ip address. This setting doesn't affect IPV6 interfaces. In some platforms, this setting will not work if IPV6 socket binds to all interfaces.
-* --interface6=ip: listen only on the specified IPV6 address. This setting doesn't affect IPV4 interfaces.
-* --port=port: listen only on the specified tcp port.
-* --port6=port: listen on the specified port, but only for IPV6. By default, use the value specified in --port. Use this value if you want different ports for IPV4 and IPV6 sockets.
-* --logfile=path, --pidfile=path: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead. If you change pidfile in the configuration file and use the server as a system daemon, update the pidfile variable in the service units for the status command to work properly.
-* --loglevel=n, where n is a number between 0 (almost quiet) and 3 (very verbose).
-* --pemfile=path: path to the private key and certificate used for ssl connections. They must be in the same file.
-* --motd=string: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes.
-* --motd_force_display=integer: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display.
-* --configfile=path: read config file from path. All the previous options can be edited in the configuration file.
+* `--interface=ip`: listen only on the specified ip address. This setting doesn't affect IPV6 interfaces. In some platforms, this setting will not work if IPV6 socket binds to all interfaces.
+* `--interface6=ip`: listen only on the specified IPV6 address. This setting doesn't affect IPV4 interfaces.
+* `--port=port`: listen only on the specified tcp port.
+* `--port6=port`: listen on the specified port, but only for IPV6. By default, use the value specified in --port. Use this value if you want different ports for IPV4 and IPV6 sockets.
+* `--logfile=path`, `--pidfile=path`: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead. If you change pidfile in the configuration file and use the server as a system daemon, update the pidfile variable in the service units for the status command to work properly.
+* `--loglevel=n`, where n is a number between 0 (almost quiet) and 3 (very verbose).
+* `--pemfile=path`: path to the private key and certificate used for ssl connections. They must be in the same file.
+* `--motd=string`: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes.
+* `--motd_force_display=integer`: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display.
+* `--configfile=path`: read config file from path. All the previous options can be edited in the configuration file.
 
 Note: the command line arguments take precedence over the supplied ones in the configuration file.
+
+Note for Docker container users: run a command similar to the following to edit the configuration file for your container:
+
+`docker exec -t -i my_nvda_remote nano /etc/NVDARemoteServer.conf`
+
+When the Nano editor loads, you can use arrow keys to move the cursor and perform changes. Once finished, press control+x. If you have made any changes, press y and then enter. Tipically, unless you know very well what you are doing, you should only update the parameters related to the message of the day.
 
 ## Known problems
 
@@ -194,15 +226,15 @@ If you want to disable it, follow these steps:
 
 * Reboot your system. While rebooting, hold the command+r key to enter in recovery mode.
 * Go to the utilities menu, and choose terminal.
-* Type the following command: csrutil disable
+* Type the following command: `csrutil disable`
 * Reboot your system and go back to the main operating system.
 * Install NVDA Remote Server.
 
-Caution! Disabling system integrity protection is a security risk. To enable it back, run csrutil enable in recovery mode.
+Caution! Disabling system integrity protection is a security risk. To enable it back, run `csrutil enable` in recovery mode.
 
 ### Problems with the server in OpenVZ or Docker containers
 
-If you run a Debian 8 or RHL 7 based OpenVZ or Docker container, don't install the Debian 8 or RHL 7 packages. They will fail and leave the installation in a bad state. In these containers, Systemd produces errors because it can't connect directly to the kernel.
+If you run a Debian 8, RHEL 7 or RHEL 8 based OpenVZ or Docker container, don't install the Debian 8 or RHEL packages. They will fail and leave the installation in a bad state. In these containers, Systemd produces errors because it can't connect directly to the kernel.
 
 Solution: install Debian 7 or RHL 6 package instead, or run systemd in a privileged container.
 
@@ -217,7 +249,7 @@ Solution: systemd-sysv is required to install this package. If you tried install
 Mac Os Sierra doesn't allow untrusted software to be installed or used by default. In addition, this option has been removed from System Preferences application. To allow untrusted software:
 
 * Go to the utilities folder, and open terminal.
-* Type the following command: sudo spctl --master-disable
+* Type the following command: `sudo spctl --master-disable`
 * Enter your password. Now, if system integrity protection has been disabled, you can install the package as described above.
 
-Caution! Allowing untrusted applications is a security risk. To revert to the recommended settings, run sudo spctl --master-enable
+Caution! Allowing untrusted applications is a security risk. To revert to the recommended settings, run `sudo spctl --master-enable`
