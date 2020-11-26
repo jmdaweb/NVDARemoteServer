@@ -3,7 +3,7 @@ Version: 1.9-1
 Section: net
 Priority: optional
 Architecture: all
-Depends: python, systemd-sysv, adduser
+Depends: python, systemd-sysv, adduser, openssl
 Maintainer: Jose Manuel Delicado <jmdaweb@hotmail.com>
 Description: NVDARemote Relay server
  This server allows NVDARemote users to redirect their traffic.
