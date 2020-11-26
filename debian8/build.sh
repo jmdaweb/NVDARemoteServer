@@ -1,7 +1,7 @@
 #!/bin/bash
 #please, run this script as root
 #make directories
-VERSION=1.9
+VERSION=2.0
 mkdir -p nvda-remote-server_$VERSION/usr/bin
 mkdir -p nvda-remote-server_$VERSION/usr/share/doc/nvda-remote-server
 mkdir -p nvda-remote-server_$VERSION/usr/share/NVDARemoteServer

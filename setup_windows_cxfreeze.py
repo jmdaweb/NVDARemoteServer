@@ -30,7 +30,7 @@ if __name__ == '__main__':
   name = "NVDARemote server",
   author = "Jose Manuel Delicado",
   author_email = "jm.delicado@nvda.es",
-  version = "1.9",
+  version = "2.0",
   url = "https://github.com/jmdaweb/NVDARemoteServer",
   description="NVDA Remote Relay Server",
 options = {
