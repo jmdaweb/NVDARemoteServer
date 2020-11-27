@@ -19,3 +19,4 @@ chmod +x package/usr/bin/NVDARemoteServer
 chmod +x package/usr/bin/NVDARemoteCertificate
 chmod +x package/usr/bin/NVDARemoteUninstall
 pkgbuild --identifier NVDARemoteServer --version $VERSION --install-location / --root package NVDARemoteServer.pkg
+rm -rf package

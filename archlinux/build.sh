@@ -19,3 +19,4 @@ cp ../systemd/NVDARemoteServer.tmpfiles src/usr/lib/tmpfiles.d/NVDARemoteServer.
 cp ../systemd/NVDARemoteServer.sysusers src/usr/lib/sysusers.d/NVDARemoteServer.conf
 cp ../systemd/NVDARemoteServer.service src/usr/lib/systemd/system
 makepkg
+rm -rf src pkg

@@ -10,3 +10,4 @@ cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 src/usr/share/
 cp ../manual/NVDARemoteServer.conf.5 src/usr/share/man/man5
 cp ../NVDARemoteServer.conf src/etc
 makepkg
+rm -rf pkg
