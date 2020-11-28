@@ -1,3 +1,11 @@
+nvda-remote-server (2.0-1) stable; urgency=low
+
+  * Bug fixes.
+    Closes: #9334588
+
+ -- Jose Manuel Delicado <jm.delicado@nvda.es>  Mon, 30 Nov 2020 10:00:00 +0530
+
+
 nvda-remote-server (1.9-1) stable; urgency=low
 
   * Stability improvements.
