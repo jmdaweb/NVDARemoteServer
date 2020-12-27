@@ -453,6 +453,12 @@ class Client(object):
 		return dict(id=self.id, connection_type=self.connection_type)
 
 	def do_join(self, obj):
+		if 'channel' not in obj or not obj['channel']:
+			self.send(type='error', error='invalid_parameters')
+			return
+		if isinstance(self.server, Channel):
+			self.send(type="error", error="already_joined")
+			return
 		self.password = obj.get('channel', None)
 		if self.password not in list(self.server.channels.keys()):
 			self.server.channels[self.password] = Channel(self.server, self.password)
