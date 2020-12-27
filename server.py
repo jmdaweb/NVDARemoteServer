@@ -17,6 +17,7 @@ from time import sleep
 import options
 import errno
 import traceback
+import string
 encoding = locale.getpreferredencoding()
 if sys.version[0] == '2':
 	python_version = 2
@@ -496,10 +497,7 @@ class Client(object):
 		printDebugMessage("Client " + str(self.id) + " generated a key", 2)
 
 	def generate_key(self):
-		res = str(random.randrange(1, 9))
-		for n in range(6):
-			res += str(random.randrange(0, 9))
-		return res
+		return "".join([random.choice(string.digits) for i in range(7)])
 
 	def check_key(self, key):
 		check = False
