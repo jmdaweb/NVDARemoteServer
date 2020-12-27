@@ -487,6 +487,8 @@ class Client(object):
 		self.protocol_version = version
 
 	def do_generate_key(self, obj):
+		if isinstance(self.server, Channel):
+			return
 		res = self.generate_key()
 		while self.check_key(res):
 			res = self.generate_key()
