@@ -1,3 +1,15 @@
+nvda-remote-server (unreleased) development; urgency=low
+
+  * Bug fixes.
+    Corrects a slight spelling error in the documentation, pull request #33
+    Corrects slight spelling errors within server.py, pull request #34
+
+  * Enhancements.
+    Adds protocol logging with loglevel 4, as well as update the change log to reflect the changes, pull request #35
+
+ -- Blake G <blakeblind@gmail.com>  Thu, 11 Mar 2021 09:02:42 -0700
+
+
 nvda-remote-server (2.0-1) stable; urgency=low
 
   * Bug fixes.
