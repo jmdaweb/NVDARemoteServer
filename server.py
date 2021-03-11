@@ -98,7 +98,7 @@ class LoggerThread(Thread):
 				self.log = codecs.open(logfile, "w", "utf-8")
 				sys.stdout = self.log
 				sys.stderr = self.log
-			print("Loggin system initialized.")
+			print("Logging system initialized.")
 		except:
 			print("Error opening NVDARemoteServer.log. Incorrect permissions or read only environment.")
 			self.printError(sys.exc_info())
@@ -240,7 +240,7 @@ class Server(baseServer):
 				except:
 					printError()
 				if not self.running:
-					printDebugMessage("Shuting down server...", 2)
+					printDebugMessage("Shutting down server...", 2)
 					break
 				for sock in e:
 					id = self.searchId(sock)
