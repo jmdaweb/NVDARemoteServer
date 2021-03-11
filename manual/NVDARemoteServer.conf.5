@@ -62,9 +62,11 @@ Example: pidfile=/home/john/run/NVDARemoteServer.pid
 .P
 loglevel
 .P
-Set the information that the server will write to the log. You must enter a value between 0 and 3. 0 means only errors and warnings, 1 adds connection info, 2 is used for debugging purposes and 3 prints also the channel passwords.
+Set the information that the server will write to the log. You must enter a value between 0 and 3. 0 means only errors and warnings, 1 adds connection info, 2 is used for debugging purposes, 3 adds the channel passwords, and 4 will log the protocol sent and received by the server.
 .P
 Warning! Although level 3 is set by default, you must change it to give less information, as level 3 is a security risk especially in production environments.
+.P
+Warning! Do not use level 4 on production servers, as the protocol sent and received by the server is included at this level. Do not use this for long running server instances, as it will quickly fill your log file with data you likely won't use. This is intended for advanced use only, and is not meant for most people to use. Most people won't need this unless they want to annalize the server's protocol or track down bugs in either the server or a client, should either be updated and cause some type of difficulty.
 .P
 Example: loglevel=2
 .P
