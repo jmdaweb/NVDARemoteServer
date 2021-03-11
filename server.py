@@ -429,7 +429,7 @@ class Client(object):
 		self.buffer = ""
 		while '\n' in data:
 			line, sep, data = data.partition('\n')
-			printDebugMessage("Protocol server receive: " + line, 4)
+			printDebugMessage("Protocol log, received from client " + str(self.id) + "\n" + line, 4)
 			self.parse(line)
 		self.buffer += data
 
@@ -527,7 +527,7 @@ class Client(object):
 			if client:
 				msg['client'] = client
 		msgstr = json.dumps(msg)
-		printDebugMessage("Protocol server send: " + msgstr, 4)
+		printDebugMessage("Protocol log, sent to client " + str(self.id) + "\n" + msgstr, 4)
 		self.socket_send(msgstr + "\n")
 
 	def socket_send(self, msgstr):
