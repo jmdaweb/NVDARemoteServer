@@ -191,8 +191,6 @@ class Server(baseServer):
 			try:
 				server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 				printDebugMessage("IPV6 socket created.", 2)
-				server_socket6 = ssl.wrap_socket(server_socket6, certfile=options.pemfile, server_side=True)
-				printDebugMessage("Enabled ssl in IPV6 socket.", 2)
 				printDebugMessage("Setting socket options...", 2)
 				if platform.system() != 'Windows':
 					server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
@@ -208,8 +206,6 @@ class Server(baseServer):
 		try:
 			server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			printDebugMessage("IPV4 socket created.", 2)
-			server_socket = ssl.wrap_socket(server_socket, certfile=options.pemfile, server_side=True)
-			printDebugMessage("Enabled ssl in IPV4 socket.", 2)
 			printDebugMessage("Setting socket options...", 2)
 			if platform.system() != 'Windows':
 				server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
@@ -283,6 +279,13 @@ class Server(baseServer):
 				s.close()
 			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
 			self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
+			return
+		try:
+			client_sock = ssl.wrap_socket(client_sock, certfile=options.pemfile, server_side=True)
+			printDebugMessage("Enabled ssl for client socket.", 2)
+		except:
+			printDebugMessage("SSL negotiation failed.", 2)
+			printError()
 			return
 		printDebugMessage("Setting socket options...", 2)
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
