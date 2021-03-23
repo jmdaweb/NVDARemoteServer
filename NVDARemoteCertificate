@@ -9,5 +9,5 @@ cat cert.crt >> server.pem
 rm -f cert.csr cert.crt
 chmod 644 server.pem
 echo Certificate successfully created.
-echo You must restart the server for the changes to take effect.
+echo You should restart the server for the changes to take effect on all connected clients.
 exit

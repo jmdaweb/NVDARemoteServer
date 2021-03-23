@@ -13,5 +13,5 @@ del cert.csr
 del cert.crt
 endlocal
 echo Certificate successfully created
-echo You must restart the server for the changes to take effect. Press any key to exit.
+echo You should restart the server for the changes to take effect on all connected clients. Press any key to exit.
 pause
