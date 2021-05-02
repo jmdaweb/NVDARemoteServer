@@ -82,13 +82,13 @@ Example: pemfile=/etc/apache2/ssl/certificate.pem
 .P
 motd
 .P
-This is the message displayed to all clients which join a channel. If you collect user data, this is a good place to specify an URL to your privacy policy, if available. The message must be written in a single line. Multiline support is not available yet. By default no message is displayed.
+This is the message displayed to all clients which join a channel. If you collect user data, this is a good place to specify an URL to your privacy policy, if available. The message must be written in a single line. Multiline support is not available yet. By default no message is displayed, unless loglevel is set to 4. In this case, clients will receive a warning message, either standalone or appended to your message.
 .P
 Example: motd=Hello, welcome to my relay server
 .P
 motd_force_display
 .P
-The message of the day can be displayed once (only for first-time clients) or each time a client joins a channel. Possible values for this setting: 0=False, other integer values mean True. Defaults to False (do not force display).
+The message of the day can be displayed once (only for first-time clients) or each time a client joins a channel. Possible values for this setting: 0=False, other integer values mean True. Defaults to False (do not force display). If loglevel is set to 4, defaults to true (always display the message), and cannot be changed.
 .P
 Example: motd_force_display=1
 .SH SEE ALSO
