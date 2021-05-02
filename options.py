@@ -54,6 +54,10 @@ def setup():
 		setattr(sys.modules[__name__], k, v)
 	if port6 is None:
 		port6 = port
+	if loglevel > 3:
+		if motd is None:
+			motd = ""
+		motd = motd + "Warning! This server is running with the maximum allowed log level. All your activity is being recorded inside a log file."
 
 
 def parseArguments():
