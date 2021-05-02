@@ -58,6 +58,7 @@ def setup():
 		if motd is None:
 			motd = ""
 		motd = motd + "Warning! This server is running with the maximum allowed log level. All your activity is being recorded inside a log file."
+		motd_force_display = True
 
 
 def parseArguments():
