@@ -448,7 +448,10 @@ class Client(object):
 		if 'type' not in parsed:
 			return
 		if self.password != "":
-			self.send_to_others(**parsed)
+			if len(list(self.server.clients.values()))==1:
+				self.send(type="nvda_not_connected")
+			else:
+				self.send_to_others(**parsed)
 			return
 		fn = 'do_' + parsed['type']
 		if hasattr(self, fn):
