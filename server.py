@@ -501,7 +501,7 @@ class Client(object):
 		printDebugMessage("Client " + str(self.id) + " generated a key", 2)
 
 	def generate_key(self):
-		return "".join([random.choice(string.digits) for i in range(7)])
+		return "".join([random.choice(string.digits) for i in range(9)])
 
 	def check_key(self, key):
 		check = False
