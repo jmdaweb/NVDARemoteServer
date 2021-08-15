@@ -1,0 +1,9 @@
+#!/bin/bash
+# Pre removal script.
+ # This script runs before removing the package 
+
+set -e
+NVDARemoteServer stop
+NVDARemoteServer disable
+set +e
+exit 0

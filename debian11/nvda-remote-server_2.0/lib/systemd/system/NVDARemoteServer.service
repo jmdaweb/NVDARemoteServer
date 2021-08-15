@@ -1,0 +1,16 @@
+[Unit]
+Description=NVDARemote relay server
+After=network.target
+
+[Service]
+Type=forking
+User=nvdaremoteserver
+PIDFile=/run/NVDARemoteServer/NVDARemoteServer.pid
+ExecStart=/usr/bin/python3 /usr/share/NVDARemoteServer/server.py start
+ExecStop=/usr/bin/python3 /usr/share/NVDARemoteServer/server.py stop
+ExecReload=/usr/bin/python3 /usr/share/NVDARemoteServer/server.py restart
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

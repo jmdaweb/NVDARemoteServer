@@ -1,0 +1,14 @@
+#!/bin/bash
+if test $# -lt 1
+then
+echo "Usage: $0 start | stop | restart | status | debug | enable | disable | kill"
+else
+case "$1" in
+start | stop | restart | status | enable | disable)
+	systemctl $1 NVDARemoteServer
+	;;
+*)
+	python3 /usr/share/NVDARemoteServer/server.py $*
+	;;
+esac
+fi
