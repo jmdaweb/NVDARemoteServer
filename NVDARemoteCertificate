@@ -1,7 +1,7 @@
 #!/bin/bash
 cd /usr/share/NVDARemoteServer
-openssl genrsa -out key.key 4096
-openssl req -new -key key.key -out cert.csr
+openssl genpkey -out key.key -algorithm EC -pkeyopt ec_paramgen_curve:secp384r1
+openssl req -new -key key.key -out cert.csr -sha512
 openssl x509 -req -days 3650 -in cert.csr -signkey key.key -out cert.crt
 rm -f server.pem
 mv key.key server.pem
