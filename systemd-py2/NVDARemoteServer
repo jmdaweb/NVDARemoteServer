@@ -8,7 +8,7 @@ start | stop | restart | status | enable | disable)
 	systemctl $1 NVDARemoteServer
 	;;
 *)
-	python3 /usr/share/NVDARemoteServer/server.py $*
+	python /usr/share/NVDARemoteServer/server.py $*
 	;;
 esac
 fi
