@@ -5,7 +5,7 @@ nvda-remote-server (unreleased) development; urgency=low
     Corrects slight spelling errors within server.py, pull request #34
 
   * Enhancements.
-    Adds protocol logging with loglevel 4, as well as update the change log to reflect the changes, pull request #35
+    Adds protocol logging with loglevel 4, pull request #35
 
  -- Blake G <blakeblind@gmail.com>  Thu, 11 Mar 2021 09:02:42 -0700
 
