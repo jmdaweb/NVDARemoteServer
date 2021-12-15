@@ -70,11 +70,23 @@ Warning! Do not use level 4 on production servers, as the protocol sent and rece
 .P
 Example: loglevel=2
 .P
+keyfile
+.P
+This setting specifies the path to a pem-encoded private key for ssl connections.
+.P
+The pem file must contain  the private key without passphrase encryption.
+.P
+This setting is optional and has no default value.
+.P
+Example: keyfile=/etc/apache2/ssl/privkey.pem
+.P
 pemfile
 .P
 This setting specifies the path to a pem-encoded, concatenated private key and certificate for ssl connections.
 .P
 The pem file must contain firstly the private key without passphrase encryption, followed by an unix-style line ending and the certificate. Additional ca and root certificates can be added below this content.
+.P
+If the file contains only a certificate or a certificate chain, you must configure keyfile setting explained above.
 .P
 By default, use server.pem located in the same path as server.py.
 .P

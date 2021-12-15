@@ -12,13 +12,14 @@ port6 = None
 logfile = None
 pidfile = None
 loglevel = None
+keyfile = None
 pemfile = None
 motd = None
 motd_force_display = False
 
 
 def setup():
-	global configfile, port, port6, interface, pidfile, logfile, loglevel, pemfile, interface6, motd, motd_force_display
+	global configfile, port, port6, interface, pidfile, logfile, loglevel, keyfile, pemfile, interface6, motd, motd_force_display
 	# set default arguments
 	port = 6837
 	interface = ""

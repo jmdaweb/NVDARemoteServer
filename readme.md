@@ -203,7 +203,8 @@ You can test your changes in debugging mode before modifying the configuration f
 * `--port6=port`: listen on the specified port, but only for IPV6. By default, use the value specified in --port. Use this value if you want different ports for IPV4 and IPV6 sockets.
 * `--logfile=path`, `--pidfile=path`: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead. If you change pidfile in the configuration file and use the server as a system daemon, update the pidfile variable in the service units for the status command to work properly.
 * `--loglevel=n`, where n is a number between 0 (almost quiet) and 4 (very verbose).
-* `--pemfile=path`: path to the private key and certificate used for ssl connections. They must be in the same file.
+* `--keyfile=path`: path to the private key used for ssl connections. Use only if the pem file explained below does not contain a private key.
+* `--pemfile=path`: path to the private key and certificate used for ssl connections. They must be in the same file. If the pem file only contains certificates, use the keyfile option explained above.
 * `--motd=string`: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes. A warning message will be appended to the provided string if loglevel is set to 4, or displayed alone if no message is given.
 * `--motd_force_display=integer`: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display. This option is ignored when loglevel is set to 4 or above. In this case, the message is always displayed.
 * `--configfile=path`: read config file from path. All the previous options can be edited in the configuration file.

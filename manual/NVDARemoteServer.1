@@ -50,7 +50,9 @@ Currently the following options are supported:
 .P
 \-\-loglevel=n: set log level. You must provide a value between 0 and 4. Default: 3, all information except the server protocol.
 .P
-\-\-pemfile=path: use private key and certificate from file specified in path for ssl connections.
+\-\-keyfile=path: use private key from file specified in path for ssl connections.
+.P
+\-\-pemfile=path: use private key and certificate from file specified in path for ssl connections. If the provided pem file only contains a certificate, use also the keyfile option explained above.
 .P
 \-\-motd=string: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes. A warning message will be appended to the provided string if loglevel is set to 4, or displayed alone if no message is given.
 .P
