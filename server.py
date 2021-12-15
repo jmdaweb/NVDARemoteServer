@@ -281,7 +281,7 @@ class Server(baseServer):
 			self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 			return
 		try:
-			client_sock = ssl.wrap_socket(client_sock, keyfile=options.keyfile, certfile=options.pemfile, server_side=True)
+			client_sock = ssl.wrap_socket(client_sock, keyfile=options.keyfile, certfile=options.certfile, server_side=True)
 			printDebugMessage("Enabled ssl for client socket.", 2)
 		except:
 			printDebugMessage("SSL negotiation failed.", 2)

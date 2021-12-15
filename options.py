@@ -13,13 +13,13 @@ logfile = None
 pidfile = None
 loglevel = None
 keyfile = None
-pemfile = None
+certfile = None
 motd = None
 motd_force_display = False
 
 
 def setup():
-	global configfile, port, port6, interface, pidfile, logfile, loglevel, keyfile, pemfile, interface6, motd, motd_force_display
+	global configfile, port, port6, interface, pidfile, logfile, loglevel, keyfile, certfile, interface6, motd, motd_force_display
 	# set default arguments
 	port = 6837
 	interface = ""
@@ -29,16 +29,16 @@ def setup():
 		pidfile = "/var/run/NVDARemoteServer.pid"
 		logfile = "/var/log/NVDARemoteServer.log"
 		configfile = "/etc/NVDARemoteServer.conf"
-		pemfile = "/usr/share/NVDARemoteServer/server.pem"
+		certfile = "/usr/share/NVDARemoteServer/server.pem"
 	else:
 		if hasattr(sys, 'frozen'):
 			logfile = os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.log")
 			configfile = os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "NVDARemoteServer.conf")
-			pemfile = os.path.join(sys.prefix, 'server.pem')
+			certfile = os.path.join(sys.prefix, 'server.pem')
 		else:
 			logfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.log")
 			configfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.conf")
-			pemfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
+			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
 		pidfile = ""
 	arguments = parseArguments()
 	if "configfile" in list(arguments.keys()):
