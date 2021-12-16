@@ -9,7 +9,7 @@ nvda-remote-server (2.1-1) stable; urgency=low
   * Enhancements.
     Adds protocol logging with loglevel 4, pull request #35
 
- -- Jose Manuel Delicado <jm.delicado@nvda.es>  Sun, 19 Dic 2021 10:00:00 +0100
+ -- Jose Manuel Delicado <jm.delicado@nvda.es>  Sun, 19 Dec 2021 10:00:00 +0100
 
 
 nvda-remote-server (2.0-1) stable; urgency=low
