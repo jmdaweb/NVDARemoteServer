@@ -382,7 +382,7 @@ class CheckThread(Thread):
 			except:
 				pass
 			self.channel.evt.wait(self.timeout)
-			if not self.channel.evt.isSet():
+			if not self.channel.evt.is_set():
 				# The channel is blocked, we need to close it
 				printDebugMessage("Channel with password " + self.channel.password + " is blocked. Stopping thread...", 3)
 				self.channel.terminate()
@@ -605,7 +605,7 @@ def startAndWait():
 			gc.collect()
 			sleep(1)
 			serverThread.evt.wait(80)
-			if serverThread.evt.isSet():  # clear and continue
+			if serverThread.evt.is_set():  # clear and continue
 				serverThread.evt.clear()
 			else:
 				if serverThread.running:  # The server is frozen
