@@ -1,9 +1,9 @@
 Package: nvda-remote-server
-Version: 2.0-1
+Version: 2.1-1
 Section: net
 Priority: optional
 Architecture: all
-Depends: python, systemd-sysv, adduser, openssl
+Depends: python3, lsb-base, adduser, openssl
 Maintainer: Jose Manuel Delicado <jm.delicado@nvda.es>
 Description: NVDARemote Relay server
  This server allows NVDARemote users to redirect their traffic.

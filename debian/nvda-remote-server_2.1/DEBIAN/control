@@ -1,5 +1,5 @@
 Package: nvda-remote-server
-Version: 2.0-1
+Version: 2.1-1
 Section: net
 Priority: optional
 Architecture: all

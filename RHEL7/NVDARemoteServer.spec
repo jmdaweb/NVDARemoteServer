@@ -1,5 +1,5 @@
 Name: NVDARemoteServer
-Version: 2.0
+Version: 2.1
 Release: 1.el7
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
@@ -85,6 +85,8 @@ NVDARemoteServer disable
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %license LICENSE
 %changelog
+* Sun Dec 19 2021 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.1-1
+- Security enhancements, stability improvements and new settings.
 * Mon Nov 30 2020 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.0-1
 - Bug fixes.
 * Wed Oct 10 2018 Jose Manuel Delicado <jm.delicado@nvda.es> - 1.9-1
