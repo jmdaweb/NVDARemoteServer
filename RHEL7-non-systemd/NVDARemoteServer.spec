@@ -1,11 +1,11 @@
 Name: NVDARemoteServer
 Version: 2.1
-Release: 1.el6
+Release: 1.el7
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
 License: GPLv2
 URL: https://github.com/jmdaweb/NVDARemoteServer
-Requires: python, openssl
+Requires: python3, openssl
 Group: System Environment/Daemons
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-buildroot
