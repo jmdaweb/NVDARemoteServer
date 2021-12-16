@@ -16,7 +16,7 @@ Building NVDA Remote Relay server is very easy. On most platforms, you only need
 
 ### Building for debian based distributions
 
-1. Navigate to the debian directory inside this repo (choose between Debian 7 or Debian 8). If you run Debian versions later than Debian 8, or Ubuntu 15.04 and later, the Debian 8 package is what you need.
+1. Navigate to the debian directory inside this repo (choose between standard Debian-based distributions, Debian without systemd (ideal for OpenVZ, Docker and other containers) and Debian legacy version for Python 2). If you run Debian versions later than Debian 9, or Ubuntu 15.04 and later, the Debian package is what you need.
 2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
 3. Run the script: `./build.sh`
 4. Install the package: `dpkg -i NVDARemoteServer.deb`
@@ -29,16 +29,16 @@ To uninstall it keeping the configuration files, run `dpkg --remove nvda-remote-
 
 To build the rpm version, the rpmdevtools package is required. Install it using your package manager.
 
-1. Navigate to the RHEL directory inside this repo (choose between RHEL 6, RHEL 7 or RHEL 8). If you run Centos versions later than Centos 8, or Fedora, the RHL 8 package is what you need.
+1. Navigate to the RHEL directory inside this repo (choose between RHEL 6, RHEL 7 or RHEL 8). If you run Centos versions later than Centos 8, the RHL 8 package is what you need. Use RHEL7 package for Fedora too.
 2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
 3. Run the script: `./build.sh`. The final rpm will be located at `~/rpmbuild/RPMS/noarch` directory.
 4. Install the package using rpm: `rpm -U NVDARemoteServer.rpm`
 
 To uninstall it, run `rpm -e NVDARemoteServer`
 
-### Building for Mac Os x
+### Building for Mac Os
 
-1. Navigate to the Mac Os x directory inside this repo.
+1. Navigate to the Mac Os directory inside this repo.
 2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
 3. Run the script: `sudo ./build.sh`
 4. Install the generated package using Finder or the terminal. Remember to allow untrusted software installation in System preferences > Security and privacy. To install from the terminal, run the following command: `installer -pkg NVDARemoteServer.pkg -target /`
@@ -52,7 +52,7 @@ Note: you must clone the repository and perform the following actions in a stand
 1. Navigate to the Arch directory inside this repo.
 2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
 3. Run the script: `./build.sh`
-4. Install the package with pacman: `sudo pacman -U NVDARemoteServer.pkg.tar.xz`
+4. Install the package with pacman: `sudo pacman -U NVDARemoteServer.pkg.tar.zst`
 
 To uninstall it, run: `sudo pacman --remove NVDARemoteServer`
 
@@ -72,12 +72,12 @@ To uninstall it, run `NVDARemoteUninstall`
 
 You need one or multiple Python installations, depending on what you want to build. Install the x86 and x64 versions if you want to build the server for both architectures. Go to the [Python downloads page](https://www.python.org/downloads/) and choose:
 
-* Python 2.x (2.7.15 or later) if you want to maximize compatibility with older Windows versions, including Windows xp. The server will also work on Windows 10.
-* Python 3.x (3.6.6 or later) if you want to take advantage of all the Python performance and security improvements. Windows service currently is not working on Python 3.7.0, so official builds still use Python 3.6.
+* Python 2.7.18 if you want to maximize compatibility with older Windows versions, including Windows xp. The server will also work on Windows 10.
+* Python 3.x (3.8.10 or later) if you want to take advantage of all the Python performance and security improvements.
 
 You need also Python for Windows Extensions, build 223 or later. Install this package running `pip install pywin32` command.
 
-Finally, you must install a packager in order to build the binary version. If you are building with Python 2.x, you can use Pyinstaller (install with `pip install pyinstaller`), cx-freeze (install with `pip install cx-freeze`), or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller and cx-freeze are supported.
+Finally, you must install a packager in order to build the binary version. If you are building with Python 2.7, you can use Pyinstaller (install with `pip install pyinstaller`), cx-freeze (install with `pip install cx-freeze`), or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller and cx-freeze are supported.
 
 Once the build environment is ready, open a command prompt and navigate to the root folder of this repository, then:
 
@@ -103,13 +103,13 @@ Change or add more tags if you plan to push the image to a Docker registry. For 
 
 Before you begin, check that the tcp port you have chosen for the server (by default 6837) is allowed through your firewall.
 
-On Unix platforms, including Mac Os x, there is a script located in /usr/bin called NVDARemoteServer. You can run this script without parameters to get a short help message.
+On Unix platforms, including Mac Os, there is a script located in /usr/bin called NVDARemoteServer. You can run this script without parameters to get a short help message.
 
 If you want to start the server in debugging mode (useful to see activity and errors) run:
 
 `sudo NVDARemoteServer debug`
 
-On most platforms, you can stop the server by pressing ctrl+c if it is running in this mode.
+On most platforms, you can stop the server by pressing ctrl+c when it is running in this mode.
 
 To start the server, run:
 
@@ -173,7 +173,7 @@ Read the Docker documentation to see all available commands.
 
 ## Creating your own self-signed certificate
 
-The server includes a default self-signed certificate to encrypt connections. This certificate is also included in the official NVDA Remote add-on, so this is a big security risk.
+The server includes a default self-signed certificate to encrypt connections. This is a huge security risk.
 
 It is strongly recommended that you create your own certificate before starting the server for the first time. You can do it by running the NVDARemoteCertificate script on almost all platforms:
 
@@ -181,7 +181,7 @@ It is strongly recommended that you create your own certificate before starting 
 
 The script takes no arguments. Follow the on-screen instructions to complete the process.
 
-The script will create a 4096 bit RSA private key and a certificate, and combine them in a single server.pem file. Once finished, if the server is running, restart it.
+The script will create a secp384r1 ecdsa private key and a certificate, and combine them in a single server.pem file. Once finished, it is recomended restarting the server if it's running.
 
 On Windows, a pre-built OpenSSL version is included in the server directory. You can run NVDARemoteCertificate.cmd to create a certificate.
 
@@ -203,7 +203,7 @@ You can test your changes in debugging mode before modifying the configuration f
 * `--port6=port`: listen on the specified port, but only for IPV6. By default, use the value specified in --port. Use this value if you want different ports for IPV4 and IPV6 sockets.
 * `--logfile=path`, `--pidfile=path`: these parameters are available, but unuseful in debug mode. You can use them on init.d and systemd units, but it's not recommended. Use --configfile instead. If you change pidfile in the configuration file and use the server as a system daemon, update the pidfile variable in the service units for the status command to work properly.
 * `--loglevel=n`, where n is a number between 0 (almost quiet) and 4 (very verbose).
-* `--keyfile=path`: path to the private key used for ssl connections. Use only if the pem file explained below does not contain a private key.
+* `--keyfile=path`: path to the private key used for ssl connections. Use only if the cert file explained below does not contain a private key.
 * `--certfile=path`: path to the private key and certificate used for ssl connections. They must be in the same file. If the pem file only contains certificates, use the keyfile option explained above.
 * `--motd=string`: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes. A warning message will be appended to the provided string if loglevel is set to 4, or displayed alone if no message is given.
 * `--motd_force_display=integer`: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display. This option is ignored when loglevel is set to 4 or above. In this case, the message is always displayed.
@@ -228,7 +228,7 @@ If you want to disable it, follow these steps:
 * Reboot your system. While rebooting, hold the command+r key to enter in recovery mode.
 * Go to the utilities menu, and choose terminal.
 * Type the following command: `csrutil disable`
-* Reboot your system and go back to the main operating system.
+* Reboot your computer and go back to the main operating system.
 * Install NVDA Remote Server.
 
 Caution! Disabling system integrity protection is a security risk. To enable it back, run `csrutil enable` in recovery mode.
