@@ -1,6 +1,26 @@
 #!/bin/bash
 cd /usr/share/NVDARemoteServer
+while true
+do
+clear
+echo "Welcome to the NVDARemoteCertificate utility"
+echo "This program generates a new private key and public certificate for your NVDA Remote Server instance"
+echo "Press control+c at any moment to abort the process"
+echo "Select your private key type"
+echo "1) RSA 4096-bit (compatible with older systems)"
+echo "2) Ecdsa secp384r1 (recommended on more recent systems)"
+echo "Type a number and press enter:"
+read PRIVATE_KEY_TYPE
+if test $PRIVATE_KEY_TYPE -eq 1
+then
+openssl genrsa -out key.key 4096
+break
+elif test $PRIVATE_KEY_TYPE -eq 2
+then
 openssl genpkey -out key.key -algorithm EC -pkeyopt ec_paramgen_curve:secp384r1
+break
+fi
+done
 openssl req -new -key key.key -out cert.csr -sha512
 openssl x509 -req -days 3650 -in cert.csr -signkey key.key -out cert.crt
 rm -f server.pem
