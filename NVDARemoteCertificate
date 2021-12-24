@@ -5,7 +5,7 @@ do
 clear
 echo "Welcome to the NVDARemoteCertificate utility"
 echo "This program generates a new private key and public certificate for your NVDA Remote Server instance"
-echo "Press control+c at any moment to abort the process"
+echo "Press control+c at any time to abort the process"
 echo "Select your private key type"
 echo "1) RSA 4096-bit (compatible with older systems)"
 echo "2) Ecdsa secp384r1 (recommended on more recent systems)"
