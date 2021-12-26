@@ -1,8 +1,8 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: NVDA Remote Server 1.1
-Upstream-Contact: Technow <info@technow.es>
-Source: http://www.technow.es/
-Copyright: 2015 Technow. All rights reserved.
+Upstream-Name: NVDA Remote Server 2.2
+Upstream-Contact: Jose Manuel Delicado <jm.delicado@nvda.es>
+Source: https://nvda.es
+Copyright: 2021 Asoc. Comunidad Hispanohablante de NVDA. All rights reserved.
 License: GPL-2+
                      License: GPL-2+
  This program is free software; you can redistribute it
