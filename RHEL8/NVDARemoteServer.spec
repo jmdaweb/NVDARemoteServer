@@ -79,6 +79,8 @@ NVDARemoteServer disable
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %license LICENSE
 %changelog
+* Wed Dec 29 2021 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.2-1
+- The NVDARemoteCertificate program now allows choosing a private key type.
 * Sun Dec 19 2021 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.1-1
 - Security enhancements, stability improvements and new settings.
 * Mon Nov 30 2020 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.0-1

@@ -1,3 +1,11 @@
+nvda-remote-server (2.2-1) stable; urgency=low
+
+  * Enhancements.
+    The NVDARemoteCertificate program now allows choosing a private key type.
+
+ -- Jose Manuel Delicado <jm.delicado@nvda.es>  Wed, 29 Dec 2021 10:00:00 +0100
+
+
 nvda-remote-server (2.1-1) stable; urgency=low
 
   * Bug fixes.
