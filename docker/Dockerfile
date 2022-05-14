@@ -9,4 +9,4 @@ run apt update && apt -y full-upgrade && apt -y install python3 nano openssl && 
 #expose the following ports to the host
 EXPOSE 6837
 #this program is executed when a container is started
-ENTRYPOINT NVDARemoteServer debug
+ENTRYPOINT ["python3", "/usr/share/NVDARemoteServer/server.py", "debug"]
