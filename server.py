@@ -36,6 +36,8 @@ serverThread = None
 
 
 def printError():
+	if not options.includeTracebacks:
+		return
 	global loggerThread
 	if loggerThread is None:
 		return

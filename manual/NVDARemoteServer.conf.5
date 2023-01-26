@@ -103,6 +103,16 @@ motd_force_display
 The message of the day can be displayed once (only for first-time clients) or each time a client joins a channel. Possible values for this setting: 0=False, other integer values mean True. Defaults to False (do not force display). If loglevel is set to 4, defaults to true (always display the message), and cannot be changed.
 .P
 Example: motd_force_display=1
+.P
+includeTracebacks
+.p
+Tracebacks are helpful when debugging exceptions, but can be quite anoying on some scenarios, such as in production servers.
+.P
+You can control wether tracebacks are displayed in the log file or the console using this setting.
+.P
+Possible values for this setting: 0=False, other integer values mean True. Defaults to False (do not display tracebacks).
+.P
+Example: includeTracebacks=1
 .SH SEE ALSO
 NVDARemoteServer (1), NVDARemoteCertificate (1)
 .SH BUGS
