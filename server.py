@@ -251,7 +251,7 @@ class Server(baseServer):
 						self.evt.set()
 				for sock in r:
 					if sock in self.server_sockets:
-						self.accept_new_connection(sock)
+						Thread(target=self.accept_new_connection, args=[sock]).start()
 						continue
 					id = self.searchId(sock)
 					if id != 0:
