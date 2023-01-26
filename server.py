@@ -579,19 +579,22 @@ class Client(object):
 			return
 
 
-def startAndWait():
+def startAndWait(service=False):
 	global serverThread
-	try:
-		import signal
-		if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system() == 'Windows') | (platform.system().startswith('CYGWIN')) | (platform.system().startswith('MSYS')):
-			printDebugMessage("Configuring signal handlers", 2)
-			signal.signal(signal.SIGINT, sighandler)
-			signal.signal(signal.SIGTERM, sighandler)
-		else:
-			printDebugMessage("Warning: this server has not been tested on your platform. We don't have added signals handlers here to avoid errors. Probably you will have to kill the process manually to stop the server.", 0)
-	except:
-		printDebugMessage("Error setting handler for signals", 0)
-		printError()
+	if service:
+		printDebugMessage("This server is running as a Windows service, skipping signal handlers setup", 2)
+	else:
+		try:
+			import signal
+			if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system() == 'Windows') | (platform.system().startswith('CYGWIN')) | (platform.system().startswith('MSYS')):
+				printDebugMessage("Configuring signal handlers", 2)
+				signal.signal(signal.SIGINT, sighandler)
+				signal.signal(signal.SIGTERM, sighandler)
+			else:
+				printDebugMessage("Warning: this server has not been tested on your platform. We don't have added signals handlers here to avoid errors. Probably you will have to kill the process manually to stop the server.", 0)
+		except:
+			printDebugMessage("Error setting handler for signals", 0)
+			printError()
 	serverThread = Server()
 	serverThread.start()
 	if python_version == 2:
@@ -677,7 +680,7 @@ if __name__ == "__main__":
 				win32event.SetEvent(self.hWaitStop)
 
 			def SvcDoRun(self):
-				startAndWait()
+				startAndWait(service=True)
 
 		if len(sys.argv) == 1:
 			servicemanager.Initialize(NVDARemoteService._svc_name_, os.path.abspath(servicemanager.__file__))
