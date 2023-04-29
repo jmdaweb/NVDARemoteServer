@@ -26,7 +26,7 @@ def setup():
 	port = 6837
 	interface = ""
 	interface6 = ""
-	loglevel = 3
+	loglevel = 2
 	if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system().startswith('MSYS')) | (platform.system().startswith('CYGWIN')):
 		pidfile = "/var/run/NVDARemoteServer.pid"
 		logfile = "/var/log/NVDARemoteServer.log"
