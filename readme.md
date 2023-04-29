@@ -207,6 +207,8 @@ You can test your changes in debugging mode before modifying the configuration f
 * `--certfile=path`: path to the private key and certificate used for ssl connections. They must be in the same file. If the pem file only contains certificates, use the keyfile option explained above.
 * `--motd=string`: specify the message of the day displayed to all clients when they join a channel. Enclose the message between quotes. A warning message will be appended to the provided string if loglevel is set to 4, or displayed alone if no message is given.
 * `--motd_force_display=integer`: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display. This option is ignored when loglevel is set to 4 or above. In this case, the message is always displayed.
+* `--includeTracebacks=integer`: display Python tracebacks when exceptions are raised. 0 means do not display tracebacks, 1 means display tracebacks.
+* `--allowedMessageLength=integer`: defines maximum allowed length, in characters, for incoming client messages. 0 means no limit.  Note that characters may have different lengths depending on the Python version and encoding used.
 * `--configfile=path`: read config file from path. All the previous options can be edited in the configuration file.
 
 Note: the command line arguments take precedence over the supplied ones in the configuration file.

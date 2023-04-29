@@ -113,6 +113,22 @@ You can control wether tracebacks are displayed in the log file or the console u
 Possible values for this setting: 0=False, other integer values mean True. Defaults to False (do not display tracebacks).
 .P
 Example: includeTracebacks=1
+.P
+allowedMessageLength
+.P
+Some providers limit or bill outgoing server traffic. If large messages are received from a client and are relayed to all clients in the same channel, this traffic may increase significantly in a short period of time.
+.P
+This setting allows defining, in characters, the maximum allowed length for incoming messages.
+.P
+If set to 0 or lower, there is no limit
+.P
+ Note that characters may have different lengths depending on the Python version and encoding used.
+.P
+Examples:
+.P
+allowedMessageLength=0
+.P
+allowedMessageLength=10240000
 .SH SEE ALSO
 NVDARemoteServer (1), NVDARemoteCertificate (1)
 .SH BUGS

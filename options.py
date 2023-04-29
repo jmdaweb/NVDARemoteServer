@@ -17,10 +17,11 @@ certfile = None
 motd = None
 motd_force_display = False
 includeTracebacks = False
+allowedMessageLength = 0
 
 
 def setup():
-	global configfile, port, port6, interface, pidfile, logfile, loglevel, keyfile, certfile, interface6, motd, motd_force_display, includeTracebacks
+	global configfile, port, port6, interface, pidfile, logfile, loglevel, keyfile, certfile, interface6, motd, motd_force_display, includeTracebacks, allowedMessageLength
 	# set default arguments
 	port = 6837
 	interface = ""
@@ -70,7 +71,7 @@ def parseArguments():
 			option = arg.split("=")
 			try:
 				option[0] = option[0].replace("--", "")
-				if option[0] in ["port", "port6", "loglevel"]:
+				if option[0] in ["port", "port6", "loglevel", "allowedMessageLength"]:
 					option[1] = int(option[1])
 				if option[0] in ['motd_force_display', 'includeTracebacks']:
 					option[1] = bool(int(option[1]))
@@ -95,7 +96,7 @@ def readConfig():
 			continue
 		option = line.split("=")
 		try:
-			if option[0] in ["port", "port6", "loglevel"]:
+			if option[0] in ["port", "port6", "loglevel", "allowedMessageLength"]:
 				option[1] = int(option[1])
 			if option[0] in ['motd_force_display', 'includeTracebacks']:
 				option[1] = bool(int(option[1]))

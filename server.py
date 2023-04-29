@@ -430,6 +430,10 @@ class Client(object):
 			self.close()
 			return
 		data = self.buffer + sock_data
+		if options.allowedMessageLength > 0 and len(data) > options.allowedMessageLength:
+			printDebugMessage("Received too much data from client " + str(self.id) + ", disconnecting", 1)
+			self.close()
+			return
 		if '\n' not in data:
 			self.buffer = data
 			return
