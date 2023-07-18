@@ -19,16 +19,32 @@ import errno
 import traceback
 import string
 encoding = locale.getpreferredencoding()
-if sys.version[0] == '2':
-	python_version = 2
+python_version = sys.version_info.major
+if python_version == 2:
 	from Queue import Queue
 	reload(sys)
 	sys.setdefaultencoding(encoding)
 	strtype = basestring
 else:
-	python_version = 3
 	from queue import Queue
 	strtype = str
+	if sys.version_info.minor >= 11:
+		def wrap_socket(sock, keyfile=None, certfile=None, server_side=False, cert_reqs=ssl.CERT_NONE, ssl_version=ssl.PROTOCOL_TLS_SERVER, ca_certs=None, do_handshake_on_connect=True, suppress_ragged_eofs=True, ciphers=None):
+			if server_side and not certfile:
+				raise ValueError("certfile must be specified for server-side operations")
+			if keyfile and not certfile:
+				raise ValueError("certfile must be specified")
+			context = ssl.SSLContext(ssl_version)
+			context.verify_mode = cert_reqs
+			if ca_certs:
+				context.load_verify_locations(ca_certs)
+			if certfile:
+				context.load_cert_chain(certfile, keyfile)
+			if ciphers:
+				context.set_ciphers(ciphers)
+			return context.wrap_socket(sock=sock, server_side=server_side, do_handshake_on_connect=do_handshake_on_connect, suppress_ragged_eofs=suppress_ragged_eofs)
+	else:
+		wrap_socket = ssl.wrap_socket
 debug = False
 logfile = None
 loggerThread = None
@@ -285,7 +301,7 @@ class Server(baseServer):
 			self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 			return
 		try:
-			client_sock = ssl.wrap_socket(client_sock, keyfile=options.keyfile, certfile=options.certfile, server_side=True)
+			client_sock = wrap_socket(client_sock, keyfile=options.keyfile, certfile=options.certfile, server_side=True)
 			printDebugMessage("Enabled ssl for client socket.", 2)
 		except:
 			printDebugMessage("SSL negotiation failed.", 2)
