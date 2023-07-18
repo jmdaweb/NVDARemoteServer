@@ -6,9 +6,9 @@ After=network.target
 Type=forking
 User=nvdaremoteserver
 PIDFile=/run/NVDARemoteServer/NVDARemoteServer.pid
-ExecStart=/usr/bin/python3.9 /usr/share/NVDARemoteServer/server.py start
-ExecStop=/usr/bin/python3.9 /usr/share/NVDARemoteServer/server.py stop
-ExecReload=/usr/bin/python3.9 /usr/share/NVDARemoteServer/server.py restart
+ExecStart=/usr/bin/python3.11 /usr/share/NVDARemoteServer/server.py start
+ExecStop=/usr/bin/python3.11 /usr/share/NVDARemoteServer/server.py stop
+ExecReload=/usr/bin/python3.11 /usr/share/NVDARemoteServer/server.py restart
 Restart=always
 RestartSec=30s
 
