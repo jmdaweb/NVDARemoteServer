@@ -1,0 +1,9 @@
+#!/bin/bash
+# This hook should be placed inside /usr/bin directory with execution permissions
+# Modify the domain variable below with your domain
+# After that, use the --post-hook switch provided by certbot or include the hook in your certbot configuration
+DOMAIN=my-domain.com
+rm -f /usr/share/NVDARemoteServer/server.pem
+cp /etc/letsencrypt/live/$DOMAIN/privkey.pem /usr/share/NVDARemoteServer/server.pem
+cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem >> /usr/share/NVDARemoteServer/server.pem
+chown nvdaremoteserver:nvdaremoteserver /usr/share/NVDARemoteServer/server.pem
