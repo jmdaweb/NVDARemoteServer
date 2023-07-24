@@ -131,17 +131,17 @@ If you want to install the server as a system service on Windows, run service_ma
 
 Run debug.cmd to start the server in debugging mode.
 
-If you want to run the server inside a Docker container, use a command similar to the following:
+If you want to run the server inside a Docker container, firstly create a data directory. This will store the configuration file and extra certificates if needed. Change ownership for this directory to uid and gid 991 with the chown command. Then, use a command similar to the following:
 
-`docker run -d -p 6837:6837 --rm jmdaweb/nvda-remote-server:latest`
+`docker run -d -v ./data:/data -p 6837:6837 --rm jmdaweb/nvda-remote-server:latest`
 
 The command above destroys the container once it is stopped. If you want a permanent container which you can start and stop without creation and removal, run:
 
-`docker run -d -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest`
+`docker run -d -v ./data:/data -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest`
 
 Or, if you want to create it and run later:
 
-`docker create -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest`
+`docker create -v ./data:/data -p 6837:6837 --name my_nvda_remote jmdaweb/nvda-remote-server:latest`
 
 You can change jmdaweb/nvda-remote-server:latest to your custom image name if you have built it. The --name argument specifies the container name. If you want to use a diferent port, change the first part after -p. The second must be always 6837.
 
@@ -153,7 +153,7 @@ To stop it, run this command:
 
 `docker stop my_nvda_remote`
 
-Run this command to remove the container:
+Run this command to remove the container. It must be stopped first:
 
 `docker rm my_nvda_remote`
 
@@ -212,12 +212,6 @@ You can test your changes in debugging mode before modifying the configuration f
 * `--configfile=path`: read config file from path. All the previous options can be edited in the configuration file.
 
 Note: the command line arguments take precedence over the supplied ones in the configuration file.
-
-Note for Docker container users: run a command similar to the following to edit the configuration file for your container:
-
-`docker exec -t -i my_nvda_remote nano /etc/NVDARemoteServer.conf`
-
-When the Nano editor loads, you can use arrow keys to move the cursor and perform changes. Once finished, press control+x. If you have made any changes, press y and then enter. Tipically, unless you know very well what you are doing, you should only update the parameters related to the message of the day.
 
 ## Known problems
 
