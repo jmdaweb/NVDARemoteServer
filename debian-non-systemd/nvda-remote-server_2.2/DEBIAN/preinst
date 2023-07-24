@@ -5,7 +5,7 @@
 set -e
 if ! getent group nvdaremoteserver > /dev/null
 then
-addgroup --system nvdaremoteserver >/dev/null
+addgroup --system nvdaremoteserver > /dev/null
 fi
 if ! getent passwd nvdaremoteserver > /dev/null
 then
