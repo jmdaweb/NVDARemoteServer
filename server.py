@@ -25,6 +25,7 @@ if python_version == 2:
 	reload(sys)
 	sys.setdefaultencoding(encoding)
 	strtype = basestring
+	wrap_socket = ssl.wrap_socket
 else:
 	from queue import Queue
 	strtype = str
