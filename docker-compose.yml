@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  nvdaremoteserver:
+    container_name: nvdaremoteserver
+    image: jmdaweb/nvda-remote-server:latest
+    restart: always
+    volumes:
+      - ./data:/data
+    network_mode: host
