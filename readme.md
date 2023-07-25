@@ -215,6 +215,13 @@ You can test your changes in debugging mode before modifying the configuration f
 
 Note: the command line arguments override the supplied ones in the configuration file.
 
+## Using Let's Encrypt certificates
+
+You can use your Let's Encrypt certificate with this server. However, the server runs by default with a non-privileged user, so it won't be able to read the required files from the default location. You can proceed in two ways:
+
+1. Copy privkey.pem and fullchain.pem to a readable location. Then, edit the configuration file and update the certfile and keyfile settings. You can follow this procedure also in Docker containers by copying certificate and private key to the data volume.
+2. Use the provided Let's Encrypt sample hook. Edit the `NVDARemoteCertificate-letsencrypt` file, update the domain name, make it executable, and place it in `/etc/letsencrypt/renewal-hooks/post`. No extra steps are required. The certificate will be available for the server immediately after each renewal.
+
 ## Known problems
 
 ### Installing on Mac os x El Capitan and later
