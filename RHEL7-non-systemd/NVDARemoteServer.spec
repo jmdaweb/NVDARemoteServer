@@ -1,5 +1,5 @@
 Name: NVDARemoteServer
-Version: 2.2
+Version: 2.3
 Release: 1.el7
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
@@ -85,6 +85,8 @@ userdel nvdaremoteserver
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %doc LICENSE
 %changelog
+* Mon Jul 31 2023 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.3-1
+- Added a new parameter to specify maximum allowed length for a message.
 * Wed Dec 29 2021 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.2-1
 - The NVDARemoteCertificate program now allows choosing a private key type.
 * Sun Dec 19 2021 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.1-1

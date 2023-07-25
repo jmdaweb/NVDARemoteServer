@@ -1,6 +1,6 @@
 # Maintainer: Jose Manuel Delicado <jm.delicado@nvda.es>
 pkgname=NVDARemoteServer
-pkgver=2.2
+pkgver=2.3
 pkgrel=1
 epoch=
 pkgdesc=""

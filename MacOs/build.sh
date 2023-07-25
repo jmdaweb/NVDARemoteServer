@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=2.2
+VERSION=2.3
 mkdir -p package/usr/bin
 mkdir -p package/etc
 mkdir -p package/usr/share/NVDARemoteServer
