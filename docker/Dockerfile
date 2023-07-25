@@ -1,5 +1,5 @@
 #base image
-FROM ubuntu
+FROM debian
 #image metadata
 LABEL version="2.3" description="This image allows you to run NVDA Remote Server inside a docker container" org.opencontainers.image.authors="Jose Manuel Delicado"
 #prepare image

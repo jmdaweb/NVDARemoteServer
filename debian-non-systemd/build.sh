@@ -20,7 +20,7 @@ gzip -n -9 nvda-remote-server_$VERSION/usr/share/man/man5/NVDARemoteServer.conf.
 gzip -n -9 nvda-remote-server_$VERSION/usr/share/man/man1/NVDARemoteCertificate.1
 gzip -n -9 nvda-remote-server_$VERSION/usr/share/doc/nvda-remote-server/changelog.Debian
 #change permissions
-chown -R root.root nvda-remote-server_$VERSION
+chown -R root:root nvda-remote-server_$VERSION
 chmod -R 755 nvda-remote-server_$VERSION
 chmod 644 nvda-remote-server_$VERSION/DEBIAN/control
 chmod 644 nvda-remote-server_$VERSION/DEBIAN/conffiles
