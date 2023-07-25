@@ -29,7 +29,7 @@ To uninstall it keeping the configuration files, run `dpkg --remove nvda-remote-
 
 To build the rpm version, the rpmdevtools package is required. Install it using your package manager.
 
-1. Navigate to the RHEL directory inside this repo (choose between RHEL 6, RHEL 7 or RHEL 8). If you run Centos versions later than Centos 8, the RHL 8 package is what you need. Use RHEL7 package for Fedora too.
+1. Navigate to the RHEL directory inside this repo (choose between RHEL 7, RHEL 7 without Systemd or RHEL 8). If you run Centos versions later than Centos 8, the RHL 8 package is what you need. Use RHEL7 package for Fedora too.
 2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
 3. Run the script: `./build.sh`. The final rpm will be located at `~/rpmbuild/RPMS/noarch` directory.
 4. Install the package using rpm: `rpm -U NVDARemoteServer.rpm`
@@ -73,9 +73,9 @@ To uninstall it, run `NVDARemoteUninstall`
 You need one or multiple Python installations, depending on what you want to build. Install the x86 and x64 versions if you want to build the server for both architectures. Go to the [Python downloads page](https://www.python.org/downloads/) and choose:
 
 * Python 2.7.18 if you want to maximize compatibility with older Windows versions, including Windows xp. The server will also work on Windows 10.
-* Python 3.x (3.8.10 or later) if you want to take advantage of all the Python performance and security improvements.
+* Python 3.x (3.11.4 or later) if you want to take advantage of all the Python performance and security improvements.
 
-You need also Python for Windows Extensions, build 223 or later. Install this package running `pip install pywin32` command.
+You need also Python for Windows Extensions, build 306 or later. Install this package running `pip install pywin32` command.
 
 Finally, you must install a packager in order to build the binary version. If you are building with Python 2.7, you can use Pyinstaller (install with `pip install pyinstaller`), cx-freeze (install with `pip install cx-freeze`), or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller and cx-freeze are supported.
 
@@ -97,7 +97,7 @@ You need Docker installed on a Linux system. Navigate to the docker directory an
 
 `docker build -t nvda-remote-server .`
 
-Change or add more tags if you plan to push the image to a Docker registry. For example: `docker build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.0 .`
+Change or add more tags if you plan to push the image to a Docker registry. For example: `docker build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.3 .`
 
 ## Running
 
@@ -123,11 +123,11 @@ Run `sudo NVDARemoteServer restart` to restart the server.
 
 If the server freezes, run `sudo NVDARemoteServer kill` to kill the process.
 
-On Centos 6, Centos 7, Centos 8, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. You can run `NVDARemoteServer status` to see if the service is running.
+On Centos 7, Centos 8, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. You can run `NVDARemoteServer status` to see if the service is running.
 
 If you want to configure the service to run at system startup, run `sudo NVDARemoteServer enable`. Run `sudo NVDARemoteServer disable` to configure the service to start manually.
 
-If you want to install the server as a system service on Windows, run service_manager.cmd as administrator and choose the right options on the displayed menu.
+If you want to install the server as a system service on Windows, run service_manager.cmd and choose the right options on the displayed menu.
 
 Run debug.cmd to start the server in debugging mode.
 
@@ -156,6 +156,8 @@ To stop it, run this command:
 Run this command to remove the container. It must be stopped first:
 
 `docker rm my_nvda_remote`
+
+A docker-compose.yml file is also available. Navigate to the root directory of this repository, and run `docker compose up -d` to start the service and `docker compose down` to stop it. Remember creating the data directory and assigning the required ownership!
 
 ## Log files
 
@@ -211,7 +213,7 @@ You can test your changes in debugging mode before modifying the configuration f
 * `--allowedMessageLength=integer`: defines maximum allowed length, in characters, for incoming client messages. 0 means no limit.  Note that characters may have different lengths depending on the Python version and encoding used.
 * `--configfile=path`: read config file from path. All the previous options can be edited in the configuration file.
 
-Note: the command line arguments take precedence over the supplied ones in the configuration file.
+Note: the command line arguments override the supplied ones in the configuration file.
 
 ## Known problems
 
