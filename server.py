@@ -51,6 +51,24 @@ loggerThread = None
 serverThread = None
 
 
+class IDGenerator(object):
+	"""Generator of client and channel ids.
+	"""
+	def __init__(self):
+		self.value = 0
+		self._lock = Lock()
+
+
+	def next(self):
+		"""Increment the counter and return its next value, for use as an id.
+		"""
+		with self._lock:
+			self.value += 1
+			# self.value becomes volatile when this block is done, so keep the value we just made.
+			val = self.value
+		return val
+
+
 def printError():
 	if not options.includeTracebacks:
 		return
@@ -259,7 +277,7 @@ class Server(baseServer):
 				for sock in e:
 					id = self.searchId(sock)
 					if id != 0:
-						printDebugMessage("The client " + str(id) + " has connection problems. Disconnecting...", 1)
+						printDebugMessage("Client " + str(id) + " has connection problems. Disconnecting...", 1)
 						self.clients[id].close()
 						self.evt.set()
 				for sock in w:
@@ -314,7 +332,7 @@ class Server(baseServer):
 			client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, struct.pack('LL', 60, 0))
 		client = Client(server=self, socket=client_sock, address=addr)
 		self.add_client(client)
-		printDebugMessage("Added a new client.", 2)
+		printDebugMessage("Added client " +str(client.id) +", address " + addr[0] + ", port " + str(addr[1]), 2)
 
 	def close(self):
 		self.running = False
@@ -336,11 +354,13 @@ class Server(baseServer):
 
 
 class Channel(baseServer):
+	idgen = IDGenerator()
 	def __init__(self, server, password):
 		super(Channel, self).__init__()
 		self.server = server
 		self.password = password
-		printDebugMessage("Created new channel with password " + password, 3)
+		self.id = self.idgen.next()
+		printDebugMessage("Created channel " +str(self.id), 3)
 		self.evt.set()
 		self.checkThread = CheckThread(self)
 
@@ -356,7 +376,7 @@ class Channel(baseServer):
 			for sock in e:
 				id = self.searchId(sock)
 				if id != 0:
-					printDebugMessage("The client " + str(id) + " has connection problems. Disconnecting...", 0)
+					printDebugMessage("Client " + str(id) + " has connection problems. Disconnecting...", 0)
 					self.clients[id].close()
 					self.evt.set()
 			for sock in w:
@@ -369,7 +389,7 @@ class Channel(baseServer):
 				if id != 0:
 					self.clients[id].handle_data()
 			self.evt.set()
-		printDebugMessage("Terminating channel with password " + self.password, 3)
+		printDebugMessage("Terminating channel " + str(self.id), 3)
 		self.terminate()
 		self.checkThread.running = False
 		self.evt.set()
@@ -404,16 +424,16 @@ class CheckThread(Thread):
 			self.channel.evt.wait(self.timeout)
 			if not self.channel.evt.is_set():
 				# The channel is blocked, we need to close it
-				printDebugMessage("Channel with password " + self.channel.password + " is blocked. Stopping thread...", 3)
+				printDebugMessage("Channel " + str(self.channel.id) + " is blocked. Stopping thread...", 3)
 				self.channel.terminate()
 				del self.server.channels[self.channel.password]
 			else:
 				self.channel.evt.clear()
-		printDebugMessage("Checker thread for channel " + self.channel.password + " has finished", 3)
+		printDebugMessage("Checker thread for channel " + str(self.channel.id) + " has finished", 3)
 
 
 class Client(object):
-	id = 0
+	idgen = IDGenerator()
 
 	def __init__(self, server, socket, address):
 		self.server = server
@@ -422,10 +442,9 @@ class Client(object):
 		self.buffer = ""
 		self.buffer2 = ""
 		self.password = ""
-		self.id = Client.id + 1
+		self.id = self.idgen.next()
 		self.connection_type = None
 		self.protocol_version = 1
-		Client.id += 1
 		self.sendLock = Lock()
 
 	def handle_data(self):
@@ -510,7 +529,12 @@ class Client(object):
 		self.send_to_others(type='client_joined', user_id=self.id, client=self.as_dict())
 		if not self.server.is_alive():
 			self.server.start()
-		printDebugMessage("Client " + str(self.id) + " joined channel " + self.password, 3)
+		printDebugMessage("Client " + str(self.id) + " (" + str(self.connection_type) +") joined channel "
+			+ str(self.server.id)
+			+ " with client(s) "
+			+ (", ".join([str(i) for i in client_ids]) or "None")
+		, 3)
+
 
 	def do_protocol_version(self, obj):
 		version = obj.get('version')
