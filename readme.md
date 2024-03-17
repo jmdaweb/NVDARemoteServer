@@ -99,6 +99,8 @@ You need Docker installed on a Linux system. Navigate to the docker directory an
 
 Change or add more tags if you plan to push the image to a Docker registry. For example: `docker build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.3 .`
 
+If you want to build a multiplatform image, provided that you meet the prerrequisites described [here](https://docs.docker.com/build/building/multi-platform/), you can use a command like the following: `docker buildx build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.3 --platform linux/amd64 --platform linux/386 --platform linux/arm64/v8 --platform linux/arm/v7 --platform linux/arm/v5 --platform linux/mips64le --platform linux/ppc64le --platform linux/s390x --push .`
+
 ## Running
 
 Before you begin, check that the tcp port you have chosen for the server (by default 6837) is allowed through your firewall.
