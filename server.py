@@ -50,7 +50,8 @@ debug = False
 logfile = None
 loggerThread = None
 serverThread = None
-
+if hasattr(time, 'monotonic'):
+	time.time = time.monotonic
 
 class IDGenerator(object):
 	"""Generator of client and channel ids.
