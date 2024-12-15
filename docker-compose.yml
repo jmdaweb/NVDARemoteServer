@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   nvdaremoteserver:
     container_name: nvdaremoteserver
