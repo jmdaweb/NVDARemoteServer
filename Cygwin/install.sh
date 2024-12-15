@@ -12,7 +12,7 @@ fi
 echo installing...
 cp NVDARemoteServer /usr/bin
 cp uninstall.sh /usr/bin/NVDARemoteUninstall
-cp ../NVDARemoteCertificate /usr/bin
+cp ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt /usr/bin
 mkdir /usr/share/NVDARemoteServer
 cp ../server.py ../daemon.py ../options.py ../server.pem /usr/share/NVDARemoteServer
 cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 ../manual/NVDARemoteUninstall.1 /usr/share/man/man1

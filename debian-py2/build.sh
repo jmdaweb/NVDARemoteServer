@@ -11,7 +11,7 @@ mkdir -p nvda-remote-server_$VERSION/etc
 mkdir -p nvda-remote-server_$VERSION/lib/systemd/system
 mkdir -p nvda-remote-server_$VERSION/usr/lib/tmpfiles.d
 #copy files
-cp ../NVDARemoteCertificate ../systemd-py2/NVDARemoteServer nvda-remote-server_$VERSION/usr/bin
+cp ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt ../systemd-py2/NVDARemoteServer nvda-remote-server_$VERSION/usr/bin
 cp ../NVDARemoteServer.conf nvda-remote-server_$VERSION/etc
 cp ../server.py ../options.py ../server.pem ../daemon.py nvda-remote-server_$VERSION/usr/share/NVDARemoteServer
 cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 nvda-remote-server_$VERSION/usr/share/man/man1

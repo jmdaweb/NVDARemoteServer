@@ -9,7 +9,7 @@ mkdir -p src/usr/lib/tmpfiles.d
 mkdir -p src/usr/lib/systemd/system
 mkdir pkg
 cp ../server.py ../options.py ../server.pem ../daemon.py src/usr/share/NVDARemoteServer
-cp ../NVDARemoteCertificate ../systemd-py2/NVDARemoteServer src/usr/bin
+cp ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt ../systemd-py2/NVDARemoteServer src/usr/bin
 chmod +x src/usr/bin/NVDARemoteServer
 chmod +x src/usr/bin/NVDARemoteCertificate
 cp ../NVDARemoteServer.conf src/etc
