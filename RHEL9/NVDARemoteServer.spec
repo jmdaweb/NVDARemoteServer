@@ -1,11 +1,11 @@
 Name: NVDARemoteServer
 Version: 2.3
-Release: 1.el8
+Release: 1.el9
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
 License: GPLv2
 URL: https://github.com/jmdaweb/NVDARemoteServer
-Requires: python3.11, openssl
+Requires: python3.12, openssl
 Group: System Environment/Daemons
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-buildroot
@@ -29,6 +29,7 @@ install -m 0644 server.pem $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/server.pem
 install -m 0644 daemon.py $RPM_BUILD_ROOT/usr/share/NVDARemoteServer/daemon.py
 install -m 0755 NVDARemoteServer $RPM_BUILD_ROOT/usr/bin/NVDARemoteServer
 install -m 0755 NVDARemoteCertificate $RPM_BUILD_ROOT/usr/bin/NVDARemoteCertificate
+install -m 0755 NVDARemoteCertificate-letsencrypt $RPM_BUILD_ROOT/usr/bin/NVDARemoteCertificate-letsencrypt
 install -m 0644 NVDARemoteServer.conf $RPM_BUILD_ROOT/etc/NVDARemoteServer.conf
 install -m 0644 NVDARemoteServer.service $RPM_BUILD_ROOT/usr/lib/systemd/system/NVDARemoteServer.service
 install -m 0644 NVDARemoteServer.tmpfiles $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/NVDARemoteServer.conf
@@ -66,6 +67,7 @@ NVDARemoteServer disable
 %files
 /usr/bin/NVDARemoteServer
 /usr/bin/NVDARemoteCertificate
+/usr/bin/NVDARemoteCertificate-letsencrypt
 %config(noreplace) /etc/NVDARemoteServer.conf
 %dir /usr/share/NVDARemoteServer
 /usr/share/NVDARemoteServer/server.py
