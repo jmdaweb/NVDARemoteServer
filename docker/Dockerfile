@@ -1,7 +1,7 @@
 #base image
-FROM debian
+FROM debian:latest
 #image metadata
-LABEL version="2.3" description="This image allows you to run NVDA Remote Server inside a docker container" org.opencontainers.image.authors="Jose Manuel Delicado"
+LABEL version="2.4" description="This image allows you to run NVDA Remote Server inside a docker container" org.opencontainers.image.authors="Jose Manuel Delicado"
 #prepare image
 ADD https://github.com/jmdaweb/NVDARemoteServer/releases/download/release-2.3/nvda-remote-server_2.3_debian_nonsystemd.deb nvda-remote-server.deb
 COPY --chmod=755 docker-entrypoint.sh /usr/bin/

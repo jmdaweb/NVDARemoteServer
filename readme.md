@@ -73,9 +73,9 @@ To uninstall it, run `NVDARemoteUninstall`
 You need one or multiple Python installations, depending on what you want to build. Install the x86 and x64 versions if you want to build the server for both architectures. Go to the [Python downloads page](https://www.python.org/downloads/) and choose:
 
 * Python 2.7.18 if you want to maximize compatibility with older Windows versions, including Windows xp. The server will also work on Windows 10.
-* Python 3.x (3.11.4 or later) if you want to take advantage of all the Python performance and security improvements.
+* Python 3.x (3.13.1 or later) if you want to take advantage of all the Python performance and security improvements.
 
-You need also Python for Windows Extensions, build 306 or later. Install this package running `pip install pywin32` command.
+You need also Python for Windows Extensions, build 308 or later. Install this package running `pip install pywin32` command.
 
 Finally, you must install a packager in order to build the binary version. If you are building with Python 2.7, you can use Pyinstaller (install with `pip install pyinstaller`), cx-freeze (install with `pip install cx-freeze`), or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller and cx-freeze are supported.
 

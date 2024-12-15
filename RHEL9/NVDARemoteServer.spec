@@ -1,5 +1,5 @@
 Name: NVDARemoteServer
-Version: 2.3
+Version: 2.4
 Release: 1.el9
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
