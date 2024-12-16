@@ -81,6 +81,8 @@ NVDARemoteServer disable
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
 %license LICENSE
 %changelog
+* Mon Dec 16 2024 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.4-1
+- Code optimization and other small tweaks.
 * Mon Jul 31 2023 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.3-1
 - Added a new parameter to specify maximum allowed length for a message.
 * Wed Dec 29 2021 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.2-1
