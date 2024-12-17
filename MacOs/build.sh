@@ -9,11 +9,12 @@ cp ../server.py ../daemon.py ../options.py ../server.pem package/usr/share/NVDAR
 cp NVDARemoteServer ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt package/usr/bin
 cp uninstall.sh package/usr/bin/NVDARemoteUninstall
 cp ../NVDARemoteServer.conf package/etc
-cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteUninstall.1 ../manual/NVDARemoteCertificate.1 package/usr/share/man/man1
+cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteUninstall.1 ../manual/NVDARemoteCertificate.1 ../manual/NVDARemoteCertificate-letsencrypt.1 package/usr/share/man/man1
 cp ../manual/NVDARemoteServer.conf.5 package/usr/share/man/man5
 gzip -n -9 package/usr/share/man/man1/NVDARemoteServer.1
 gzip -n -9 package/usr/share/man/man1/NVDARemoteUninstall.1
 gzip -n -9 package/usr/share/man/man1/NVDARemoteCertificate.1
+gzip -n -9 package/usr/share/man/man1/NVDARemoteCertificate-letsencrypt.1
 gzip -n -9 package/usr/share/man/man5/NVDARemoteServer.conf.5
 chmod +x package/usr/bin/NVDARemoteServer
 chmod +x package/usr/bin/NVDARemoteCertificate

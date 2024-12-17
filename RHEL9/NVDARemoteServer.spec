@@ -39,6 +39,8 @@ gzip -n -9 NVDARemoteServer.conf.5
 install -m 0644 NVDARemoteServer.conf.5.gz $RPM_BUILD_ROOT/usr/share/man/man5/NVDARemoteServer.conf.5.gz
 gzip -n -9 NVDARemoteCertificate.1
 install -m 0644 NVDARemoteCertificate.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteCertificate.1.gz
+gzip -n -9 NVDARemoteCertificate-letsencrypt.1
+install -m 0644 NVDARemoteCertificate-letsencrypt.1.gz $RPM_BUILD_ROOT/usr/share/man/man1/NVDARemoteCertificate-letsencrypt.1.gz
 %clean
 rm -rf $RPM_BUILD_ROOT
 %post

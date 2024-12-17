@@ -3,7 +3,7 @@ FROM debian:latest
 #image metadata
 LABEL version="2.4" description="This image allows you to run NVDA Remote Server inside a docker container" org.opencontainers.image.authors="Jose Manuel Delicado"
 #prepare image
-ADD https://github.com/jmdaweb/NVDARemoteServer/releases/download/release-2.3/nvda-remote-server_2.3_debian_nonsystemd.deb nvda-remote-server.deb
+ADD https://github.com/jmdaweb/NVDARemoteServer/releases/download/release-2.4/nvda-remote-server_2.4_debian_nonsystemd.deb nvda-remote-server.deb
 COPY --chmod=755 docker-entrypoint.sh /usr/bin/
 run groupadd -g 991 nvdaremoteserver && useradd -l -u 991 -g 991 -M nvdaremoteserver
 run apt update && apt -y full-upgrade && apt -y install python3 openssl && dpkg -i nvda-remote-server.deb && rm -f nvda-remote-server.deb && apt clean
