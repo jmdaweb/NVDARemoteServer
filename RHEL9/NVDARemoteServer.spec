@@ -81,6 +81,7 @@ NVDARemoteServer disable
 /usr/share/man/man1/NVDARemoteServer.1.gz
 /usr/share/man/man5/NVDARemoteServer.conf.5.gz
 /usr/share/man/man1/NVDARemoteCertificate.1.gz
+/usr/share/man/man1/NVDARemoteCertificate-letsencrypt.1.gz
 %license LICENSE
 %changelog
 * Mon Dec 16 2024 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.4-1
