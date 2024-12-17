@@ -1,0 +1,17 @@
+.\" Manpage for NVDARemoteCertificate-letsencrypt.
+.\" Contact jm.delicado@nvda.es to correct errors or typos.
+.TH man 1 "16 Dic 2024" "2.4" "NVDARemoteCertificate-letsencrypt man page"
+.SH NAME
+NVDARemoteCertificate-letsencrypt \- Prepare a Let's Encrypt certificate for NVDA Remote Server
+.SH SYNOPSIS
+NVDARemoteCertificate-letsencrypt
+.SH DESCRIPTION
+NVDARemoteCertificate-letsencrypt can be used as a certbot hook which will run after renewing a certificate for a NVDA Remote server. Edit /usr/bin/NVDARemoteCertificate-letsencrypt with a text editor, change the domain variable, configure the hook on Certbot and enjoy! This script will automatically update /usr/share/NVDARemoteServer/server.pem after each renewal.
+.SH OPTIONS
+No options are required.
+.SH SEE ALSO
+NVDARemoteServer (1), NVDARemoteServer.conf (5)
+.SH BUGS
+Report bugs to jm.delicado@nvda.es
+.SH AUTHOR
+Jose Manuel Delicado (jm.delicado@nvda.es)
