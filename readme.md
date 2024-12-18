@@ -82,7 +82,7 @@ Finally, you must install a packager in order to build the binary version. If yo
 Once the build environment is ready, open a command prompt and navigate to the root folder of this repository, then:
 
 * If you want to use py2exe, run: `python setup_windows.py py2exe`
-* If you prefer pyinstaller, run: `pyinstaller pyinstaller.spec`. Run `python -OO -m PyInstaller pyinstaller.spec` if you want to apply code optimizations.
+* If you prefer pyinstaller, run: `pyinstaller pyinstaller.spec`.
 * If you prefer cx-freeze, run: `python setup_windows_cxfreeze.py build`.
 
 Note: if you build with several Python versions on the same machine, don't add python to the path environment variable during installation. Instead, use the Python launcher included with Python 3, or specify the full path to your python executable. For example: `C:\\python27x86\\python setup_windows.py py2exe`.
