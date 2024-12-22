@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v4.2.2
     - name: building package
       run: cd MacOs && sh build.sh
-    - uses: actions/upload-artifact@v4.4.3
+    - uses: actions/upload-artifact@v4.5.0
       with:
         name: packaged_addon
         path: MacOs/NVDARemoteServer.pkg
