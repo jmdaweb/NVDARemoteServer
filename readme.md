@@ -29,7 +29,7 @@ To uninstall it keeping the configuration files, run `dpkg --remove nvda-remote-
 
 To build the rpm version, the rpmdevtools package is required. Install it using your package manager.
 
-1. Navigate to the RHEL directory inside this repo (choose between RHEL 7, RHEL 7 without Systemd or RHEL 8). If you run Centos versions later than Centos 8, the RHL 8 package is what you need. Use RHEL7 package for Fedora too.
+1. Navigate to the RHEL9 or rpm-generic directory inside this repo. Use Generic package for all RPM-based distros. Use RHEL9 package for Alma Linux 9, Rocky Linux 9 or similar. It will require specifically Python 3.12, which is more recent than the provided python3 package.
 2. Ensure that the build.sh script can be executed: `chmod +x build.sh`
 3. Run the script: `./build.sh`. The final rpm will be located at `~/rpmbuild/RPMS/noarch` directory.
 4. Install the package using rpm: `rpm -U NVDARemoteServer.rpm`
@@ -125,7 +125,7 @@ Run `sudo NVDARemoteServer restart` to restart the server.
 
 If the server freezes, run `sudo NVDARemoteServer kill` to kill the process.
 
-On Centos 7, Centos 8, Arch and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the service and systemctl utilities. You can run `NVDARemoteServer status` to see if the service is running.
+On Arch, RHEL and Debian based distributions, the NVDA Remote Relay server is also installed as a service, so you can configure it to run at system startup, and manage it with the systemctl utility. You can run `NVDARemoteServer status` to see if the service is running.
 
 If you want to configure the service to run at system startup, run `sudo NVDARemoteServer enable`. Run `sudo NVDARemoteServer disable` to configure the service to start manually.
 
