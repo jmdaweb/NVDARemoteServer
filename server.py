@@ -11,35 +11,24 @@ import platform
 import codecs
 import struct
 from threading import Thread, Lock, Event
-import locale
 import gc
 from time import sleep
 import options
 import errno
 import traceback
 import string
-encoding = locale.getpreferredencoding()
-python_version = sys.version_info.major
-if python_version == 2:
-	from Queue import Queue
-	reload(sys)
-	sys.setdefaultencoding(encoding)
-	strtype = basestring
-	wrap_socket = ssl.wrap_socket
+from queue import Queue
+if sys.version_info.minor >= 11:
+	context = None
+	def wrap_socket(sock, keyfile=None, certfile=None, server_side=False, cert_reqs=ssl.CERT_NONE, ssl_version=ssl.PROTOCOL_TLS_SERVER, ca_certs=None, do_handshake_on_connect=True, suppress_ragged_eofs=True, ciphers=None):
+		global context
+		if not context:
+			context = ssl.SSLContext(ssl_version)
+			context.verify_mode = cert_reqs
+			context.load_cert_chain(certfile, keyfile)
+		return context.wrap_socket(sock=sock, server_side=server_side, do_handshake_on_connect=do_handshake_on_connect, suppress_ragged_eofs=suppress_ragged_eofs)
 else:
-	from queue import Queue
-	strtype = str
-	if sys.version_info.minor >= 11:
-		context = None
-		def wrap_socket(sock, keyfile=None, certfile=None, server_side=False, cert_reqs=ssl.CERT_NONE, ssl_version=ssl.PROTOCOL_TLS_SERVER, ca_certs=None, do_handshake_on_connect=True, suppress_ragged_eofs=True, ciphers=None):
-			global context
-			if not context:
-				context = ssl.SSLContext(ssl_version)
-				context.verify_mode = cert_reqs
-				context.load_cert_chain(certfile, keyfile)
-			return context.wrap_socket(sock=sock, server_side=server_side, do_handshake_on_connect=do_handshake_on_connect, suppress_ragged_eofs=suppress_ragged_eofs)
-	else:
-		wrap_socket = ssl.wrap_socket
+	wrap_socket = ssl.wrap_socket
 debug = False
 logfile = None
 loggerThread = None
@@ -116,8 +105,7 @@ close_notifier, close_listener = create_sock_pair()
 def sighandler(signum, frame):
 	printDebugMessage("Received system signal. Waiting for server stop.", 0)
 	serverThread.running = False
-	if python_version == 3:
-		raise
+	raise
 
 
 class LoggerThread(Thread):
@@ -146,7 +134,7 @@ class LoggerThread(Thread):
 				continue
 			try:
 				print(time.asctime())
-				if isinstance(item, strtype):
+				if isinstance(item, str):
 					print(item)
 				elif isinstance(item, tuple):
 					self.printError(item)
@@ -198,7 +186,7 @@ class baseServer(Thread):
 
 	def searchId(self, socket):
 		id = 0
-		for c in list(self.clients.values()):
+		for c in self.clients.values():
 			if socket == c.socket:
 				id = c.id
 				break
@@ -291,7 +279,7 @@ class Server(baseServer):
 					if id != 0:
 						self.clients[id].handle_data()
 				if time.time() - self.last_ping_time >= self.PING_TIME:
-					for channel in list(self.channels.values()):
+					for channel in self.channels.values():
 						channel.ping()
 					self.last_ping_time = time.time()
 			self.close()
@@ -334,11 +322,11 @@ class Server(baseServer):
 		self.running = False
 		self.evt.set()
 		printDebugMessage("Closing channels...", 2)
-		for c in list(self.channels.values()):
+		for c in self.channels.values():
 			c.running = False
 			c.join(10)
 		printDebugMessage("Disconnecting clients...", 2)
-		for c in list(self.clients.values()):
+		for c in self.clients.values():
 			c.close()
 		printDebugMessage("Closing server socket...", 2)
 		for s in self.server_sockets:
@@ -393,11 +381,11 @@ class Channel(baseServer):
 		del self.server.channels[self.password]
 
 	def ping(self):
-		for client in list(self.clients.values()):
+		for client in self.clients.values():
 			client.send(type='ping')
 
 	def terminate(self):
-		for client in list(self.clients.values()):
+		for client in self.clients.values():
 			client.close()
 
 
@@ -446,10 +434,7 @@ class Client(object):
 	def handle_data(self):
 		sock_data = ''
 		try:
-			if python_version == 2:
-				sock_data = self.socket.recv(16384)
-			else:
-				sock_data = self.socket.recv(16384).decode()
+			sock_data = self.socket.recv(16384).decode()
 		except:
 			printDebugMessage("Socket error in client " + str(self.id) + " while receiving data", 0)
 			printError()
@@ -515,7 +500,7 @@ class Client(object):
 		self.connection_type = obj.get('connection_type')
 		clients = []
 		client_ids = []
-		for c in list(self.server.clients.values()):
+		for c in self.server.clients.values():
 			if c is not self and self.password == c.password:
 				clients.append(c.as_dict())
 				client_ids.append(c.id)
@@ -552,7 +537,7 @@ class Client(object):
 
 	def check_key(self, key):
 		check = False
-		for v in list(self.server.channels.values()):
+		for v in self.server.channels.values():
 			if v.password == key:
 				check = True
 				break
@@ -588,10 +573,7 @@ class Client(object):
 	def confirmSend(self):
 		if self.buffer2 != "":
 			try:
-				if python_version == 2:
-					self.socket.sendall(self.buffer2)
-				else:
-					self.socket.sendall(bytes(self.buffer2, "utf-8"))
+				self.socket.sendall(bytes(self.buffer2, "utf-8"))
 				self.buffer2 = ""
 			except:
 				printDebugMessage("Socket error in client " + str(self.id) + " while sending data", 0)
@@ -600,7 +582,7 @@ class Client(object):
 
 	def send_data_to_others(self, data):
 		try:
-			for c in list(self.server.clients.values()):
+			for c in self.server.clients.values():
 				if (c.password == self.password) & (c != self):
 					c.socket_send(data)
 		except:
@@ -612,7 +594,7 @@ class Client(object):
 		if origin is None:
 			origin = self.id
 		try:
-			for c in list(self.server.clients.values()):
+			for c in self.server.clients.values():
 				if (c.password == self.password) & (c != self):
 					c.send(origin=origin, **obj)
 		except:
@@ -639,10 +621,7 @@ def startAndWait(service=False):
 			printError()
 	serverThread = Server()
 	serverThread.start()
-	if python_version == 2:
-		close_notifier.sendall('\n')
-	else:
-		close_notifier.sendall(bytes('\n', "utf-8"))
+	close_notifier.sendall(bytes('\n', "utf-8"))
 	try:
 		sleep(10)
 	except:
@@ -674,9 +653,6 @@ if __name__ == "__main__":
 	# If debug is enabled, all platform checks are skipped
 	if "debug" in sys.argv:
 		debug = True
-		if python_version == 2:
-			sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
-			sys.stderr = codecs.getwriter("utf-8")(sys.stderr)
 		startAndWait()
 	elif (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system().startswith('MSYS')):
 		import daemon
