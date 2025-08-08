@@ -165,16 +165,21 @@ class baseServer(Thread):
 		self.daemon = True
 		self.clients = {}
 		self.client_sockets = []
+		self.clients_lock = Lock()
 		self.running = False
 		self.evt = Event()
 
 	def add_client(self, client):
+		self.clients_lock.acquire()
 		self.clients[client.id] = client
 		self.client_sockets.append(client.socket)
+		self.clients_lock.release()
 
 	def remove_client(self, client):
+		self.clients_lock.acquire()
 		self.client_sockets.remove(client.socket)
 		del self.clients[client.id]
+		self.clients_lock.release()
 
 	def client_disconnected(self, client):
 		printDebugMessage("Client " + str(client.id) + " has disconnected.", 2)
@@ -186,10 +191,12 @@ class baseServer(Thread):
 
 	def searchId(self, socket):
 		id = 0
+		self.clients_lock.acquire()
 		for c in self.clients.values():
 			if socket == c.socket:
 				id = c.id
 				break
+		self.clients_lock.release()
 		return id
 
 
@@ -285,6 +292,8 @@ class Server(baseServer):
 					id = self.searchId(sock)
 					if id != 0:
 						self.clients[id].confirmSend()
+						if self.clients[id].canClose:
+							self.clients[id].close()
 						self.evt.set()
 				for sock in r:
 					if sock in self.server_sockets:
@@ -296,6 +305,8 @@ class Server(baseServer):
 					if id != 0:
 						self.clients[id].handle_data()
 				if time.time() - self.last_ping_time >= self.ping_time:
+					for client in list(self.clients.values()):
+						client.close()
 					for channel in self.channels.values():
 						channel.ping()
 					self.last_ping_time = time.time()
@@ -319,6 +330,7 @@ class Server(baseServer):
 		except:
 			printDebugMessage("SSL negotiation failed.", 2)
 			printError()
+			client_sock.close()
 			return
 		printDebugMessage("Setting socket options...", 2)
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
@@ -441,6 +453,7 @@ class Client(object):
 		self.connection_type = None
 		self.protocol_version = 1
 		self.sendLock = Lock()
+		self.canClose = False
 
 	def handle_data(self):
 		sock_data = ''
@@ -498,6 +511,7 @@ class Client(object):
 	def do_join(self, obj):
 		if 'channel' not in obj or not obj['channel']:
 			self.send(type='error', error='invalid_parameters')
+			self.canClose = True
 			return
 		if isinstance(self.server, Channel):
 			self.send(type="error", error="already_joined")
@@ -541,6 +555,7 @@ class Client(object):
 		while self.check_key(res):
 			res = self.generate_key()
 		self.send(type='generate_key', key=res)
+		self.canClose = True
 		printDebugMessage("Client " + str(self.id) + " generated a key", 2)
 
 	def generate_key(self):
