@@ -68,6 +68,8 @@ def parseArguments():
 					option[1] = int(option[1])
 				if option[0] == "timeout":
 					option[1] = float(option[1])
+					if option[1] < 5.0:
+						option[1] = 5.0
 				if option[0] in ['motd_force_display', 'includeTracebacks']:
 					option[1] = bool(int(option[1]))
 				if option[0] == 'motd':
@@ -94,6 +96,8 @@ def readConfig():
 				option[1] = int(option[1])
 			if option[0] == "timeout":
 				option[1] = float(option[1])
+				if option[1] < 5.0:
+					option[1] = 5.0
 			if option[0] in ['motd_force_display', 'includeTracebacks']:
 				option[1] = bool(int(option[1]))
 			if option[0] == 'motd':
