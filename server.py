@@ -194,7 +194,6 @@ class baseServer(Thread):
 
 
 class Server(baseServer):
-	PING_TIME = 300
 
 	def __init__(self):
 		super(Server, self).__init__()
@@ -203,6 +202,7 @@ class Server(baseServer):
 		self.bind_host = options.interface
 		self.bind_host6 = options.interface6
 		self.channels = {}
+		self.ping_time = options.ping_time
 		printDebugMessage("Initialized instance variables", 2)
 
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
@@ -278,7 +278,7 @@ class Server(baseServer):
 					id = self.searchId(sock)
 					if id != 0:
 						self.clients[id].handle_data()
-				if time.time() - self.last_ping_time >= self.PING_TIME:
+				if time.time() - self.last_ping_time >= self.ping_time:
 					for channel in self.channels.values():
 						channel.ping()
 					self.last_ping_time = time.time()

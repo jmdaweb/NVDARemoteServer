@@ -19,10 +19,11 @@ motd_force_display = False
 includeTracebacks = False
 allowedMessageLength = 0
 timeout = 5.0
+ping_time = 300
 
 
 def setup():
-	global configfile, pidfile, logfile, loglevel, certfile, motd, motd_force_display
+	global configfile, pidfile, logfile, certfile, motd, motd_force_display
 	# set default arguments
 	if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system().startswith('MSYS')) | (platform.system().startswith('CYGWIN')):
 		pidfile = "/var/run/NVDARemoteServer.pid"
@@ -64,7 +65,7 @@ def parseArguments():
 			option = arg.split("=")
 			try:
 				option[0] = option[0].replace("--", "")
-				if option[0] in ["port", "port6", "loglevel", "allowedMessageLength"]:
+				if option[0] in ["port", "port6", "loglevel", "allowedMessageLength", "ping_time"]:
 					option[1] = int(option[1])
 				if option[0] == "timeout":
 					option[1] = float(option[1])
@@ -92,7 +93,7 @@ def readConfig():
 			continue
 		option = line.split("=")
 		try:
-			if option[0] in ["port", "port6", "loglevel", "allowedMessageLength"]:
+			if option[0] in ["port", "port6", "loglevel", "allowedMessageLength", "ping_time"]:
 				option[1] = int(option[1])
 			if option[0] == "timeout":
 				option[1] = float(option[1])
