@@ -127,6 +127,18 @@ Examples:
 allowedMessageLength=0
 .P
 allowedMessageLength=10240000
+.P
+timeout
+.P
+This setting specifies the maximum time, in seconds, that a client can be connected without negotiating a SSL connection before an exception is raised.
+.P
+Default value: 5.0 (5 seconds). Only same or greather values are supported.
+.P
+Examples:
+.P
+timeout=5.0
+.P
+timeout=10.0
 .SH SEE ALSO
 NVDARemoteServer (1), NVDARemoteCertificate (1)
 .SH BUGS

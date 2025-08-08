@@ -61,6 +61,8 @@ Currently the following options are supported:
 \-\-includeTracebacks=integer: display Python tracebacks when exceptions are raised. 0 means do not display tracebacks, 1 means display tracebacks.
 .P
 \-\-allowedMessageLength=integer: defines maximum allowed length, in characters, for incoming client messages. 0 means no limit. Note that characters may have different lengths depending on the Python version and encoding used.
+.P
+\-\-timeout=float: defines the maximum time, in seconds, that a client can be connected without negotiating a SSL connection before an exception is raised.
 .SH NOTES
 .P
 You can change server settings by editing the configuration file. See NVDARemoteServer.conf (5) for more details. The options \-\-configfile, \-\-logfile and \-\-pidfile can affect the server in daemon mode too. Edit the service files to fit your needs.
