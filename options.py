@@ -56,7 +56,7 @@ def setup():
 	if loglevel > 3:
 		motd = "Warning! This server is running with the maximum allowed log level. All your activity is being recorded inside a log file. " + motd
 		motd_force_display = True
-
+	validate()
 
 def parseArguments():
 	options = {}
@@ -108,3 +108,15 @@ def readConfig():
 		except:
 			pass
 	return options
+
+def validate():
+	# This function checks some settings. If a wrong value is found, it is replaced by its default.
+	global port, port6, timeout, ping_time
+	if port < 1 or port > 65535:
+		port = 6837
+	if port6 < 1 or port > 65535:
+		port6 = 6837
+	if ping_time < 30:
+		ping_time = 300
+	if timeout < 1.0:
+		timeout = 5.0
