@@ -295,7 +295,7 @@ class Server(baseServer):
 			printError()
 			return
 		try:
-			client_sock.settimeout(5.0)
+			client_sock.settimeout(options.timeout)
 			client_sock = wrap_socket(client_sock, keyfile=options.keyfile, certfile=options.certfile, server_side=True)
 			client_sock.settimeout(None)
 			printDebugMessage("Enabled ssl for client socket.", 2)

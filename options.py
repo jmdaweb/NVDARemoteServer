@@ -5,28 +5,25 @@ import codecs
 import os
 # global variables
 configfile = None
-interface = None
-interface6 = None
-port = None
-port6 = None
+interface = ""
+interface6 = ""
+port = 6837
+port6 = 6837
 logfile = None
 pidfile = None
-loglevel = None
+loglevel = 2
 keyfile = None
 certfile = None
-motd = None
+motd = ""
 motd_force_display = False
 includeTracebacks = False
 allowedMessageLength = 0
+timeout = 5.0
 
 
 def setup():
-	global configfile, port, port6, interface, pidfile, logfile, loglevel, keyfile, certfile, interface6, motd, motd_force_display, includeTracebacks, allowedMessageLength
+	global configfile, pidfile, logfile, loglevel, certfile, motd, motd_force_display
 	# set default arguments
-	port = 6837
-	interface = ""
-	interface6 = ""
-	loglevel = 2
 	if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system().startswith('MSYS')) | (platform.system().startswith('CYGWIN')):
 		pidfile = "/var/run/NVDARemoteServer.pid"
 		logfile = "/var/log/NVDARemoteServer.log"
@@ -55,11 +52,7 @@ def setup():
 	# the command line arguments are parsed after the configfile. They take priority over the options in the file
 	for k, v in arguments.items():
 		setattr(sys.modules[__name__], k, v)
-	if port6 is None:
-		port6 = port
 	if loglevel > 3:
-		if motd is None:
-			motd = ""
 		motd = "Warning! This server is running with the maximum allowed log level. All your activity is being recorded inside a log file. " + motd
 		motd_force_display = True
 
@@ -73,6 +66,8 @@ def parseArguments():
 				option[0] = option[0].replace("--", "")
 				if option[0] in ["port", "port6", "loglevel", "allowedMessageLength"]:
 					option[1] = int(option[1])
+				if option[0] == "timeout":
+					option[1] = float(option[1])
 				if option[0] in ['motd_force_display', 'includeTracebacks']:
 					option[1] = bool(int(option[1]))
 				if option[0] == 'motd':
@@ -86,7 +81,6 @@ def parseArguments():
 
 def readConfig():
 	options = {}
-	global configfile
 	f = codecs.open(configfile, "r", "utf-8")
 	content = f.read()
 	f.close()
@@ -98,6 +92,8 @@ def readConfig():
 		try:
 			if option[0] in ["port", "port6", "loglevel", "allowedMessageLength"]:
 				option[1] = int(option[1])
+			if option[0] == "timeout":
+				option[1] = float(option[1])
 			if option[0] in ['motd_force_display', 'includeTracebacks']:
 				option[1] = bool(int(option[1]))
 			if option[0] == 'motd':
