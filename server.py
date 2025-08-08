@@ -293,17 +293,11 @@ class Server(baseServer):
 		except:
 			printDebugMessage("Error while accepting a new connection.", 0)
 			printError()
-			for s in self.server_sockets:
-				try:
-					s.shutdown(socket.SHUT_RDWR)
-				except:
-					printError()
-				s.close()
-			printDebugMessage("The server socket has been closed and deleted. The server will create it again.", 0)
-			self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
 			return
 		try:
+			client_sock.settimeout(5.0)
 			client_sock = wrap_socket(client_sock, keyfile=options.keyfile, certfile=options.certfile, server_side=True)
+			client_sock.settimeout(None)
 			printDebugMessage("Enabled ssl for client socket.", 2)
 		except:
 			printDebugMessage("SSL negotiation failed.", 2)
