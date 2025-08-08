@@ -93,13 +93,13 @@ The server is almost portable, there is no installation required. If you install
 
 ### Building the Docker image
 
-You need Docker installed on a Linux system. Navigate to the docker directory and run:
+You need Docker installed on a Linux system. Navigate to the root directory on this repository and run:
 
-`docker build -t nvda-remote-server .`
+`docker build -f docker/Dockerfile -t nvda-remote-server .`
 
 Change or add more tags if you plan to push the image to a Docker registry. For example: `docker build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.4 .`
 
-If you want to build a multiplatform image, provided that you meet the prerrequisites described [here](https://docs.docker.com/build/building/multi-platform/), you can use a command like the following: `docker buildx build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.4 --platform linux/amd64 --platform linux/386 --platform linux/arm64/v8 --platform linux/arm/v7 --platform linux/arm/v5 --platform linux/mips64le --platform linux/ppc64le --platform linux/s390x --push .`
+If you want to build a multiplatform image, provided that you meet the prerrequisites described [here](https://docs.docker.com/build/building/multi-platform/), you can use a command like the following: `docker buildx build -f docker/Dockerfile -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.4 --platform linux/amd64 --platform linux/386 --platform linux/arm64/v8 --platform linux/arm/v7 --platform linux/arm/v5 --platform linux/mips64le --platform linux/ppc64le --platform linux/s390x --push .`
 
 ## Running
 
