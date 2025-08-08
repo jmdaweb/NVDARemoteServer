@@ -213,6 +213,8 @@ You can test your changes in debugging mode before modifying the configuration f
 * `--motd_force_display=integer`: display the message of the day even if it has not changed since last time the client joined a channel. 0 means do not force display, 1 means force display. This option is ignored when loglevel is set to 4 or above. In this case, the message is always displayed.
 * `--includeTracebacks=integer`: display Python tracebacks when exceptions are raised. 0 means do not display tracebacks, 1 means display tracebacks.
 * `--allowedMessageLength=integer`: defines maximum allowed length, in characters, for incoming client messages. 0 means no limit.  Note that characters may have different lengths depending on the Python version and encoding used.
+* `--timeout=float`: defines the maximum time, in seconds, that a client can be connected without negotiating a SSL connection before an exception is raised.
+* `--ping_time=integer`: specifies the ping interval, in seconds, for all connected clients.
 * `--configfile=path`: read config file from path. All the previous options can be edited in the configuration file.
 
 Note: the command line arguments override the supplied ones in the configuration file.
