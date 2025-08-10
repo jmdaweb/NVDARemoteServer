@@ -608,7 +608,7 @@ def startAndWait(service=False):
 	else:
 		try:
 			import signal
-			if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system() == 'Windows') | (platform.system().startswith('CYGWIN')) | (platform.system().startswith('MSYS')):
+			if platform.system() == 'Linux' or platform.system() == 'Windows' or platform.system() == 'Darwin' or platform.system().startswith('CYGWIN') or platform.system().startswith('MSYS'):
 				printDebugMessage("Configuring signal handlers", 2)
 				signal.signal(signal.SIGINT, sighandler)
 				signal.signal(signal.SIGTERM, sighandler)
@@ -652,7 +652,7 @@ if __name__ == "__main__":
 	if "debug" in sys.argv:
 		debug = True
 		startAndWait()
-	elif (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system().startswith('MSYS')):
+	elif platform.system() == 'Linux' or platform.system() == 'Darwin' or platform.system().startswith('MSYS'):
 		import daemon
 
 		class serverDaemon(daemon.Daemon):
@@ -673,7 +673,7 @@ if __name__ == "__main__":
 				sys.exit(2)
 			sys.exit(0)
 		else:
-			print("usage: %s start|stop|restart|kill [options]. Read the server documentation for more information." % sys.argv[0])
+			print("usage: {program} start|stop|restart|kill [options]. Read the server documentation for more information.".format(program=sys.argv[0]))
 			sys.exit(2)
 	elif platform.system() == 'Windows':
 		import win32serviceutil
