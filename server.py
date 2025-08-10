@@ -35,6 +35,7 @@ loggerThread = None
 serverThread = None
 if hasattr(time, 'monotonic'):
 	time.time = time.monotonic
+system = platform.system()
 
 class IDGenerator(object):
 	"""Generator of client and channel ids.
@@ -197,7 +198,7 @@ class Server(baseServer):
 				server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 				printDebugMessage("IPV6 socket created.", 2)
 				printDebugMessage("Setting socket options...", 2)
-				if platform.system() != 'Windows':
+				if system != 'Windows':
 					server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 				server_socket6.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 				server_socket6.bind((bind_host6, port6, 0, 0))
@@ -213,7 +214,7 @@ class Server(baseServer):
 			server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			printDebugMessage("IPV4 socket created.", 2)
 			printDebugMessage("Setting socket options...", 2)
-			if platform.system() != 'Windows':
+			if system != 'Windows':
 				server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 			server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			server_socket.bind((bind_host, port))
@@ -307,7 +308,7 @@ class Server(baseServer):
 			return
 		printDebugMessage("Setting socket options...", 2)
 		client_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-		if platform.system() != 'Windows':
+		if system != 'Windows':
 			client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack('LL', 60, 0))
 			client_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, struct.pack('LL', 60, 0))
 		client = Client(server=self, socket=client_sock, address=addr)
@@ -608,7 +609,7 @@ def startAndWait(service=False):
 	else:
 		try:
 			import signal
-			if platform.system() == 'Linux' or platform.system() == 'Windows' or platform.system() == 'Darwin' or platform.system().startswith('CYGWIN') or platform.system().startswith('MSYS'):
+			if system == 'Linux' or system == 'Windows' or system == 'Darwin' or system.startswith('CYGWIN') or system.startswith('MSYS'):
 				printDebugMessage("Configuring signal handlers", 2)
 				signal.signal(signal.SIGINT, sighandler)
 				signal.signal(signal.SIGTERM, sighandler)
@@ -652,7 +653,7 @@ if __name__ == "__main__":
 	if "debug" in sys.argv:
 		debug = True
 		startAndWait()
-	elif platform.system() == 'Linux' or platform.system() == 'Darwin' or platform.system().startswith('MSYS'):
+	elif system == 'Linux' or system == 'Darwin' or system.startswith('MSYS'):
 		import daemon
 
 		class serverDaemon(daemon.Daemon):
@@ -675,7 +676,7 @@ if __name__ == "__main__":
 		else:
 			print("usage: {program} start|stop|restart|kill [options]. Read the server documentation for more information.".format(program=sys.argv[0]))
 			sys.exit(2)
-	elif platform.system() == 'Windows':
+	elif system == 'Windows':
 		import win32serviceutil
 		import win32service
 		import win32event
