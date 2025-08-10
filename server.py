@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-import select
+import selectors
 import socket
 import ssl
 import json
@@ -73,33 +73,7 @@ def printDebugMessage(msg, level):
 	loggerThread.queue.put(msg)
 
 
-def create_sock_pair(port=0):
-	have_socketpair = hasattr(socket, 'socketpair')
-	if have_socketpair:
-		client_sock, srv_sock = socket.socketpair()
-		return client_sock, srv_sock
-	temp_srv_sock = socket.socket()
-	temp_srv_sock.setblocking(False)
-	temp_srv_sock.bind(('127.0.0.1', port))
-	port = temp_srv_sock.getsockname()[1]
-	temp_srv_sock.listen(1)
-	client_sock = socket.socket()
-	client_sock.setblocking(False)
-	try:
-		client_sock.connect(('127.0.0.1', port))
-	except socket.error as err:
-		if err.errno != errno.EWOULDBLOCK:
-			raise
-	timeout = 1
-	readable = select.select([temp_srv_sock], [], [], timeout)[0]
-	if temp_srv_sock not in readable:
-		raise Exception('Client socket not connected in {} second(s)'.format(timeout))
-	srv_sock, _ = temp_srv_sock.accept()
-	temp_srv_sock.close()
-	return client_sock, srv_sock
-
-
-close_notifier, close_listener = create_sock_pair()
+close_notifier, close_listener = socket.socketpair()
 
 
 def sighandler(signum, frame):
@@ -168,16 +142,19 @@ class baseServer(Thread):
 		self.clients_lock = Lock()
 		self.running = False
 		self.evt = Event()
+		self.sel = selectors.DefaultSelector()
 
 	def add_client(self, client):
 		self.clients_lock.acquire()
 		self.clients[client.id] = client
 		self.client_sockets.append(client.socket)
+		self.sel.register(client.socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
 		self.clients_lock.release()
 
 	def remove_client(self, client):
 		self.clients_lock.acquire()
 		self.client_sockets.remove(client.socket)
+		self.sel.unregister(client.socket)
 		del self.clients[client.id]
 		self.clients_lock.release()
 
@@ -210,6 +187,7 @@ class Server(baseServer):
 		self.bind_host6 = options.interface6
 		self.channels = {}
 		self.ping_time = options.ping_time
+		self.sel.register(close_listener, selectors.EVENT_READ)
 		printDebugMessage("Initialized instance variables", 2)
 
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
@@ -225,6 +203,7 @@ class Server(baseServer):
 				server_socket6.bind((bind_host6, port6, 0, 0))
 				server_socket6.listen(5)
 				self.server_sockets.append(server_socket6)
+				self.sel.register(server_socket6, selectors.EVENT_READ)
 				printDebugMessage("IPV6 socket has started listening on port " + str(self.port6), 0)
 			except:
 				server_socket6.close()
@@ -240,6 +219,7 @@ class Server(baseServer):
 			server_socket.bind((bind_host, port))
 			server_socket.listen(5)
 			self.server_sockets.append(server_socket)
+			self.sel.register(server_socket, selectors.EVENT_READ)
 			printDebugMessage("IPV4 socket has started listening on port " + str(self.port), 0)
 		except:
 			server_socket.close()
@@ -276,38 +256,31 @@ class Server(baseServer):
 				self.evt.set()
 				try:
 					sleep(0.01)
-					r, w, e = select.select(self.client_sockets + self.server_sockets + [close_listener], self.client_sockets, self.client_sockets, 60)
+					events = self.sel.select(60)
 				except:
 					printError()
 				if not self.running:
 					printDebugMessage("Shutting down server...", 2)
 					break
-				for sock in e:
-					id = self.searchId(sock)
-					if id != 0:
-						printDebugMessage("Client " + str(id) + " has connection problems. Disconnecting...", 1)
-						self.clients[id].close()
-						self.evt.set()
-				for sock in w:
-					id = self.searchId(sock)
-					if id != 0:
-						self.clients[id].confirmSend()
-						if self.clients[id].canClose:
-							self.clients[id].close()
-						self.evt.set()
-				for sock in r:
-					if sock in self.server_sockets:
-						th = Thread(target=self.accept_new_connection, args=[sock])
+				for sock, event in events:
+					if sock.fileobj in self.server_sockets:
+						th = Thread(target=self.accept_new_connection, args=[sock.fileobj])
 						th.daemon = True
 						th.start()
 						continue
-					id = self.searchId(sock)
+					id = self.searchId(sock.fileobj)
 					if id != 0:
-						self.clients[id].handle_data()
+						if event==selectors.EVENT_WRITE or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
+							self.clients[id].confirmSend()
+							if self.clients[id].canClose:
+								self.clients[id].close()
+						if event==selectors.EVENT_READ or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
+							self.clients[id].handle_data()
+						self.evt.set()
 				if time.time() - self.last_ping_time >= self.ping_time:
 					for client in list(self.clients.values()):
 						client.close()
-					for channel in self.channels.values():
+					for channel in list(self.channels.values()):
 						channel.ping()
 					self.last_ping_time = time.time()
 			self.close()
@@ -345,11 +318,11 @@ class Server(baseServer):
 		self.running = False
 		self.evt.set()
 		printDebugMessage("Closing channels...", 2)
-		for c in self.channels.values():
+		for c in list(self.channels.values()):
 			c.running = False
 			c.join(10)
 		printDebugMessage("Disconnecting clients...", 2)
-		for c in self.clients.values():
+		for c in list(self.clients.values()):
 			c.close()
 		printDebugMessage("Closing server socket...", 2)
 		for s in self.server_sockets:
@@ -357,7 +330,10 @@ class Server(baseServer):
 				s.shutdown(socket.SHUT_RDWR)
 			except:
 				printError()
+			self.sel.unregister(s)
 			s.close()
+		self.sel.unregister(close_listener)
+		self.sel.close()
 
 
 class Channel(baseServer):
@@ -370,32 +346,26 @@ class Channel(baseServer):
 		printDebugMessage("Created channel " +str(self.id), 3)
 		self.evt.set()
 		self.checkThread = CheckThread(self)
+		self.sel.register(close_listener, selectors.EVENT_READ)
 
 	def run(self):
 		self.running = True
 		self.checkThread.start()
 		while self.running and len(list(self.clients.values())) > 0:
+			self.evt.set()
 			try:
 				sleep(0.01)  # Prevent 100% cpu usage when there's at least one writeable socket
-				r, w, e = select.select(self.client_sockets + [close_listener], self.client_sockets, self.client_sockets, 60)
+				events = self.sel.select(60)
 			except:
 				printError()
-			for sock in e:
-				id = self.searchId(sock)
+			for sock, event in events:
+				id = self.searchId(sock.fileobj)
 				if id != 0:
-					printDebugMessage("Client " + str(id) + " has connection problems. Disconnecting...", 0)
-					self.clients[id].close()
-					self.evt.set()
-			for sock in w:
-				id = self.searchId(sock)
-				if id != 0:
-					self.clients[id].confirmSend()
-					self.evt.set()
-			for sock in r:
-				id = self.searchId(sock)
-				if id != 0:
-					self.clients[id].handle_data()
-			self.evt.set()
+					if event==selectors.EVENT_WRITE or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
+						self.clients[id].confirmSend()
+					if event==selectors.EVENT_READ or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
+						self.clients[id].handle_data()
+				self.evt.set()
 		printDebugMessage("Terminating channel " + str(self.id), 3)
 		self.terminate()
 		self.checkThread.running = False
@@ -408,8 +378,10 @@ class Channel(baseServer):
 			client.send(type='ping')
 
 	def terminate(self):
-		for client in self.clients.values():
+		for client in list(self.clients.values()):
 			client.close()
+		self.sel.unregister(close_listener)
+		self.sel.close()
 
 
 class CheckThread(Thread):
@@ -563,7 +535,7 @@ class Client(object):
 
 	def check_key(self, key):
 		check = False
-		for v in self.server.channels.values():
+		for v in list(self.server.channels.values()):
 			if v.password == key:
 				check = True
 				break
