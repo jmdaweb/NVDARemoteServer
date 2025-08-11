@@ -6,3 +6,7 @@ services:
     volumes:
       - ./data:/data
     network_mode: host
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
