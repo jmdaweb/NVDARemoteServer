@@ -25,7 +25,8 @@ ping_time = 300
 def setup():
 	global configfile, pidfile, logfile, certfile, motd, motd_force_display
 	# set default arguments
-	if (platform.system() == 'Linux') | (platform.system() == 'Darwin') | (platform.system().startswith('MSYS')) | (platform.system().startswith('CYGWIN')):
+	system = platform.system()
+	if system == 'Linux' or system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
 		pidfile = "/var/run/NVDARemoteServer.pid"
 		logfile = "/var/log/NVDARemoteServer.log"
 		configfile = "/etc/NVDARemoteServer.conf"

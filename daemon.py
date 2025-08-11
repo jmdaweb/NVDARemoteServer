@@ -30,7 +30,7 @@ class Daemon(object):
 				# exit first parent
 				sys.exit(0)
 		except OSError as e:
-			sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
+			sys.stderr.write("fork #1 failed: {code} ({msg})\n".format(code=e.errno, msg=e.strerror))
 			sys.exit(1)
 		# decouple from parent environment
 		os.chdir("/")
@@ -43,7 +43,7 @@ class Daemon(object):
 				# exit from second parent
 				sys.exit(0)
 		except OSError as e:
-			sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
+			sys.stderr.write("fork #2 failed: {code} ({msg})\n".format(code=e.errno, msg=e.strerror))
 			sys.exit(1)
 		# redirect standard file descriptors
 		sys.stdout.flush()
@@ -64,9 +64,9 @@ class Daemon(object):
 		try:
 			file = open(self.pidfile, 'w+')
 		except:
-			print("Can't open file '%s' for writing. Perhaps the config is broken. If this instance is started by a service manager such as systemd or open-rc it might have consequences!" % self.pidfile)
+			print("Can't open file '{file}' for writing. Perhaps the config is broken. If this instance is started by a service manager such as systemd or open-rc it might have consequences!".format(file=self.pidfile))
 			return
-		file.write("%s\n" % pid)
+		file.write("{id}\n".format(id=pid))
 		file.close()
 
 	def delpid(self):
@@ -84,8 +84,8 @@ class Daemon(object):
 		except IOError:
 			pid = None
 		if pid:
-			message = "pidfile %s already exist. Daemon already running?\n"
-			sys.stderr.write(message % self.pidfile)
+			message = "pidfile {pidfile} already exist. Daemon already running?\n"
+			sys.stderr.write(message.format(pidfile=self.pidfile))
 			sys.exit(1)
 		
 		# Start the daemon
@@ -104,8 +104,8 @@ class Daemon(object):
 		except IOError:
 			pid = None
 		if not pid:
-			message = "pidfile %s does not exist. Daemon not running?\n"
-			sys.stderr.write(message % self.pidfile)
+			message = "pidfile {pidfile} does not exist. Daemon not running?\n"
+			sys.stderr.write(message.format(pidfile=self.pidfile))
 			return  # not an error in a restart
 
 		# Try killing the daemon process
@@ -134,8 +134,8 @@ class Daemon(object):
 		except IOError:
 			pid = None
 		if not pid:
-			message = "pidfile %s does not exist. Daemon not running?\n"
-			sys.stderr.write(message % self.pidfile)
+			message = "pidfile {pidfile} does not exist. Daemon not running?\n"
+			sys.stderr.write(message.format(self.pidfile))
 			return  # not an error in a restart
 
 		# Try killing the daemon process
