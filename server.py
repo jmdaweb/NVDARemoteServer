@@ -274,17 +274,29 @@ class Server(baseServer):
 					id = self.searchId(sock.fileobj)
 					if id != 0:
 						if event==selectors.EVENT_WRITE or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
-							self.clients[id].confirmSend()
-							if self.clients[id].canClose:
-								self.clients[id].close()
+							try:
+								self.clients[id].confirmSend()
+								if self.clients[id].canClose:
+									self.clients[id].close()
+							except KeyError:
+								continue
 						if event==selectors.EVENT_READ or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
-							self.clients[id].handle_data()
+							try:
+								self.clients[id].handle_data()
+							except KeyError:
+								continue
 						self.evt.set()
 				if time.time() - self.last_ping_time >= self.ping_time:
 					for client in list(self.clients.values()):
-						client.close()
+						try:
+							client.close()
+						except KeyError:
+							continue
 					for channel in list(self.channels.values()):
-						channel.ping()
+						try:
+							channel.ping()
+						except KeyError:
+							continue
 					self.last_ping_time = time.time()
 			self.close()
 		except:
@@ -322,11 +334,17 @@ class Server(baseServer):
 		self.evt.set()
 		printDebugMessage("Closing channels...", 2)
 		for c in list(self.channels.values()):
-			c.running = False
-			c.join(10)
+			try:
+				c.running = False
+				c.join(10)
+			except KeyError:
+				continue
 		printDebugMessage("Disconnecting clients...", 2)
 		for c in list(self.clients.values()):
-			c.close()
+			try:
+				c.close()
+			except KeyError:
+				continue
 		printDebugMessage("Closing server socket...", 2)
 		for s in self.server_sockets:
 			try:
@@ -365,9 +383,15 @@ class Channel(baseServer):
 				id = self.searchId(sock.fileobj)
 				if id != 0:
 					if event==selectors.EVENT_WRITE or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
-						self.clients[id].confirmSend()
+						try:
+							self.clients[id].confirmSend()
+						except KeyError:
+							continue
 					if event==selectors.EVENT_READ or event==selectors.EVENT_READ|selectors.EVENT_WRITE:
-						self.clients[id].handle_data()
+						try:
+							self.clients[id].handle_data()
+						except KeyError:
+							continue
 				self.evt.set()
 		printDebugMessage("Terminating channel " + str(self.id), 3)
 		self.terminate()
@@ -377,12 +401,18 @@ class Channel(baseServer):
 		del self.server.channels[self.password]
 
 	def ping(self):
-		for client in self.clients.values():
-			client.send(type='ping')
+		for client in list(self.clients.values()):
+			try:
+				client.send(type='ping')
+			except KeyError:
+				continue
 
 	def terminate(self):
 		for client in list(self.clients.values()):
-			client.close()
+			try:
+				client.close()
+			except KeyError:
+				continue
 		self.sel.unregister(close_listener)
 		self.sel.close()
 
