@@ -1,7 +1,11 @@
 #!/bin/bash
-if ! test -e /var/run
+if ! test -e /var/run/NVDARemoteServer
 then
-mkdir /var/run
+mkdir -p /var/run/NVDARemoteServer
+fi
+if ! test -e /var/log/NVDARemoteServer
+then
+mkdir -p /var/log/NVDARemoteServer
 fi
 if test $# -lt 1
 then
@@ -9,7 +13,7 @@ echo "Usage: $0 start | stop | restart | status | debug | kill"
 else
 case "$1" in
 status)
-	if test -e /var/run/NVDARemoteServer.pid
+	if test -e /var/run/NVDARemoteServer/NVDARemoteServer.pid
 	then
 		echo NVDARemoteServer is running
 	else

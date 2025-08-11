@@ -53,13 +53,13 @@ systemd-tmpfiles --create
 NVDARemoteServer enable
 NVDARemoteServer start
 %postun
-if test -e /var/run/NVDARemoteServer
+if test -e /run/NVDARemoteServer
 then
-rm -rf /var/run/NVDARemoteServer
+rm -rf /run/NVDARemoteServer
 fi
-if test -e /var/log/NVDARemoteServer.log
+if test -e /var/log/NVDARemoteServer
 then
-rm -f /var/log/NVDARemoteServer.log
+rm -rf /var/log/NVDARemoteServer
 fi
 userdel nvdaremoteserver
 systemctl daemon-reload
@@ -72,6 +72,7 @@ NVDARemoteServer disable
 /usr/bin/NVDARemoteCertificate-letsencrypt
 %config(noreplace) /etc/NVDARemoteServer.conf
 %dir /usr/share/NVDARemoteServer
+%dir /var/log/NVDARemoteServer
 /usr/share/NVDARemoteServer/server.py
 /usr/share/NVDARemoteServer/options.py
 /usr/share/NVDARemoteServer/server.pem

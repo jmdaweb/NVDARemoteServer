@@ -9,5 +9,6 @@ cp ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt src/usr/bin
 cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 ../manual/NVDARemoteCertificate-letsencrypt.1 src/usr/share/man/man1
 cp ../manual/NVDARemoteServer.conf.5 src/usr/share/man/man5
 cp ../NVDARemoteServer.conf src/etc
+echo "pidfile=/var/run/NVDARemoteServer/NVDARemoteServer.pid" >> src/etc/NVDARemoteServer.conf
 makepkg
 rm -rf pkg

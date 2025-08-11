@@ -8,9 +8,9 @@ if test -e /run/NVDARemoteServer
 then
 rm -rf /run/NVDARemoteServer
 fi
-if test -e /var/log/NVDARemoteServer.log
+if test -e /var/log/NVDARemoteServer
 then
-rm -f /var/log/NVDARemoteServer.log
+rm -rf /var/log/NVDARemoteServer
 fi
 userdel nvdaremoteserver
 }

@@ -44,6 +44,5 @@ chmod -x nvda-remote-server_$VERSION/usr/share/doc/nvda-remote-server/changelog.
 chmod -x nvda-remote-server_$VERSION/lib/systemd/system/NVDARemoteServer.service
 chmod -x nvda-remote-server_$VERSION/usr/lib/tmpfiles.d/NVDARemoteServer.conf
 chmod -x nvda-remote-server_$VERSION/etc/NVDARemoteServer.conf
-sed -i "s/.*=\/var\/run\/NVDARemoteServer.pid.*/pidfile=\/run\/NVDARemoteServer\/NVDARemoteServer.pid/" nvda-remote-server_$VERSION/etc/NVDARemoteServer.conf
 #build the package
 dpkg-deb --build nvda-remote-server_$VERSION

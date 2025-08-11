@@ -25,7 +25,6 @@ validpgpkeys=()
 
 prepare() {
 echo preparing...
-sed -i "s/.*=\/var\/run\/NVDARemoteServer.pid.*/pidfile=\/run\/NVDARemoteServer\/NVDARemoteServer.pid/" etc/NVDARemoteServer.conf
 }
 
 build() {

@@ -20,6 +20,7 @@ cp ../manual/NVDARemoteServer.conf.5 /usr/share/man/man5
 mkdir /usr/share/doc/NVDARemoteServer
 cp ../LICENSE /usr/share/doc/NVDARemoteServer
 cp ../NVDARemoteServer.conf /etc
+mkdir /var/log/NVDARemoteServer
 if test $? -eq 0
 then
 echo NVDA Remote Server has been installed succesfully.

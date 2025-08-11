@@ -31,7 +31,7 @@ def setup():
 	elif system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
 		pidfile = "/var/run/NVDARemoteServer.pid"
 	if system == 'Linux' or system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
-		logfile = "/var/log/NVDARemoteServer.log"
+		logfile = "/var/log/NVDARemoteServer/NVDARemoteServer.log"
 		configfile = "/etc/NVDARemoteServer.conf"
 		certfile = "/usr/share/NVDARemoteServer/server.pem"
 	else:

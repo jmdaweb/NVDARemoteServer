@@ -12,6 +12,7 @@ cp ../server.py ../options.py ../server.pem ../daemon.py src/usr/share/NVDARemot
 cp ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt ../systemd-py2/NVDARemoteServer src/usr/bin
 chmod +x src/usr/bin/NVDARemoteServer
 chmod +x src/usr/bin/NVDARemoteCertificate
+chmod +x src/usr/bin/NVDARemoteCertificate-letsencrypt
 cp ../NVDARemoteServer.conf src/etc
 cp ../manual/NVDARemoteServer.1 ../manual/NVDARemoteCertificate.1 ../manual/NVDARemoteCertificate-letsencrypt.1 src/usr/share/man/man1
 cp ../manual/NVDARemoteServer.conf.5 src/usr/share/man/man5

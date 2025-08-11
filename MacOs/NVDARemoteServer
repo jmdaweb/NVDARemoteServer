@@ -1,4 +1,8 @@
 #!/bin/bash
+if ! test -e /var/log/NVDARemoteServer
+then
+mkdir /var/log/NVDARemoteServer
+fi
 if test $# -lt 1
 then
 echo "Usage: $0 start | stop | restart | status | debug | kill"
