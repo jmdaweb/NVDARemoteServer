@@ -36,6 +36,8 @@ serverThread = None
 if hasattr(time, 'monotonic'):
 	time.time = time.monotonic
 system = platform.system()
+if system == 'Linux':
+	import resource
 
 class IDGenerator(object):
 	"""Generator of client and channel ids.
@@ -625,6 +627,17 @@ def startAndWait(service=False):
 		sleep(10)
 	except:
 		pass
+	if system == 'Linux':
+		# increase file descriptor limit
+		# Other Unix variants may be supported in the future, but for now, this solution is only applied on Linux
+		# Feel free to contribute if you run the server on other testing environments, such as BSD
+		try:
+			soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+			resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
+			printDebugMessage("File descriptor limit has been increased to "+str(hard), 1)
+		except:
+			printDebugMessage("Error while increasing file descriptor limits", 0)
+			printError()
 	while serverThread.running:  # Wait actively to catch system signals
 		try:
 			gc.collect()
