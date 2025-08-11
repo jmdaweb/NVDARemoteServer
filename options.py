@@ -10,7 +10,7 @@ interface6 = ""
 port = 6837
 port6 = 6837
 logfile = None
-pidfile = None
+pidfile = ""
 loglevel = 2
 keyfile = None
 certfile = None
@@ -26,8 +26,11 @@ def setup():
 	global configfile, pidfile, logfile, certfile, motd, motd_force_display
 	# set default arguments
 	system = platform.system()
-	if system == 'Linux' or system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
+	if system=='Linux':
+		pidfile = "/run/NVDARemoteServer.pid"
+	elif system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
 		pidfile = "/var/run/NVDARemoteServer.pid"
+	if system == 'Linux' or system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
 		logfile = "/var/log/NVDARemoteServer.log"
 		configfile = "/etc/NVDARemoteServer.conf"
 		certfile = "/usr/share/NVDARemoteServer/server.pem"
@@ -40,7 +43,6 @@ def setup():
 			logfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.log")
 			configfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), "NVDARemoteServer.conf")
 			certfile = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.pem')
-		pidfile = ""
 	arguments = parseArguments()
 	if "configfile" in list(arguments.keys()):
 		configfile = arguments['configfile']
