@@ -1,15 +1,14 @@
 #base image
-FROM debian:latest
+FROM python:3.13-alpine
 #image metadata
 LABEL version="2.4" description="This image allows you to run NVDA Remote Server inside a docker container" org.opencontainers.image.authors="Jose Manuel Delicado"
 #prepare image
-RUN <<EOT bash
-groupadd -g 991 nvdaremoteserver
- useradd -l -u 991 -g 991 -M nvdaremoteserver
-apt update
-apt -y full-upgrade
-apt install -y python3 openssl
-apt clean
+RUN <<EOT sh
+addgroup -g 991 -S nvdaremoteserver
+ adduser -S -u 991 -G nvdaremoteserver -H nvdaremoteserver
+apk update
+apk upgrade --no-cache
+apk add --no-cache openssl
 mkdir /usr/share/NVDARemoteServer
 mkdir /data
 chown -R 991:991 /data
