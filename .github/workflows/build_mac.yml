@@ -9,7 +9,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4.2.2
+    - uses: actions/checkout@v5.0.0
     - name: building package
       run: cd MacOs && sh build.sh
     - uses: actions/upload-artifact@v4.6.2
