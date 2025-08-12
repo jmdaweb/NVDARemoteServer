@@ -30,6 +30,7 @@ if sys.version_info.minor >= 11:
 else:
 	wrap_socket = ssl.wrap_socket
 debug = False
+stop = False
 logfile = None
 loggerThread = None
 serverThread = None
@@ -80,8 +81,13 @@ close_notifier, close_listener = socket.socketpair()
 
 
 def sighandler(signum, frame):
+	global stop
+	if stop:
+		# We already received a signal and the server is being closed
+		return
 	printDebugMessage("Received system signal. Waiting for server stop.", 0)
 	serverThread.running = False
+	stop = True
 	raise
 
 
