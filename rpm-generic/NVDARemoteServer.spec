@@ -3,7 +3,7 @@ Version: 2.5
 Release: 1.generic
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
-License: GPLv2
+License: GPL-2.0-or-later
 URL: https://github.com/jmdaweb/NVDARemoteServer
 Requires: python3, systemd-sysv, openssl
 Group: System Environment/Daemons

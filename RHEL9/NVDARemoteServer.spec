@@ -3,7 +3,7 @@ Version: 2.5
 Release: 1.el9
 Summary: NVDARemote server rpm
 Source0: server.tar.gz
-License: GPLv2
+License: GPL-2.0-or-later
 URL: https://github.com/jmdaweb/NVDARemoteServer
 Requires: python3.13, openssl
 Group: System Environment/Daemons
@@ -75,7 +75,7 @@ NVDARemoteServer disable
 /usr/share/man/man1/NVDARemoteCertificate-letsencrypt.1.gz
 %license LICENSE
 %changelog
-* Tue Aug 12 2025 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.5-1
+* Tue Aug 12 2025 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.5-1.el9
 - Security and stability fixes.
 * Mon Dec 16 2024 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.4-1
 - Code optimization and other small tweaks.
