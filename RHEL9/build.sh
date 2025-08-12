@@ -16,7 +16,7 @@ then
 mkdir -p ~/rpmbuild/SPECS
 fi
 cp NVDARemoteServer.spec ~/rpmbuild/SPECS
-cp ../systemd/NVDARemoteServer.sysusers ../systemd/NVDARemoteServer.tmpfiles ../*.py ../*.pem ../LICENSE ../manual/* ../*.conf ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt ~/rpmbuild/SOURCES/NVDARemoteServer-$VERSION
+cp ../*.py ../*.pem ../LICENSE ../manual/* ../*.conf ../NVDARemoteCertificate ../NVDARemoteCertificate-letsencrypt ~/rpmbuild/SOURCES/NVDARemoteServer-$VERSION
 cp NVDARemoteServer NVDARemoteServer.service ~/rpmbuild/SOURCES/NVDARemoteServer-$VERSION
 cd ~/rpmbuild/SOURCES
 tar -czf server.tar.gz NVDARemoteServer-$VERSION

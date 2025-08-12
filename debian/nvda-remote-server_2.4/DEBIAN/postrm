@@ -20,7 +20,6 @@ if test -e /var/log/NVDARemoteServer
 then
 rm -rf /var/log/NVDARemoteServer
 fi
-userdel nvdaremoteserver
 fi
 systemctl daemon-reload
 set +e

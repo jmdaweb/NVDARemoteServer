@@ -12,7 +12,6 @@ if test -e /var/log/NVDARemoteServer
 then
 rm -rf /var/log/NVDARemoteServer
 fi
-userdel nvdaremoteserver
 }
 post_install(){
 NVDARemoteServer enable
