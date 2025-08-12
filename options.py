@@ -27,7 +27,7 @@ def setup():
 	# set default arguments
 	system = platform.system()
 	if system=='Linux':
-		pidfile = "/run/NVDARemoteServer.pid"
+		pidfile = "/run/NVDARemoteServer/NVDARemoteServer.pid"
 	elif system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
 		pidfile = "/var/run/NVDARemoteServer.pid"
 	if system == 'Linux' or system == 'Darwin' or system.startswith('MSYS') or system.startswith('CYGWIN'):
