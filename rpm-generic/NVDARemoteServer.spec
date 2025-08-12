@@ -75,7 +75,7 @@ NVDARemoteServer disable
 /usr/share/man/man1/NVDARemoteCertificate-letsencrypt.1.gz
 %license LICENSE
 %changelog
-* Tue Aug 12 2025 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.5-1
+* Tue Aug 12 2025 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.5-1.generic
 - Security and stability fixes.
 * Mon Dec 16 2024 Jose Manuel Delicado <jm.delicado@nvda.es> - 2.4-1
 - Code optimization and other small tweaks.
