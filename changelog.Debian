@@ -1,3 +1,11 @@
+nvda-remote-server (2.5-1) stable; urgency=low
+
+  * Enhancements.
+    New configuration parameters. Important security and stability fixes.
+
+ -- Jose Manuel Delicado <jm.delicado@nvda.es>  Tue, 12 Aug 2025 20:00:00 +0200
+
+
 nvda-remote-server (2.4-1) stable; urgency=low
 
   * Enhancements.

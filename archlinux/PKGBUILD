@@ -1,6 +1,6 @@
 # Maintainer: Jose Manuel Delicado <jm.delicado@nvda.es>
 pkgname=NVDARemoteServer
-pkgver=2.4
+pkgver=2.5
 pkgrel=1
 epoch=
 pkgdesc="NVDA Remote relay server"

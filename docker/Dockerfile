@@ -1,7 +1,7 @@
 #base image
 FROM python:3.13-alpine
 #image metadata
-LABEL version="2.4" description="This image allows you to run NVDA Remote Server inside a docker container" org.opencontainers.image.authors="Jose Manuel Delicado"
+LABEL version="2.5" description="This image allows you to run NVDA Remote Server inside a docker container" org.opencontainers.image.authors="Jose Manuel Delicado"
 #prepare image
 RUN <<EOT sh
 addgroup -g 991 -S nvdaremoteserver
