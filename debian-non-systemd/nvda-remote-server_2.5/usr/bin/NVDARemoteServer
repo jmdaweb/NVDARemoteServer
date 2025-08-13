@@ -11,7 +11,7 @@ enable | disable)
 	update-rc.d NVDARemoteServer $1
 	;;
 *)
-	python3 /usr/share/NVDARemoteServer/server.py $*
+	python3 -B /usr/share/NVDARemoteServer/server.py $*
 	;;
 esac
 fi

@@ -1,22 +1,9 @@
 #!/bin/bash
-post_remove(){
-if test -e /usr/share/NVDARemoteServer
-then
-rm -rf /usr/share/NVDARemoteServer
-fi
-if test -e /run/NVDARemoteServer
-then
-rm -rf /run/NVDARemoteServer
-fi
-if test -e /var/log/NVDARemoteServer
-then
-rm -rf /var/log/NVDARemoteServer
-fi
-}
 post_install(){
 NVDARemoteServer enable
 }
 pre_remove(){
 NVDARemoteServer stop
 NVDARemoteServer disable
+systemctl clean --what=all NVDARemoteServer
 }

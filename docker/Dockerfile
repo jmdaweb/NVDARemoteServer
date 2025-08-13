@@ -21,5 +21,5 @@ VOLUME /data
 EXPOSE 6837
 USER nvdaremoteserver
 #this program is executed when a container is started
-CMD ["python3", "/usr/share/NVDARemoteServer/server.py", "debug", "--configfile=/data/NVDARemoteServer.conf"]
+CMD ["python3", "-B", "/usr/share/NVDARemoteServer/server.py", "debug", "--configfile=/data/NVDARemoteServer.conf"]
 ENTRYPOINT ["docker-entrypoint.sh"]

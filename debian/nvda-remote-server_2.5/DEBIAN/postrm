@@ -3,24 +3,6 @@
  # This script runs after removing the package 
 
 set -e
-if test $1 = remove
-then
-if test -e /usr/share/NVDARemoteServer
-then
-rm -rf /usr/share/NVDARemoteServer
-fi
-if test -e /run/NVDARemoteServer
-then
-rm -rf /run/NVDARemoteServer
-fi
-fi
-if test $1 = purge
-then
-if test -e /var/log/NVDARemoteServer
-then
-rm -rf /var/log/NVDARemoteServer
-fi
-fi
 systemctl daemon-reload
 set +e
 exit 0

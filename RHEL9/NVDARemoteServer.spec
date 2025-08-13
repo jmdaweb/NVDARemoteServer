@@ -46,18 +46,11 @@ systemctl daemon-reload
 NVDARemoteServer enable
 NVDARemoteServer start
 %postun
-if test -e /run/NVDARemoteServer
-then
-rm -rf /run/NVDARemoteServer
-fi
-if test -e /var/log/NVDARemoteServer
-then
-rm -rf /var/log/NVDARemoteServer
-fi
 systemctl daemon-reload
 %preun
 NVDARemoteServer stop
 NVDARemoteServer disable
+systemctl clean --what=all NVDARemoteServer
 %files
 /usr/bin/NVDARemoteServer
 /usr/bin/NVDARemoteCertificate

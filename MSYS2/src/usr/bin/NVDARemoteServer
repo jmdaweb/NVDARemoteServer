@@ -21,7 +21,7 @@ status)
 	fi
 	;;
 *)
-	/usr/bin/python /usr/share/NVDARemoteServer/server.py $*
+	/usr/bin/python -B /usr/share/NVDARemoteServer/server.py $*
 	;;
 esac
 fi
