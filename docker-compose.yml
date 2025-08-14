@@ -1,6 +1,9 @@
 services:
   nvdaremoteserver:
     container_name: nvdaremoteserver
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
     image: jmdaweb/nvda-remote-server:latest
     restart: always
     volumes:
