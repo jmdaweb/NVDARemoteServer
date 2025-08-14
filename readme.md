@@ -72,20 +72,19 @@ To uninstall it, run `NVDARemoteUninstall`
 
 You need one or multiple Python installations, depending on what you want to build. Install the x86 and x64 versions if you want to build the server for both architectures. Go to the [Python downloads page](https://www.python.org/downloads/) and choose:
 
-* Python 2.7.18 if you want to maximize compatibility with older Windows versions, including Windows xp. The server will also work on Windows 10.
-* Python 3.x (3.13.1 or later) if you want to take advantage of all the Python performance and security improvements.
+* Python 3.x (3.13.6 or later) if you want to take advantage of all the Python performance and security improvements. Please, don't use the experimental free-threading binary for building, at least for now.
+* Python 3.8.10 if you want to provide compatibility with Windows 7.
 
-You need also Python for Windows Extensions, build 308 or later. Install this package running `pip install pywin32` command.
+You need also Python for Windows Extensions, build 311 or later. Install this package running `pip install pywin32` command.
 
-Finally, you must install a packager in order to build the binary version. If you are building with Python 2.7, you can use Pyinstaller (install with `pip install pyinstaller`), cx-freeze (install with `pip install cx-freeze`), or [py2exe 0.6.9](https://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/). On Python 3, only pyinstaller and cx-freeze are supported.
+Finally, you must install a packager in order to build the binary version. You can use Pyinstaller (install with `pip install pyinstaller`) or cx-freeze (install with `pip install cx-freeze`).
 
 Once the build environment is ready, open a command prompt and navigate to the root folder of this repository, then:
 
-* If you want to use py2exe, run: `python setup_windows.py py2exe`
 * If you prefer pyinstaller, run: `pyinstaller pyinstaller.spec`.
 * If you prefer cx-freeze, run: `python setup_windows_cxfreeze.py build`.
 
-Note: if you build with several Python versions on the same machine, don't add python to the path environment variable during installation. Instead, use the Python launcher included with Python 3, or specify the full path to your python executable. For example: `C:\\python27x86\\python setup_windows.py py2exe`.
+Note: if you build with several Python versions on the same machine, don't add python to the path environment variable during installation. Instead, use the Python launcher included with Python 3, or specify the full path to your python executable.
 
 The binaries will be placed in the dist folder. For cx-freeze builds, the binaries will be placed in the build folder. If you build for multiple architectures, using multiple Python installations and packagers, remember saving the dist folder contents (in case of cx-freeze, the build folder) to another location before building again. To avoid conflicts, remove the build and dist directories after saving their contents.
 
@@ -95,11 +94,11 @@ The server is almost portable, there is no installation required. If you install
 
 You need Docker installed on a Linux system. Navigate to the root directory on this repository and run:
 
-`docker build -f docker/Dockerfile -t nvda-remote-server .`
+`docker build -f docker/Dockerfile -t nvda-remote-server --progress plain .`
 
-Change or add more tags if you plan to push the image to a Docker registry. For example: `docker build -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.4 .`
+Change or add more tags if you plan to push the image to a Docker registry. For example: `docker build -f docker/Dockerfile -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.5 --progress plain .`
 
-If you want to build a multiplatform image, provided that you meet the prerrequisites described [here](https://docs.docker.com/build/building/multi-platform/), you can use a command like the following: `docker buildx build -f docker/Dockerfile -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.4 --platform linux/amd64 --platform linux/386 --platform linux/arm64/v8 --platform linux/arm/v7 --platform linux/arm/v5 --platform linux/mips64le --platform linux/ppc64le --platform linux/s390x --push .`
+If you want to build a multiplatform image, provided that you meet the prerrequisites described [here](https://docs.docker.com/build/building/multi-platform/), you can use a command like the following: `docker buildx build -f docker/Dockerfile -t jmdaweb/nvda-remote-server:latest -t jmdaweb/nvda-remote-server:2.5 --platform linux/amd64 --platform linux/386 --platform linux/arm64/v8 --platform linux/arm/v7 --platform linux/arm/v5 --platform linux/arm/v6 --platform linux/ppc64le --platform linux/riscv64 --platform linux/s390x --push --progress plain .`
 
 ## Running
 
