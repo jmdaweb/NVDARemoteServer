@@ -202,6 +202,7 @@ class Server(baseServer):
 	def createServerSocket(self, port, port6, bind_host, bind_host6):
 		self.server_sockets = []
 		if socket.has_ipv6:
+			server_socket6 = None
 			try:
 				server_socket6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 				printDebugMessage("IPV6 socket created.", 2)
@@ -215,9 +216,11 @@ class Server(baseServer):
 				self.sel.register(server_socket6, selectors.EVENT_READ)
 				printDebugMessage("IPV6 socket has started listening on port " + str(self.port6), 0)
 			except:
-				server_socket6.close()
-				server_socket6 = None
+				if server_socket6 is not None:
+					server_socket6.close()
+					server_socket6 = None
 				printDebugMessage("IPV6 socket cannot process incoming connections with the specified configuration. That means the configured interface and port are used by another application, or your system does not support IPV6. The server may still process incoming IPV4 connections", 0)
+		server_socket = None
 		try:
 			server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			printDebugMessage("IPV4 socket created.", 2)
@@ -231,11 +234,12 @@ class Server(baseServer):
 			self.sel.register(server_socket, selectors.EVENT_READ)
 			printDebugMessage("IPV4 socket has started listening on port " + str(self.port), 0)
 		except:
-			server_socket.close()
-			server_socket = None
+			if server_socket is not None:
+				server_socket.close()
+				server_socket = None
 			printDebugMessage("IPV4 socket cannot process incoming connections with the specified configuration. In most situations, this means IPV6 socket will process incoming IPV4 connections, so you can ignore this message.", 0)
 		if self.server_sockets == []:
-			raise  # If there are no sockets in the list, stop the server
+			raise RuntimeError("There are no listening sockets. The server will be stopped") # If there are no sockets in the list, stop the server
 
 	def run(self):
 		self.createServerSocket(self.port, self.port6, self.bind_host, self.bind_host6)
